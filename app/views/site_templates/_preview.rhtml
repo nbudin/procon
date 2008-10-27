@@ -1,0 +1,8 @@
+<div style="border: 1px black solid; width: 80em; margin: 1em;">
+  <div style="width: 100%; background-color: black; color: white;">
+    <b>Preview of site template "<%= site_template.name %>"</b>
+  </div>
+<iframe src="<%= url_for :controller => 'main', :action => 'index', :site_template => site_template%>" 
+  style="width: 100%; height: 20em; border: none;">
+</iframe>
+</div>

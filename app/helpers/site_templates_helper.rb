@@ -1,0 +1,2 @@
+module SiteTemplatesHelper
+end

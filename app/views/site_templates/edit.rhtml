@@ -1,0 +1,12 @@
+<h1>Editing site_template</h1>
+
+<%= error_messages_for :the_template %>
+
+<%= render :partial => "preview", :locals => { :site_template => @the_template } %>
+
+<% form_for(:the_template, :url => site_template_path(@the_template), :html => { :method => :put }) do |f| %>
+<%= render :partial => "form", :locals => { :f => f } %>
+<% end %>
+
+<%= link_to 'Show', site_template_path(@the_template) %> |
+<%= link_to 'Back', site_templates_path %>

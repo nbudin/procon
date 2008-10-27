@@ -1,0 +1,65 @@
+<h1><%= @event.fullname %></h1>
+
+<% if logged_in? -%>
+  <% if @event.has_edit_permissions? logged_in_person -%>
+    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
+    [<%= link_to "Edit", edit_event_url(@event) %>]
+  <% end -%>
+  <%= signup_link @event %>
+<% else -%>
+  You must be <%= link_to "logged in", :controller => 'auth', :action => 'login' %> to register for this event.
+<% end -%>
+
+<p><b>Time:</b> <%= @event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
+<b>Length:</b> <%= event_length @event %>
+<% if @event.locations.size > 0 -%>
+  <br/><b>Location:</b> <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
+<% end -%>
+</p>
+
+<% if @event.staff.length > 0 -%>
+  <h2>Event Staff</h2>
+  <ul>
+    <% @event.staff.each do |staff| -%>
+      <li><%= staff.name %></li>
+    <% end -%>
+  </ul>
+<% end -%>
+
+<% if @event.blurb and @event.blurb.length > 0 -%>
+<h2>Blurb</h2>
+
+<p><%= @event.blurb %></p>
+<% end -%>
+
+<% if @event.description and @event.description.length > 0 -%>
+<h2>Description</h2>
+
+<p><%= @event.description %></p>
+<% end -%>
+
+<h2>Attendees</h2>
+<p>
+  <% if @event.kind_of? LimitedCapacityEvent and @event.gendered? -%>
+	  <%= pluralize(@event.attendee_count, "attendee") %> total: 
+	  <%= @event.attendee_count "male" %> male,
+	  <%= @event.attendee_count "female" %> female
+  <% else -%>
+  	  <%= pluralize(@event.attendee_count, "attendee") %>
+  <% end -%>
+  <% if @event.kind_of? LimitedCapacityEvent -%>
+    <br/><%= pluralize(@event.open_slots, "open slot")%>:
+    <%= open_slot_count(@event) %>
+  <% end -%>
+  <% if @event.has_edit_permissions? logged_in_person -%>
+    <br/>
+    <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
+    <% if @event.children.count > 0 -%>
+      <br/><%= link_to "Pull attendees from children", :controller => "events", :action => "pull_from_children", :id => @event.id %>
+    <% end -%>
+  <% elsif logged_in? and @event.attendees_visible_to?(logged_in_person) -%>
+  	<br/><%= link_to "View attendee list", event_attendances_url(@event) %>
+  <% end -%>
+</p>
+  
+  

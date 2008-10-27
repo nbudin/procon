@@ -1,0 +1,12 @@
+<h1>Editing registration_rule</h1>
+
+<%= error_messages_for :registration_rule %>
+
+<% form_for(:registration_rule, :url => registration_rule_path(@registration_rule), :html => { :method => :put }) do |f| %>
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', registration_rule_path(@registration_rule) %> |
+<%= link_to 'Back', registration_rules_path %>

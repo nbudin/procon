@@ -1,0 +1,71 @@
+<h1>Editing schedule "<%= @schedule.name %>"</h1>
+
+<p><%= link_to "&lt;- Back to list of schedules", schedules_url %>
+<%= link_to "View schedule -&gt;", @schedule %></p>
+
+<style type="text/css">
+.track {
+  border: 1px black solid;
+  padding-left: 1em;
+  padding-right: 1em;
+  margin-bottom: 1em;
+}
+
+table.events {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.events tr.odd {
+  background-color: #ccc;
+}
+.events tr.even {
+  background-color: #aaa;
+}
+</style>
+
+<%= error_messages_for :schedule %>
+
+<% form_for @schedule do |f| -%>
+  <% @schedule.tracks.each do |track| -%>
+    <div class="track" style="background-color: <%= track.color ? track.color : "#fff" %>;">
+    <h2>Track: <%=h track.name %></h2>
+    <p>Color: <%= text_field_tag "track_color[#{track.id}]", track.color -%><br/>
+      Delete track <%= check_box_tag "delete_track", track.id %></p>
+    <table class="events">
+      <% track.events.each do |event| -%>
+        <tr class="<%= cycle "odd", "even" %>">
+          <td><%=link_to event.shortname, edit_event_path(event) %></td>
+          <td>Starts at <%= datetime_select "event[#{event.id}]", "start", :default => event.start %></td>
+          <td>Ends at <%= datetime_select "event[#{event.id}]", "end", :default => event.end %></td>
+          <td>Remove <%= check_box_tag "remove_event_from_track[#{track.id}]", event.id %></td>
+        </tr>
+      <% end -%>
+      <tr class="<%= cycle "odd", "even" %>">
+        <td><%= text_field_tag "create_event_in_track[#{track.id}][fullname]" %></td>
+        <td>Starts at <%= datetime_select "create_event_in_track[#{track.id}]", "start" %></td>
+        <td>Ends at <%= datetime_select "create_event_in_track[#{track.id}]", "end" %></td>
+        <td></td>
+      </tr>
+      <tr class="<%= cycle "odd", "even" %>">
+        <td>Add existing event</td>
+        <td><%= select_tag "add_event_to_track[#{track.id}]",
+            options_for_select([['', '']] + @schedule.event.children.select {|e| not track.events.include? e}.collect {|e| [e.shortname, e.id]}) %>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    
+    <p><%= submit_tag %></p>
+    </div>
+  <% end -%>
+  
+  <h2>Create new track</h2>
+  
+  <p>Name: <%= text_field_tag "new_track[name]" %></p>
+  <p>Color: <%= text_field_tag "new_track[color]" %></p>
+  
+  <%= submit_tag %>
+<% end -%>
+

@@ -1,0 +1,6 @@
+<h1>Delete event</h1>
+
+<p>Are you sure you want to delete the event "<%=@event.fullname%>"?</p>
+
+<p><%=link_to "Yes, I'm sure.", event_url(@event) + "?sure=1", :method=>"delete", :sure=>true%><br/>
+  <%= link_to "No, I changed my mind.", events_url %></p>

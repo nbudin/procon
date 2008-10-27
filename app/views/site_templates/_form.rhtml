@@ -1,0 +1,27 @@
+<p>
+  <p>
+    <b>Template name:</b>
+    <%= f.text_field :name %>
+  </p>
+  
+  <p><i>Note: All template fields allow ERb template commands.  Use with caution.</i></p>
+  <table>
+    <tr>
+      <th>CSS for page</th>
+      <th>Page header</th>
+      <th>Page footer</th>
+    </tr>
+    <tr>
+      <td>
+        <%= f.text_area :css %>
+      </td>
+      <td>
+        <%= f.text_area :header %>
+      </td>
+      <td>
+        <%= f.text_area :footer %>
+      </td>
+    </tr>
+  </table>
+  <%= submit_tag %>
+</p>

@@ -1,0 +1,53 @@
+<table style="width: 100%">
+  <tr>
+    <th>#</th>
+    <th>Person</th>
+    <th>Email</th>
+    <th>Age (as of event)</th>
+    <th>Gender</th>
+    <% if not waitlist -%>
+      <th>Is staff?</th>
+      <th>Counts towards total?</th>
+    <% end -%>
+  </tr>
+  
+<% count = 0 -%>
+<% for attendance in attendances %>
+  <% if attendance.counts or waitlist
+    count += 1
+  end -%>
+  <tr id="attendance_<%=attendance.id%>">
+    <td>
+      <% if attendance.counts or waitlist -%>
+        <%= count %>
+      <% end -%>
+    </td>
+    <% if attendance.person -%>
+      <td>
+        <%=h attendance.person.name %>
+      </td>
+      <td>
+        <% if attendance.person.account -%>
+          <%= mail_to attendance.person.primary_email_address %>
+        <% end -%>
+      </td>
+      <td>
+        <%= attendance.age %>
+      </td>
+      <td><%=h attendance.person.gender %></td>
+    <% else -%>
+      <td colspan="4">
+        <b>No person attached to this attendance.  This is probably the result of a bug.</b>
+      </td>
+    <% end -%>
+    <% if not waitlist -%>
+      <td><%=h attendance.is_staff %></td>
+      <td><%=h attendance.counts %></td>
+    <% end -%>
+	<% if @event.has_edit_permissions?(logged_in_person) -%>
+	    <td><%= link_to 'Edit', edit_event_attendance_path(@event, attendance) %></td>
+	    <td><%= link_to 'Drop', event_attendance_path(@event, attendance), :confirm => 'Are you sure?', :method => :delete %></td>
+	<% end -%>
+  </tr>
+<% end %>
+</table>

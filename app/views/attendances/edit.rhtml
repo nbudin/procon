@@ -1,0 +1,28 @@
+<h1>Editing attendee for <%=h @event.fullname %></h1>
+
+<p><%=h @attendance.person.name %></p>
+
+<%= error_messages_for :attendance %>
+
+<% form_for(:attendance, :url => event_attendance_path(@event, @attendance), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Is staff?</b>
+    <%= f.check_box :is_staff %>
+  </p>
+  
+  <p>
+    <b>Waitlisted:</b>
+    <%=f.check_box :is_waitlist %>
+  </p>
+
+  <p>
+    <b>Counts toward total?</b>
+    <%= f.check_box :counts %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Cancel', event_attendances_path(@event) %>

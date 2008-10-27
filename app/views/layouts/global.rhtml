@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<% if @site_template -%>
+  <!-- Laid out using site_template #{@site_template.id} -->
+<% else -%>
+  <!-- Laid out using built-in ProCon site_template -->
+<% end -%>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <%= stylesheet_link_tag 'global.css' %>
+  <%= ae_form_stylesheet %>
+  <%= javascript_include_tag :defaults %>
+  <% if @rss_url %>
+    <link rel="alternate" title="RSS Feed" href="<%=@rss_url%>" type="application/rss+xml"/>
+  <% end %>
+   
+  <% if @site_template.css -%>
+  <style type="text/css">
+    <%= ERB.new(@site_template.css).result %>
+  </style>
+  <% end -%>
+  <title><%= page_title %></title>
+</head>
+<body id="body">
+
+<% if @site_template.header and @site_template.header.length > 0 -%>
+  <%= ERB.new(@site_template.header).result %>
+<% end -%>
+
+  <div id="topbar">
+    <table style="width: 100%">
+      <tr>
+        <td>
+          <h1><%= page_title %></h1>
+          <% if @context and @context.parent -%>
+            <p><i>Part of 
+              <%= link_to @context.parent.fullname, :controller => params[:controller], :context => @context.parent.id %>
+              </i></p>
+          <% end -%>
+          <ul class="nav_links">
+            <li><%= link_to "Home", :controller => :main, :action => :index %></li>
+            <li><%= link_to "My Events", :controller => :agenda, :action => :index %></li>
+            <% if @context and @context.schedules.size == 1 -%>
+              <li><%= link_to "Event Schedule", schedule_path(@context.schedules[0]) %></li>
+            <% else -%>
+              <li><%= link_to "Event Schedules", schedules_path %></li>
+            <% end -%>
+            <% if logged_in_person_can_edit?(@context) -%>
+              <li><a href="#" onClick="$('admin_closed').hide(); $('admin_open').show();" id="admin_closed">Administration &raquo;</a>
+                <span id="admin_open" style="display: none;">
+                  <a href="#" onClick="$('admin_open').hide(); $('admin_closed').show();" id="admin_closed">&laquo;</a>
+                  <%= link_to "Events", events_path %>
+                  <%= link_to "Site Templates", site_templates_path %>
+                  <%= link_to "Schedules", schedules_path %>
+                </span>
+              </li>
+            <% end -%>
+          </ul>
+        </td>
+        <td align="right">
+          <%= render :partial => 'auth/auth_form' %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+<% if flash[:error_messages] and flash[:error_messages].length > 0 -%>
+  <div class="error_messages">
+    <p>There were some errors processing your request:</p>
+    <ul>
+      <% flash[:error_messages].each do |msg| -%>
+        <li><%= msg%></li>
+      <% end -%>
+    </ul>
+  </div>
+<% end -%>
+
+<%= @content_for_layout %>
+
+<% if @site_template.footer and @site_template.footer.length > 0 -%>
+  <%= ERB.new(@site_template.footer).result %>
+<% end -%>
+
+</body>
+</html>

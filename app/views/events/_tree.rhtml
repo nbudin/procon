@@ -1,0 +1,22 @@
+<% begin
+  # if roots does not exist or is nil, we'll create it
+  roots.length
+rescue
+  roots = events.select { |e| @context ? e.parent == @context : e.parent.nil? }
+end -%>
+<% if events.length > 0 -%>
+  <ul>
+    <% roots.each do |event| -%>
+      <% if events.include? event -%>
+        <li><%= render :partial => "events/link", :locals => { :event => event } %>
+          - <%= event.start.strftime "%B %d, %Y at %I:%M %p" %>, <%= event_length event %>
+          <% if event.children.length > 0 -%>
+            <%= render :partial => "events/tree", :locals => { :events => events, :roots => event.children } %>
+          <% end -%>
+        </li>
+      <% end -%>
+    <% end -%>
+  </ul>
+<% else -%>
+  <p>No events to display.</p>
+<% end -%>

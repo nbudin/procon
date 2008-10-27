@@ -1,0 +1,5 @@
+<h1>Listing events</h1>
+
+[<%= link_to "New event", new_event_url %>]
+
+<%= render :partial => "tree", :locals => { :events => @events } %>

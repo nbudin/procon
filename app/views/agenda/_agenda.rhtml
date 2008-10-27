@@ -1,0 +1,45 @@
+<% current = []
+upcoming = []
+past = []
+
+now = Time.now
+@attendances.each do |a|
+  e = a.event
+  if e.end < now
+    past.push a
+  elsif e.start < now
+    current.push a
+  else
+    upcoming.push a
+  end
+end -%>
+<div class="agenda">
+  <h2>My events
+    <% if @context -%>
+      at <%= @context.fullname %>
+    <% end -%></h2>
+
+  <% if current.length > 0 -%>
+    <% reset_cycle("agenda_rows") -%>
+    <h3>Events In Progress</h3>
+    <table>
+      <%= render :partial => 'event', :collection => current.sort { |a,b| a.event.length <=> b.event.length } %>
+    </table>
+  <% end -%>
+  
+  <% if upcoming.length > 0 -%>
+    <% reset_cycle("agenda_rows") -%>
+    <h3>Upcoming events</h3>
+    <table>
+      <%= render :partial => 'event', :collection => upcoming.sort { |a,b| a.event.start <=> b.event.start } %>
+    </table>
+  <% end -%>
+  
+  <% if past.length > 0 -%>
+    <% reset_cycle("agenda_rows") -%>
+    <h3>Past events</h3>
+    <table>
+      <%= render :partial => 'event', :collection => past.sort { |a,b| b.event.end <=> a.event.end } %>
+    </table>
+  <% end -%>
+</div>

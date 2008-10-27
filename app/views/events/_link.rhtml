@@ -1,0 +1,7 @@
+<% if event.virtual_sites.length > 0 -%>
+  <b><%= event.fullname %></b> (<%= link_to "Go to site", 
+    url_for(:controller => 'events', :host => "#{event.virtual_sites[0].domain}:#{request.port}",
+      :action => 'show', :id => event.id, :only_path => false) %>)
+<% else -%>
+  <%= link_to event.fullname, event_url(event) %>
+<% end -%>
