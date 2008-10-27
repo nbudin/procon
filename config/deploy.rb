@@ -13,7 +13,7 @@
 # form the root of the application path.
 
 set :application, "procon"
-set :repository, "http://svn.aegames.org/svn/procon"
+set :repository, "https://procon.googlecode.com/svn/trunk"
 
 # =============================================================================
 # ROLES
