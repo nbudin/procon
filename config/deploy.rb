@@ -13,7 +13,7 @@
 # form the root of the application path.
 
 set :application, "procon"
-set :repository, "https://procon.googlecode.com/svn/trunk"
+set :repository, "http://procon.googlecode.com/svn/trunk"
 
 # =============================================================================
 # ROLES
