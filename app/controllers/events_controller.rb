@@ -224,8 +224,8 @@ class EventsController < ApplicationController
   end
   
   def check_edit_permissions
-    if params[:id]
-      event = Event.find params[:id]
+    if params[:id] or @context
+      event = Event.find params[:id] || @context
       if logged_in?
         person = logged_in_person
         if event.has_edit_permissions? person
