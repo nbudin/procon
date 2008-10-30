@@ -36,6 +36,8 @@ class EventsController < ApplicationController
   
   def show_description
     @event = Event.find params[:id]
+    @noninteractive = true
+    render :action => "show"
   end
   
   def pull_from_children

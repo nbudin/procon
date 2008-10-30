@@ -1,10 +1,10 @@
-<h1><%= @event.fullname %></h1>
+<h1 id="eventtitle"><%= @event.fullname %></h1>
 
 <% if logged_in? and logged_in_person.app_profile.events.include? @event -%>
 View this event from the "My Events" page to drop out of the event.
 <% end -%>
 
-<p><b>Time:</b> <%= @event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
+<p id="schedulingdetails"><b>Time:</b> <%= @event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
 <b>Length:</b> <%= event_length @event %>
 <% if @event.locations.size > 0 -%>
   <br/><b>Location:</b> <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
@@ -12,12 +12,14 @@ View this event from the "My Events" page to drop out of the event.
 </p>
 
 <% if @event.staff.length > 0 -%>
+<div id="stafflist">
   <h2>Event Staff</h2>
   <ul>
     <% @event.staff.each do |staff| -%>
       <li><%= staff.name %></li>
     <% end -%>
   </ul>
+</div>
 <% end -%>
 
 <% if @event.blurb and @event.blurb.length > 0 -%>
