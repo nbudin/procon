@@ -33,7 +33,7 @@
     <table style="width: 100%">
       <tr>
         <td>
-          <h1 id="pagetitle"><%= page_title %></h1>
+          <h1 id="banner"><%= page_title %></h1>
           <% if @context and @context.parent -%>
             <p><i>Part of 
               <%= link_to @context.parent.fullname, :controller => params[:controller], :context => @context.parent.id %>

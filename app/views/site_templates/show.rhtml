@@ -1,3 +1,5 @@
+<h1 id="pagetitle"><%= @the_template.name %></h1>
+
 <%= render :partial => 'preview', :locals => {:site_template => @the_template} %>
 
 <%= link_to 'Edit', edit_site_template_path(@the_template) %> |

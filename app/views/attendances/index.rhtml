@@ -1,4 +1,4 @@
-<h1>Attendees for <%= @event.fullname %></h1>
+<h1 id="pagetitle">Attendees for <%= @event.fullname %></h1>
 <% if @event.has_edit_permissions?(logged_in_person) -%>
 	[<%= link_to 'Add attendee', new_event_attendance_path(@event) %>]
 <% end -%>
