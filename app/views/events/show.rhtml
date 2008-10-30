@@ -1,20 +1,22 @@
 <h1 id="eventtitle"><%= @event.fullname %></h1>
 
-<% if @noninteractive -%>
-	<% if logged_in? and logged_in_person.app_profile.events.include? @event -%>
-		View this event from the "My Events" page to drop out of the event.
-	<% end -%>
-<% else -%>
-	<% if logged_in? -%>
-	  <% if @event.has_edit_permissions? logged_in_person -%>
-	    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
-	    [<%= link_to "Edit", edit_event_url(@event) %>]
-	  <% end -%>
-	  <%= signup_link @event %>
+<div id="signupcontrols">
+	<% if @noninteractive -%>
+		<% if logged_in? and logged_in_person.app_profile.events.include? @event -%>
+			View this event from the "My Events" page to drop out of the event.
+		<% end -%>
 	<% else -%>
-	  You must be <%= link_to "logged in", :controller => 'auth', :action => 'login' %> to register for this event.
+		<% if logged_in? -%>
+		  <% if @event.has_edit_permissions? logged_in_person -%>
+		    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
+		    [<%= link_to "Edit", edit_event_url(@event) %>]
+		  <% end -%>
+		  <%= signup_link @event %>
+		<% else -%>
+		  You must be <%= link_to "logged in", :controller => 'auth', :action => 'login' %> to register for this event.
+		<% end -%>
 	<% end -%>
-<% end -%>
+</div>
 
 <p id="schedulingdetails"><b>Time:</b> <%= @event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
 <b>Length:</b> <%= event_length @event %>
