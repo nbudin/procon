@@ -1,4 +1,4 @@
-!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html>
@@ -18,7 +18,7 @@
    
   <% if @site_template.css -%>
   <style type="text/css">
-    <%= ERB.new(@site_template.css).result %>
+    <%= @site_template.css %>
   </style>
   <% end -%>
   <title><%= page_title %></title>
@@ -26,7 +26,7 @@
 <body id="body">
 
 <% if @site_template.header and @site_template.header.length > 0 -%>
-  <%= ERB.new(@site_template.header).result %>
+  <%= @site_template.header %>
 <% end -%>
 
   <div id="topbar">
@@ -82,7 +82,7 @@
 </div>
 
 <% if @site_template.footer and @site_template.footer.length > 0 -%>
-  <%= ERB.new(@site_template.footer).result %>
+  <%= @site_template.footer %>
 <% end -%>
 
 </body>
