@@ -32,7 +32,7 @@ role :db,  "sakai.natbudin.com", :primary => true
 # OPTIONAL VARIABLES
 # =============================================================================
 set :deploy_to, "/var/www/events.brandeislarp.com" # defaults to "/u/apps/#{application}"
-#set :use_sudo, true
+set :use_sudo, false
 set :checkout, "export"
 set :user, "www-data"            # defaults to the currently logged in user
 #set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
