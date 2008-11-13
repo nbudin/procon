@@ -17,8 +17,8 @@ xml.rss(:version=>"2.0"){
         if attendance.updated_at
           xml.pubDate(attendance.updated_at.rfc2822)
         end
-      xml.link(event_attendance_url(@event, attendance, :only_path => false))
-      xml.guid(event_attendance_url(@event, attendance, :only_path => false))
+        xml.link(event_attendance_url(@event, attendance, :only_path => false))
+        xml.guid(event_attendance_url(@event, attendance, :only_path => false))
       end
     end
   }
