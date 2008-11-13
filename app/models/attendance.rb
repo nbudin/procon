@@ -19,8 +19,10 @@ class Attendance < ActiveRecord::Base
       "Waitlisted"
     elsif not counts
       "Not counted"
-    else
+    elsif event.kind_of? LimitedCapacityEvent
       "Confirmed"
+    else
+      nil
     end
   end
   

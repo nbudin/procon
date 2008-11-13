@@ -11,7 +11,7 @@ xml.rss(:version=>"2.0"){
         else
           "No person"
         end
-        xml.title("#{name} (#{attendance.status})")
+        xml.title("#{name}#{attendance.status ? "( #{attendance.status})" : ""}")
         xml.description("#{name} signed up for #{@event.fullname} at #{attendance.created_at} with status #{attendance.status}.")
         # rfc822
         if attendance.updated_at
