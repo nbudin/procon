@@ -12,6 +12,18 @@ class Attendance < ActiveRecord::Base
     end
   end
   
+  def status
+    if is_staff
+      "Staff"
+    elsif is_waitlist
+      "Waitlisted"
+    elsif not counts
+      "Not counted"
+    else
+      "Confirmed"
+    end
+  end
+  
   def pull_from_waitlist
     if not event.kind_of? LimitedCapacityEvent
       return

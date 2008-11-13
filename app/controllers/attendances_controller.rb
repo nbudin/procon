@@ -13,6 +13,10 @@ class AttendancesController < ApplicationController
     respond_to do |format|
       format.html # index.rhtml
       format.xml  { render :xml => @attendances.to_xml }
+      format.rss do
+        @attendances = @event.attendances.find(:all, :order => "created_at DESC", :limit => 10)
+        render :layout => false
+      end
     end
   end
 
