@@ -1,8 +1,11 @@
-<p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
-  <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
-  <b>Starts at:</b> <%= datetime_select "event", "start" %><br/>
-  <b>Ends at:</b> <%= datetime_select "event", "end" %></p>
-  
+<div id="basiceventinfo">
+  <h2>Basic Information</h2>
+  <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
+    <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
+    <b>Starts at:</b> <%= datetime_select "event", "start" %><br/>
+    <b>Ends at:</b> <%= datetime_select "event", "end" %></p>
+</div>
+
 <script type="text/javascript">
 function updateCapacityLimitsVisibility() {
   if ($('limited_capacity').checked) {
@@ -15,96 +18,105 @@ function updateCapacityLimitsVisibility() {
 Event.observe(window, 'load', updateCapacityLimitsVisibility);
 </script>
 
-<h2>Locations</h2>
+<div id="locations">
+  <h2>Locations</h2>
 
-<p id="location_summary">Current locations:
-<% if @event.locations.size > 0 -%>
-  <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
-<% else -%>
-  none
-<% end -%>
+  <p id="location_summary">Current locations:
+  <% if @event.locations.size > 0 -%>
+    <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
+  <% else -%>
+    none
+  <% end -%>
 
-(<%= link_to_function "Edit" do |page|
-    page.hide "location_summary"
-    page.show "event_locations"
-  end %>)</p>
+  (<%= link_to_function "Edit" do |page|
+      page.hide "location_summary"
+      page.show "event_locations"
+    end %>)</p>
 
-<select id="event_locations" style="display: none;" multiple="multiple" name="event[locations][]">
-	<%= location_options @event.locations %>
-</select>
+  <select id="event_locations" style="display: none;" multiple="multiple" name="event[locations][]">
+  	<%= location_options @event.locations %>
+  </select>
+</div>
 
-<h2>Description/Blurb</h2>
+<div id="description">
+  <h2>Description/Blurb</h2>
 
-<table>
-  <tr>
-    <td>
-      <p>Blurb:<br/>
-        <%= text_area "event", "blurb" %></p>
-    </td>
-    <td>      
-      <p>Description:<br/>
-        <%= text_area "event", "description" %></p>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <td>
+        <p>Blurb:<br/>
+          <%= text_area "event", "blurb" %></p>
+      </td>
+      <td>      
+        <p>Description:<br/>
+          <%= text_area "event", "description" %></p>
+      </td>
+    </tr>
+  </table>
+</div>
       
-<h2>Permissions</h2>
+<div id="regoptions">
+  <h2>Registration Options</h2>
 
-<table>
-  <tr>
-    <td><%= check_box_tag "registration_open", "open", @registration_open %></td>
-    <td>Event registration is open</td>
-  </tr>
-  <tr>
-  	<td><%= check_box "event", "attendees_visible" %></td>
-	<td>People attending this event can see the attendee list</td>
-  </tr>
-  <tr>
-    <td><%= check_box_tag "non_exclusive", "nonexclusive", @non_exclusive %></td>
-    <td>People can attend this event at the same time as other events</td>
-  </tr>
-  <tr>
-    <td><%= check_box_tag "age_restricted", "agerestricted", @age_restricted %></td>
-    <td>This event has a minimum age of <%= text_field_tag "min_age", @min_age %></td>
-  </tr>
-  <tr>
-    <td><%= check_box_tag "limited_capacity", "limited", @limited_capacity,
-            :onChange => "updateCapacityLimitsVisibility();"%></td>
-    <td>Limited capacity</td>
-  </tr>
-  <tr id="capacity_limits">
-    <td></td>
-    <td>
-      <table>
-        <% %w( male female neutral ).each do |gender| -%>
-          <tr>
-            <td><b><%= gender %></b></td>
-            <% %w( min preferred max ).each do |threshold| -%>
-              <td><%= threshold.humanize %>: <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold] %></td>
-            <% end -%>
-          </tr>
-        <% end %>
-      </table>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <td><%= check_box_tag "registration_open", "open", @registration_open %></td>
+      <td>Event registration is open</td>
+    </tr>
+    <tr>
+    	<td><%= check_box "event", "attendees_visible" %></td>
+  	<td>People attending this event can see the attendee list</td>
+    </tr>
+    <tr>
+      <td><%= check_box_tag "non_exclusive", "nonexclusive", @non_exclusive %></td>
+      <td>People can attend this event at the same time as other events</td>
+    </tr>
+    <tr>
+      <td><%= check_box_tag "age_restricted", "agerestricted", @age_restricted %></td>
+      <td>This event has a minimum age of <%= text_field_tag "min_age", @min_age %></td>
+    </tr>
+    <tr>
+      <td><%= check_box_tag "limited_capacity", "limited", @limited_capacity,
+              :onChange => "updateCapacityLimitsVisibility();"%></td>
+      <td>Limited capacity</td>
+    </tr>
+    <tr id="capacity_limits">
+      <td></td>
+      <td>
+        <table>
+          <% %w( male female neutral ).each do |gender| -%>
+            <tr>
+              <td><b><%= gender %></b></td>
+              <% %w( min preferred max ).each do |threshold| -%>
+                <td><%= threshold.humanize %>: <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold] %></td>
+              <% end -%>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
 
-<h2>Virtual Sites</h2>
+<div id="virtualsites">
+  <h2>Virtual Sites</h2>
 
-<%= render :partial => "virtual_sites_form" %>
+  <%= render :partial => "virtual_sites_form" %>
+</div>
 
-<h2>Event Staff</h2>
-<% if @event.staff.length > 0 -%>
-  <ul>
-    <% @event.staff.each do |staff| -%>
-      <li><%= staff.name %> (Remove: <%= check_box_tag "remove_staff[#{staff.id}]" %>)</li>
-    <% end -%>
-  </ul>
-<% else -%>
-  <p>There are currently no staff listed for this event.</p>
-<% end -%>
-<p>Add staff by name: <%= text_field_tag "add_staff[firstname]" %> <%= text_field_tag "add_staff[lastname]" %></p>
-
+<div id="staff">
+  <h2>Event Staff</h2>
+  <% if @event.staff.length > 0 -%>
+    <ul>
+      <% @event.staff.each do |staff| -%>
+        <li><%= staff.name %> (Remove: <%= check_box_tag "remove_staff[#{staff.id}]" %>)</li>
+      <% end -%>
+    </ul>
+  <% else -%>
+    <p>There are currently no staff listed for this event.</p>
+  <% end -%>
+  <p>Add staff by name: <%= text_field_tag "add_staff[firstname]" %> <%= text_field_tag "add_staff[lastname]" %></p>
+</div>
 
 
 <%= submit_tag %>
