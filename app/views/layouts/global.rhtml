@@ -12,7 +12,7 @@
   <%= stylesheet_link_tag 'global.css' %>
   <%= ae_form_stylesheet %>
   <%= stylesheet_link_tag "thickbox" %>
-  <%= javascript_include_tag "jquery", "thickbox" %>
+  <%= javascript_include_tag "jquery", "thickbox", "jquery.ui.all.packed.js" %>
   <% if @rss_url %>
     <link rel="alternate" title="RSS Feed" href="<%=@rss_url%>" type="application/rss+xml"/>
   <% end %>
