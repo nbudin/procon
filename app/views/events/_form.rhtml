@@ -8,14 +8,14 @@
 
 <script type="text/javascript">
 function updateCapacityLimitsVisibility() {
-  if ($('limited_capacity').checked) {
-    $('capacity_limits').show();
+  if ($('#limited_capacity').attr("checked")) {
+    $('#capacity_limits').show();
   } else {
-    $('capacity_limits').hide();
+    $('#capacity_limits').hide();
   }
 }
 
-Event.observe(window, 'load', updateCapacityLimitsVisibility);
+$(document).ready(updateCapacityLimitsVisibility);
 </script>
 
 <div id="locations">

@@ -15,11 +15,11 @@ class ApplicationController < ActionController::Base
     if @virtual_site.site_template.nil?
       @virtual_site.build_site_template
     end
+    @hide_chrome = false
     if params[:site_template]
       if params[:site_template] == 'none'
         @site_template = SiteTemplate.new
-        @site_template.header = " "
-        @site_template.footer = " "
+        @hide_chrome = true
       else
         @site_template = SiteTemplate.find params[:site_template]
       end

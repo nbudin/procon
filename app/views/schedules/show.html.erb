@@ -38,13 +38,6 @@ div.waitlist {
   border-style: dashed;
 }
 </style>
-<script type="text/javascript" src="/javascripts/scriptaculous.js?load=effects"></script>
-<%= javascript_include_tag "jquery" %>
-<script type="text/javascript">
-jQuery.noConflict();
-</script>
-<%= javascript_include_tag "thickbox" %>
-<%= stylesheet_link_tag "thickbox" %>
 
 <% if @events.size == 0 -%>
   <p>There are no events on this schedule.</p>

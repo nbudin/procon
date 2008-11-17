@@ -86,12 +86,22 @@ class Event < ActiveRecord::Base
   
   def shortname
     sn = read_attribute(:shortname)
-    if sn and sn != ''
+    if not sn.blank?
       return sn
     else
       return fullname
     end
   end
+  
+  def fullname
+    fn = read_attribute(:fullname)
+    if fn.blank?
+      return "Untitled Event"
+    else
+      return fn
+    end
+  end
+      
   
   def globally_visible?
     return parent.nil?

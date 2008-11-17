@@ -50,6 +50,7 @@ Rails::Initializer.run do |config|
 end
 
 AeUsers.profile_class = ProconProfile
+AeUsers.js_framework = "jquery"
 
 # Add new inflection rules using the following format 
 # (all these examples are active by default):
