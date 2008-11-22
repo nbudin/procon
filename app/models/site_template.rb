@@ -34,14 +34,14 @@ end
 
 class SiteTemplate < ActiveRecord::Base
   has_many :virtual_sites
-  has_many :images, :dependent => :destroy
+  has_many :attached_images, :dependent => :destroy
   acts_as_permissioned
   
   def themeroller_css()
     data = read_attribute(:themeroller_css)
-    #if not data.blank?
-    #  data.gsub!(/url\(/, "url(/stylesheets/")
-    #end
+    if not data.blank?
+      data.gsub!(/url\(images/, "url(attached_images")
+    end
     return data
   end
   
@@ -49,17 +49,17 @@ class SiteTemplate < ActiveRecord::Base
     data = if file.kind_of?(String)
       file
     elsif file.original_filename =~ /.zip$/i
-      images.clear
       tf = Tempfile.new(file.original_filename)
       logger.debug "Using tempfile #{tf.path}"
       #copy data into tempfile because rubyzip is braindead about this
       tf.write(file.read)
       tf.flush
       css = ""
+      attached_images.clear
       Zip::ZipFile.open(tf.path) do |zipfile|
         zipfile.each do |entry|
           if entry.name =~ /images\/.*(png|gif|jpg|jpeg)$/i
-            i = images.create
+            i = attached_images.create
             img = i.image
             img.assign(ZipFileEntryReader.new(entry, zipfile))
             if not img.valid?

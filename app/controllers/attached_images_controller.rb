@@ -1,8 +1,8 @@
-class ImagesController < ApplicationController
+class AttachedImagesController < ApplicationController
   def show
     filename = "#{params[:id]}.#{params[:format]}"
     @site_template = SiteTemplate.find(params[:site_template_id])
-    @image = @site_template.images.find_by_image_file_name(filename)
+    @image = @site_template.attached_images.find_by_image_file_name(filename)
     if @image
       redirect_to @image.image.url, :status => :moved_permanently
     else

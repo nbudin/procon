@@ -9,7 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 42) do
+ActiveRecord::Schema.define(:version => 43) do
+
+  create_table "attached_images", :force => true do |t|
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_created_at"
+    t.datetime "image_updated_at"
+    t.integer  "site_template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "attendances", :force => true do |t|
     t.integer  "event_id"
