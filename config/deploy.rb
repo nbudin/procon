@@ -61,10 +61,11 @@ namespace :deploy do
     run "touch #{current_path}/tmp/restart.txt"
   end
   
-  desc "Link in database config"
+  desc "Link in database config and attachments"
   task :after_update_code do
     run "rm -f #{release_path}/config/database.yml"
     run "ln -nfs #{deploy_to}/#{shared_dir}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{deploy_to}/#{shared_dir}/attached_images #{release_path}/public/attached_images"
   end
 end
   
