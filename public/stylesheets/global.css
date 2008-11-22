@@ -4,14 +4,14 @@ body {
 	height: 100%;
 }
 
-div#topbar {
+/*div#topbar {
     background-color: #006;
     color: #fff;
 }
 
 div#topbar a {
     color: #fcc;
-}
+}*/
 
 div#topbar ul.nav_links {
     padding: 0;
@@ -19,15 +19,15 @@ div#topbar ul.nav_links {
 }
 
 div#topbar ul.nav_links li {
-    background-color: #fff;
+/*    background-color: #fff;*/
     display: inline;
     padding: 3px;
     margin: 3px;
 }
 
-div#topbar ul.nav_links li a {
+/*div#topbar ul.nav_links li a {
     color: #000;
-}
+}*/
 
 label.required {
     font-weight: bold;

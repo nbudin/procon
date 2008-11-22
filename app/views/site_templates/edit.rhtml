@@ -4,7 +4,7 @@
 
 <%= render :partial => "preview", :locals => { :site_template => @the_template } %>
 
-<% form_for(:the_template, :url => site_template_path(@the_template), :html => { :method => :put }) do |f| %>
+<% form_for(:the_template, :url => site_template_path(@the_template), :html => { :multipart => true, :method => :put }) do |f| %>
 <%= render :partial => "form", :locals => { :f => f } %>
 <% end %>
 

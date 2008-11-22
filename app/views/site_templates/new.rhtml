@@ -2,7 +2,7 @@
 
 <%= error_messages_for :the_template %>
 
-<% form_for(:the_template, :url => site_templates_path) do |f| %>
+<% form_for(:the_template, :url => site_templates_path, :html => { :multipart => true }) do |f| %>
   <%= render :partial => "form", :locals => { :f => f } %>
 <% end %>
 

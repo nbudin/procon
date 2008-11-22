@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 41) do
+ActiveRecord::Schema.define(:version => 42) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "event_id"
@@ -188,10 +188,11 @@ ActiveRecord::Schema.define(:version => 41) do
   end
 
   create_table "site_templates", :force => true do |t|
-    t.string "name",   :null => false
+    t.string "name",            :null => false
     t.text   "css"
     t.text   "header"
     t.text   "footer"
+    t.text   "themeroller_css"
   end
 
   create_table "tracks", :force => true do |t|

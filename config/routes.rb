@@ -20,7 +20,9 @@ ActionController::Routing::Routes.draw do |map|
     events.resources :attendances
   end
   
-  map.resources :site_templates
+  map.resources :site_templates, :member => {:themeroller => :get} do |site_templates|
+    site_templates.resources :images
+  end
 
   # site contexts - so we know what our local event parent is
   map.connect 'c/:context', :controller => "main"

@@ -17,21 +17,34 @@
     <link rel="alternate" title="RSS Feed" href="<%=@rss_url%>" type="application/rss+xml"/>
   <% end %>
    
-  <% if @site_template.css -%>
+  <% if not @site_template.themeroller_css.blank? -%>
+    <%= stylesheet_link_tag "#{site_template_url(@site_template)}/themeroller.css" %>
+  <% else -%>
+    <%= stylesheet_link_tag 'themeroller-default.css' %>
+  <% end -%>
+  <% if not @site_template.css.blank? -%>
   <style type="text/css">
     <%= @site_template.css %>
   </style>
   <% end -%>
   <title><%= page_title %></title>
+  <script type="text/javascript">
+  $(document).ready(function () {
+    $('.ui-default-state').hover(
+       function(){$(this).addClass('ui-hover-state');}, 
+       function(){$(this).removeClass('ui-hover-state');}
+    );
+  });
+  </script>
 </head>
 <body id="body">
 
-<% if @site_template.header and @site_template.header.length > 0 -%>
+<% if not @site_template.header.blank? -%>
   <%= @site_template.header %>
 <% end -%>
 
 <% if not @hide_chrome -%>
-  <div id="topbar">
+  <div id="topbar" class="ui-active-state">
     <table style="width: 100%">
       <tr>
         <td>
@@ -42,15 +55,15 @@
               </i></p>
           <% end -%>
           <ul class="nav_links">
-            <li><%= link_to "Home", :controller => :main, :action => :index %></li>
-            <li><%= link_to "My Events", :controller => :agenda, :action => :index %></li>
+            <li class="ui-default-state"><%= link_to "Home", :controller => :main, :action => :index %></li>
+            <li class="ui-default-state"><%= link_to "My Events", :controller => :agenda, :action => :index %></li>
             <% if @context and @context.schedules.size == 1 -%>
-              <li><%= link_to "Event Schedule", schedule_path(@context.schedules[0]) %></li>
+              <li class="ui-default-state"><%= link_to "Event Schedule", schedule_path(@context.schedules[0]) %></li>
             <% else -%>
-              <li><%= link_to "Event Schedules", schedules_path %></li>
+              <li class="ui-default-state"><%= link_to "Event Schedules", schedules_path %></li>
             <% end -%>
             <% if logged_in_person_can_edit?(@context) -%>
-              <li><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
+              <li class="ui-default-state"><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
                 <span id="admin_open" style="display: none;">
                   <a href="#" onClick="$('#admin_open').hide(); $('#admin_closed').show();" id="admin_closed">&laquo;</a>
                   <%= link_to "Events", events_path %>
@@ -84,7 +97,7 @@
   <%= @content_for_layout %>
 </div>
 
-<% if @site_template.footer and @site_template.footer.length > 0 -%>
+<% if not @site_template.footer.blank? -%>
   <%= @site_template.footer %>
 <% end -%>
 

@@ -79,4 +79,12 @@ class SiteTemplatesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def themeroller
+    @the_template = SiteTemplate.find(params[:id])
+    
+    respond_to do |format|
+      format.css { render :text => @the_template.themeroller_css }
+    end
+  end
 end
