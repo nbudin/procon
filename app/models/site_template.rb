@@ -1,3 +1,4 @@
+gem 'rubyzip'
 require 'zip/zipfilesystem'
 
 class ZipFileEntryReader
