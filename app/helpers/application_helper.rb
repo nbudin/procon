@@ -25,6 +25,10 @@ module ApplicationHelper
     end
   end
   
+  def thickbox_params
+    '?site_template=none&TB_iframe=true&KeepThis=true&height=400&width=500'
+  end
+  
   def signup_link(event)
     if not logged_in?
       return ''
@@ -32,10 +36,13 @@ module ApplicationHelper
     att = logged_in_person.app_profile.attendance_for_event(event)
     output = ""
     if not logged_in_person.app_profile.events.include? event
-      if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender))
-        output += "[#{ link_to "Sign up", signup_url(event) }]"
-      else
-        output += "[#{ link_to "Waitlist", :controller => :signup, :action => 'signup_for_waitlist', :event => event.id }]"
+      if event.registration_open
+        caption = if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender))
+          "Sign up"
+        else
+          "Waitlist"
+        end
+        output += "[#{ link_to caption, signup_url(event) + thickbox_params + '&modal=true', :class => 'thickbox' }]"
       end
     else
       link_caption = "Drop out"
@@ -49,7 +56,7 @@ module ApplicationHelper
         confirm_msg += "you will lose your place in line."
         link_caption = "Drop from waitlist"
       else
-        confirm_msg = "Are you sure you want to drop out of this event?"
+        confirm_msg = "Are you sure you want to drop out of #{event.shortname}?"
       end
       output += "[#{ link_to link_caption, url_for(:controller => 'signup', :action => 'dropout', :event => event),
                       :confirm => confirm_msg}]"

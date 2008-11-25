@@ -5,27 +5,33 @@ class SignupController < ApplicationController
   end
   
   def signup
+    @hide_chrome = true
     @person = logged_in_person
     @event = Event.find params[:event]
-    att = Attendance.new :person => @person, :event => @event, :is_waitlist => false, :counts => true
-    begin
-      att.save!
-    rescue StandardError => err
-      flash[:error_messages] = "You can't sign up for that event.  Reason: \"#{err}\""
+    is_waitlist = (@event.kind_of?(LimitedCapacityEvent) and @event.full_for_gender?(@person.gender))
+    
+    proceed = false
+    if (not @event.attendees_visible) or (not params[:acknowledge_attendees_visible].blank?)
+      proceed = true
+      @event.public_info_fields.each do |field|
+        if params[:public_info_field][field.id.to_s].blank?
+          proceed = false
+        end
+      end
     end
-    redirect_to request.env['HTTP_REFERER']
-  end
-  
-  def signup_for_waitlist
-    @person = logged_in_person
-    @event = Event.find params[:event]
-    att = Attendance.create :person => @person, :event => @event, :is_waitlist => true, :counts => false
-    begin
-      att.save!
-    rescue StandardError => err
-      flash[:error_messages] = "You can't sign up for that event.  Reason: \"#{err}\""
+
+    if proceed
+      @att = Attendance.new :person => @person, :event => @event, :is_waitlist => is_waitlist, :counts => true
+      begin
+        @att.save!
+        @event.public_info_fields.each do |field|
+          piv = @att.public_info_values.new :public_info_field => field, :value => params[:public_info_field][field.id.to_s]
+          piv.save!
+        end
+      rescue StandardError => err
+        flash[:error_messages] = "You can't sign up for that event.  Reason: \"#{err}\""
+      end
     end
-    redirect_to request.env['HTTP_REFERER']
   end
   
   def dropout

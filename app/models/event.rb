@@ -49,6 +49,9 @@ class Event < ActiveRecord::Base
   has_and_belongs_to_many :schedule_blocks
   has_many :scheduled_event_positions
   after_save :invalidate_blocks
+  
+  has_many :public_info_fields, :dependent => :destroy
+  has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
     
   acts_as_tree :order => "start"
   
@@ -237,5 +240,17 @@ class Event < ActiveRecord::Base
         Attendance.create :person => person, :event => self
       end
     end
+  end
+  
+  def registration_open
+    not obtain_registration_policy.contains_rule_type? ClosedEventRule
+  end
+  
+  def non_exclusive
+    not obtain_registration_policy.contains_rule_type? ExclusiveEventRule
+  end
+  
+  def age_restricted
+    obtain_registration_policy.contains_rule_type? AgeRestrictionRule
   end
 end

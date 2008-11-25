@@ -3,6 +3,8 @@ class Attendance < ActiveRecord::Base
   belongs_to :event
   acts_as_paranoid
   
+  has_many :public_info_values
+  
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."
   after_destroy :pull_from_waitlist
   
@@ -36,5 +38,9 @@ class Attendance < ActiveRecord::Base
   
   def age
     person.age_as_of event.start
+  end
+  
+  def value_for_public_info_field(field)
+    public_info_values.find_by_public_info_field_id(field.id)
   end
 end

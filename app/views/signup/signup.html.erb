@@ -1,0 +1,38 @@
+<% if @att -%>
+  <% if @att.is_waitlist -%>
+    <p>You are now #<%= @event.waitlist_number(@person) %> in the waitlist for <%= @event.fullname %>.</p>
+  <% else -%>
+    <p>Congratulations!  You are now signed up for <%= @event.fullname %>.</p>
+  <% end -%>
+  
+  <%= button_to_function " OK ", "self.parent.window.location.reload();" %>
+<% else -%>
+  <% form_tag({ :controller => 'signup', :action => 'signup', :event => @event.id }) do -%>
+    <% if @event.public_info_fields.length > 0 -%>
+      <p>Please fill out the following information to sign up for this event:</p>
+      <table>
+        <% @event.public_info_fields.each do |field| -%>
+          <tr>
+            <td><%=h field.name %></td>
+            <td>
+              <% existing = if params[:public_info_field]
+                params[:public_info_field][field.id.to_s]
+              else
+                ""
+              end -%>
+              <%= text_field_tag "public_info_field[#{field.id}]", existing %>
+            </td>
+          </tr>
+        <% end -%>
+      </table>
+    <% end -%>
+    <% if @event.attendees_visible -%>    
+      <p><%= check_box_tag 'acknowledge_attendees_visible' %> By checking this checkbox, I agree to have my name 
+        made visible on this web site.  <strong>This is mandatory in order to sign up for 
+        <%= @event.fullname %>.</strong></p>
+    <% end -%>
+    <p><%= submit_tag " Continue " %> <%= button_to_function " Cancel ", "self.parent.tb_remove();" %></p>
+  <% end -%>
+<% end -%>
+
+    

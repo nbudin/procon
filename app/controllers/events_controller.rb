@@ -32,10 +32,12 @@ class EventsController < ApplicationController
   
   def show
     @event = Event.find params[:id]
+    @public_info_fields = @event.public_info_fields
   end
   
   def show_description
     @event = Event.find params[:id]
+    @public_info_fields = @event.public_info_fields
     @noninteractive = true
     render :action => "show"
   end
@@ -105,6 +107,21 @@ class EventsController < ApplicationController
       end
     end
     
+    if not params[:add_public_info_field].blank?
+      pif = @event.public_info_fields.new :name => params[:add_public_info_field]
+      if not pif.save
+        flash[:error_messages].push("Couldn't create new PublicInfoField: #{pif.errors.full_messages.join(", ")}")
+      end
+    end
+    
+    if params[:delete_public_info_field]
+      params[:delete_public_info_field].each_key do |pif_id|
+        if params[:delete_public_info_field][pif_id]
+          @event.public_info_fields.find(pif_id.to_i).destroy
+        end
+      end
+    end
+    
     if params[:add_virtual_site][:domain].length > 0
       site_template_id = params[:add_virtual_site][:site_template]
       if site_template_id and site_template_id != ''
@@ -119,7 +136,7 @@ class EventsController < ApplicationController
     if params[:delete_virtual_site]
       params[:delete_virtual_site].each_key do |vs_id|
         if params[:delete_virtual_site][vs_id]
-          VirtualSite.find(vs_id.to_i).destroy
+          @event.virtual_sites.find(vs_id.to_i).destroy
         end
       end
     end

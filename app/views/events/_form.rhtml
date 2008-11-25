@@ -4,6 +4,7 @@
     <li><a href="#locations"><span>Locations</span></a></li>
     <li><a href="#descriptionblurb"><span>Description/Blurb</span></a></li>
     <li><a href="#regoptions"><span>Registration Options</span></a></li>
+    <li><a href="#publicinfo"><span>Public Signup Info</span></a></li>
     <li><a href="#virtualsites"><span>Virtual Sites</span></a></li>
     <li><a href="#staff"><span>Staff</span></a></li>
   </ul>
@@ -36,14 +37,9 @@
       <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
     <% else -%>
       none
-    <% end -%>
+    <% end -%></p>
 
-    (<%= link_to_function "Edit" do |page|
-        page.hide "location_summary"
-        page.show "event_locations"
-      end %>)</p>
-
-    <select id="event_locations" style="display: none;" multiple="multiple" name="event[locations][]">
+    <select id="event_locations" multiple="multiple" name="event[locations][]">
     	<%= location_options @event.locations %>
     </select>
   </div>
@@ -74,10 +70,6 @@
         <td>Event registration is open</td>
       </tr>
       <tr>
-      	<td><%= check_box "event", "attendees_visible" %></td>
-    	<td>People attending this event can see the attendee list</td>
-      </tr>
-      <tr>
         <td><%= check_box_tag "non_exclusive", "nonexclusive", @non_exclusive %></td>
         <td>People can attend this event at the same time as other events</td>
       </tr>
@@ -106,6 +98,17 @@
         </td>
       </tr>
     </table>
+  </div>
+  
+  <div id="publicinfo">
+    <h2>Public Signup Information</h2>
+    
+    <p><%= check_box "event", "attendees_visible" %> Make attendees' names publicly visible</p>
+    
+    <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process. 
+      The answers to these questions will be publicly shown next to the attendee's name.</i></p>
+    
+    <%= render :partial => "public_info_form" %>
   </div>
 
   <div id="virtualsites">

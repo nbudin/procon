@@ -1,0 +1,19 @@
+<table>
+  <tr>
+    <th></th>
+    <th>Question</th>
+    <th>Delete?</th>
+  </tr>
+  <% @event.public_info_fields.each do |pif| -%>
+    <tr>
+      <td></td>
+      <td><%=h pif.name %></td>
+      <td><%= check_box_tag "delete_public_info_field[#{pif.id}]" %></td>
+    </tr>
+  <% end -%>
+  <tr>
+    <td>Add new question:</td>
+    <td><%= text_field_tag "add_public_info_field" %></td>
+    <td></td>
+  </tr>
+</table>

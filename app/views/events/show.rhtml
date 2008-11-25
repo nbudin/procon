@@ -67,21 +67,38 @@
 	    <%= open_slot_count(@event) %>
 	  <% end -%>
 	  <% if @event.has_edit_permissions? logged_in_person -%>
-	  	<% if @noninteractive -%>
-		    <br/>
-		    <br/>
-    		View this event from the "My Events" page to view/edit the attendee list, or to edit the event.
-		<% else -%>
+	  	<% if not @noninteractive -%>
 		    <br/>
 		    <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
 		    <% if @event.children.count > 0 -%>
 		      <br/><%= link_to "Pull attendees from children", :controller => "events", :action => "pull_from_children", :id => @event.id %>
 		    <% end -%>
+		  <% end -%>
 		<% end -%>
-	  <% elsif logged_in? and @event.attendees_visible_to?(logged_in_person) and not @noninteractive -%>
-	  	<br/><%= link_to "View attendee list", event_attendances_url(@event) %>
-	  <% end -%>
 	</p>
+	<% if @event.attendees_visible -%>
+	  <table>
+	    <tr>
+	      <th>Name</th>
+	      <% @public_info_fields.each do |pif| -%>
+	        <th><%=h pif.name%></th>
+	      <% end -%>
+	    </tr>
+	    <% @event.attendances.each do |att| -%>
+	      <tr>
+  	      <td><%= att.person.name %></td>
+  	      <% @public_info_fields.each do |pif| -%>
+  	        <td>
+  	          <% piv = att.public_info_values.find_by_public_info_field_id(pif.id) -%>
+  	          <% if piv -%>
+  	            <%=h piv.value %>
+  	          <% end -%>
+  	        </td>
+  	      <% end -%>
+  	    </tr>
+	    <% end -%>
+	  </table>
+	<% end -%>
 </div>
   
   

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 43) do
+ActiveRecord::Schema.define(:version => 45) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -137,6 +137,26 @@ ActiveRecord::Schema.define(:version => 43) do
     t.string  "phone"
     t.string  "best_call_time"
   end
+
+  create_table "public_info_fields", :force => true do |t|
+    t.string   "name"
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "public_info_fields", ["event_id"], :name => "index_public_info_fields_on_event_id"
+
+  create_table "public_info_values", :force => true do |t|
+    t.integer  "public_info_field_id"
+    t.integer  "attendance_id"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "public_info_values", ["public_info_field_id"], :name => "index_public_info_values_on_public_info_field_id"
+  add_index "public_info_values", ["attendance_id"], :name => "index_public_info_values_on_attendance_id"
 
   create_table "registration_buckets", :force => true do |t|
     t.integer "event_id",  :null => false

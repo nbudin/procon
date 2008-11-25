@@ -52,8 +52,8 @@ module SchedulesHelper
             height: #{position.height}%;
             background-color: #{ position.color };"
      class="event #{ att ? 'signedup' : '' } #{ att and att.is_waitlist ? 'waitlist' : '' }">
-  #{ link_to event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + 
-     '?site_template=none&TB_iframe=true&KeepThis=true&height=400&width=500', :class => 'thickbox', :style => 'font-weight: bold;' }
+  #{ link_to event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
+    :class => 'thickbox', :style => 'font-weight: bold;' }
 ENDHTML
     if logged_in?
       output += "<br/><br/>\n"
