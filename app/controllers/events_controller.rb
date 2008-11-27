@@ -67,7 +67,7 @@ class EventsController < ApplicationController
     
     flash[:error_messages] ||= []
     
-    locs = params[:event][:locations] || []
+    locs = params[:locations] || []
     @event.event_locations.each do |booking|
       if not locs.include? booking.location.id
         booking.destroy
