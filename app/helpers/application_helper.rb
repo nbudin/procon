@@ -17,6 +17,13 @@ module ApplicationHelper
     return "#{pluralize days.round, "days"}"
   end
   
+  def event_locations(event)
+    locs = event.locations
+    redundant = locs.select { |l| locs.include? l.parent }
+    locs -= redundant
+    return h(locs.collect { |l| l.name }.join(", "))
+  end
+  
   def signup_url(event)
     if logged_in?
       url_for :controller => :signup, :action => :signup, :event => event
