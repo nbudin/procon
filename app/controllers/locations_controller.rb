@@ -49,7 +49,7 @@ class LocationsController < ApplicationController
         format.js do
           render :update do |page|
             addid = "add_location_" + (@loc.parent ? @loc.parent.id.to_s : "root")
-            page.insert_html(:before, addid, :partial => "location", :locals => { :loc => @loc, :locs => [] })
+            page.insert_html(:before, addid, :partial => "location", :locals => { :loc => @loc })
             page << "makeCollapsibleById('child_locations_#{@loc.id}');"
             page << "$('\##{addid}').val('');"
           end

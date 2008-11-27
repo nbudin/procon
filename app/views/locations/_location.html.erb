@@ -2,6 +2,6 @@
   <%= link_to_remote image_tag("delete.png", :border => "0"), :url => formatted_location_path(loc, "js"), :method => "delete", 
     :confirm => "Are you sure you want to delete the location #{loc.name}?  #{pluralize(loc.events.count, "event")} currently use this location." %>
   <ul class="loctree" id="child_locations_<%=loc.id%>">
-    <%= render :partial => "locations/tree", :locals => { :locs => locs, :roots => loc.children, :parent => loc } %>
+    <%= render :partial => "locations/tree", :locals => { :roots => loc.children, :parent => loc } %>
   </ul>
 </li>

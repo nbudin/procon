@@ -2,15 +2,11 @@
   # if roots does not exist or is nil, we'll create it
   roots.length
 rescue
-  roots = locs.select { |loc| @context ? loc.events.include?(@context) : loc.parent.nil? }
+  roots = Location.find(:all).select { |loc| @context ? loc.events.include?(@context) : loc.parent.nil? }
 end -%>
 <% parent ||= nil -%>
-<% if locs.length > 0 -%>
-  <% roots.each do |loc| -%>
-    <% if locs.include? loc -%>
-      <%= render :partial => "location", :locals => { :loc => loc, :locs => locs } %>
-    <% end -%>
-  <% end -%>
+<% roots.each do |loc| -%>
+  <%= render :partial => "location", :locals => { :loc => loc } %>
 <% end -%>
 
 <li class="addnew" id="add_location_<%= parent ? parent.id : "root" %>">
