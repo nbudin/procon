@@ -1,0 +1,71 @@
+<h1>Listing locations</h1>
+
+<style type="text/css">
+ul.loctree {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.loctree li {
+    background-image: url(/images/building.png);
+    background-position: 0 0px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    min-height: 16px;
+}
+li.folder {
+    background-image: url(/images/building.png);
+}
+li.addnew {
+  background-image: url(/images/building_add.png);
+}
+
+.loctree a {
+    color: #000000;
+    cursor: pointer;
+    text-decoration: none;
+}
+.loctree a:hover {
+    text-decoration: underline;
+}
+
+</style>
+
+<ul class="loctree" id="locations_root">
+  <%= render :partial => "tree", :locals => { :locs => @locs } %>
+</ul>
+
+<script type="text/javascript">
+function makeCollapsible(i) {
+    // Find this list's parent list item.
+    var parent_li = $(this).parent('li');
+
+    // Style the list item as folder.
+    parent_li.addClass('folder');
+
+    // Temporarily remove the list from the
+    // parent list item, wrap the remaining
+    // text in an anchor, then reattach it.
+    var sub_ul = $(this).remove();
+    parent_li.wrapInner('<a/>').find('a').click(function() {
+        // Make the anchor toggle the leaf display.
+        sub_ul.toggle();
+    });
+    parent_li.append(sub_ul);
+}
+
+function makeCollapsibleById(id) {
+  $('#' + id).each(makeCollapsible);
+}
+
+$(function() {
+  // Find list items representing folders and
+  // style them accordingly.  Also, turn them
+  // into links that can expand/collapse the
+  // tree leaf.
+  $('li > ul').each(makeCollapsible);
+
+  // Hide all lists except the outermost.
+  $('ul ul').hide();
+});
+</script>
