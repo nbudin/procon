@@ -18,9 +18,7 @@ module ApplicationHelper
   end
   
   def event_locations(event)
-    locs = event.locations
-    redundant = locs.select { |l| locs.include? l.parent }
-    locs -= redundant
+    locs = Location.roots(event.locations)
     return h(locs.collect { |l| l.name }.join(", "))
   end
   

@@ -2,7 +2,11 @@
   # if roots does not exist or is nil, we'll create it
   roots.length
 rescue
-  roots = Location.find(:all).select { |loc| @context ? loc.events.include?(@context) : loc.parent.nil? }
+  if @context
+    roots = Location.roots(@context.locations)
+  else
+    roots = Location.find_all_by_parent_id(nil)
+  end
 end -%>
 <% parent ||= nil -%>
 <% roots.each do |loc| -%>
