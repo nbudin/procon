@@ -199,9 +199,10 @@ class EventsController < ApplicationController
     end
     
     if @event.update_attributes(params[:event]) and flash[:error_messages].length == 0
-      redirect_to(event_url(@event))
+       redirect_to(event_url(@event))
     else
-      redirect_to(edit_event_url(@event))
+       flash[:error_messages] += @event.errors.full_messages
+       redirect_to(edit_event_url(@event))
     end
   end
   

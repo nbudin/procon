@@ -50,6 +50,13 @@ class Event < ActiveRecord::Base
   has_many :scheduled_event_positions
   after_save :invalidate_blocks
   
+  # possibly replace this with a confirmation check later
+  validate do |e|
+    if e.length > 2.weeks
+      e.errors.add_to_base "Events cannot be longer than 2 weeks"
+    end
+  end
+  
   has_many :public_info_fields, :dependent => :destroy
   has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
     
