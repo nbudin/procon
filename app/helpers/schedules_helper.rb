@@ -3,20 +3,20 @@ module SchedulesHelper
     colsize = 90.0 / usetracks.size
     output = ""
     if usetracks.size > 1
-      output += "<table class=\"scheduleheader\">\n"
-      output += "  <tr>\n"
-      output += "    <th style=\"width: 10%;\"></th>\n"
+      output << "<table class=\"scheduleheader\">\n"
+      output << "  <tr>\n"
+      output << "    <th style=\"width: 10%;\"></th>\n"
       usetracks.each do |track|
-        output += "    <th style=\"width: #{colsize}%;"
+        output << "    <th style=\"width: #{colsize}%;"
         if track.color
           output += " background-color: #{track.color};"
         end
-        output += "\">\n"
-        output += h(track.name)
-        output += "    </th>\n"
+        output << "\">\n"
+        output << h(track.name)
+        output << "    </th>\n"
       end
-      output += "  </tr>\n"
-      output += "</table>"
+      output << "  </tr>\n"
+      output << "</table>"
     end
     return output
   end
@@ -27,18 +27,18 @@ module SchedulesHelper
     output = "<table class=\"schedulebody\">\n"
     rownum = 0
     while now < block.end
-      output += "  <tr style=\"height: 20px;\">\n"
-      output += "    <td style=\"width: 10%; border-right: 1px dotted #aaa;\">\n"
+      output << "  <tr style=\"height: 20px;\">\n"
+      output << "    <td style=\"width: 10%; border-right: 1px dotted #aaa;\">\n"
 			if rownum % 2 == 0
-        output += "      #{now.strftime("%I:%M %p")}\n"
+        output << "      #{now.strftime("%I:%M %p")}\n"
 			end
-			output += "    </td>\n"
-			output == "    <td style=\"width: 90%;\">&nbsp;</td>\n"
-    	output += "  </tr>\n"
+			output << "    </td>\n"
+			output << "    <td style=\"width: 90%;\">&nbsp;</td>\n"
+    	output << "  </tr>\n"
     	now += interval
     	rownum += 1
     end
-    output += "</table>"
+    output << "</table>"
     return output
   end
   
@@ -56,20 +56,20 @@ module SchedulesHelper
     :class => 'thickbox', :style => 'font-weight: bold;' }
 ENDHTML
     if logged_in?
-      output += "<br/><br/>\n"
-      output += signup_link(event)
+      output << "<br/><br/>\n"
+      output << signup_link(event)
     end
     if event.kind_of? LimitedCapacityEvent
-      output += "<br/>\n"
-      output += registration_count(event)
+      output << "<br/>\n"
+      output << registration_count(event)
     end
     if event.locations.size > 0
-			output += "<br/><br/>\n"
-			output += "<i>"
-			output += event.locations.collect { |l| h(l.name) }.join(", ")
-			output += "</i>\n"
+			output << "<br/><br/>\n"
+			output << "<i>"
+			output << event.locations.collect { |l| h(l.name) }.join(", ")
+			output << "</i>\n"
     end
-    output += "</div>\n"
+    output << "</div>\n"
     return output
   end
   
@@ -77,13 +77,13 @@ ENDHTML
     positions = block.obtain_event_positions
     
     output = "<h2>#{ block.start.strftime("%A, %B %d, %Y") }</h2>\n\n"
-    output += schedule_header(block.obtain_tracks)
-    output += "\n\n<div class=\"schedule\">\n"
-    output += schedule_body_table(block)
+    output << schedule_header(block.obtain_tracks)
+    output << "\n\n<div class=\"schedule\">\n"
+    output << schedule_body_table(block)
     positions.each do |position|
-      output += schedule_event(position)
+      output << schedule_event(position)
     end
-    output += "</div>"
+    output << "</div>"
     return output
   end
 end
