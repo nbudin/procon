@@ -35,11 +35,11 @@ module SchedulesHelper
       end
       output << "\">\n"
 			if rownum % 2 == 0
-        fstr = "%I:%M %p"   
-        if lastday != now.day
-          fstr << " %m/%d/%Y"
-        end
-        output << "      #{now.strftime(fstr)}\n"
+        if lastday == now.day   
+          output << "      #{now.strftime("%I:%M %p")}\n"
+        else
+          output << "      <b>#{now.strftime("%m/%d/%Y")}</b>\n"
+        end        
 			end
 			output << "    </td>\n"
 			output << "    <td style=\"width: 90%;\">&nbsp;</td>\n"
