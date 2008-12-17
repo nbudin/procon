@@ -71,7 +71,6 @@ class ScheduleBlock < ActiveRecord::Base
 
       numcols = usetracks.size
       colsize = ((100.0 - 10.0) / numcols)
-      rowheight = (self.interval / (self.end - self.start)) * 100.0
       now = self.start
         
       while now < self.end
@@ -119,8 +118,8 @@ class ScheduleBlock < ActiveRecord::Base
               eventnum += 1
             end
             
-            trackcount = event.tracks.select do |track|
-              usetracks.include? track
+            trackcount = event.tracks.select do |eventtrack|
+              usetracks.include? eventtrack
             end.size
             
             scheduled_event_positions.create(:event => event,
