@@ -42,7 +42,11 @@ module SchedulesHelper
         end        
 			end
 			output << "    </td>\n"
-			output << "    <td style=\"width: 90%;\">&nbsp;</td>\n"
+			output << "    <td style=\"width: 90%;"
+      if lastday != now.day
+        output << " border-top: 1px dashed #333;"
+      end
+      output << "\">&nbsp;</td>\n"
     	output << "  </tr>\n"
       lastday = now.day
     	now += interval
