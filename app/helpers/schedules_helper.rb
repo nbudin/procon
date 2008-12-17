@@ -34,13 +34,13 @@ module SchedulesHelper
         output << " border-top: 1px dashed #333;"
       end
       output << "\">\n"
-			if rownum % 2 == 0
-        if lastday == now.day   
+			if lastday == now.day   
+        if rownum % 2 == 0
           output << "      #{now.strftime("%I:%M %p")}\n"
-        else
-          output << "      <b>#{now.strftime("%m/%d/%Y")}</b>\n"
-        end        
-			end
+        end
+      else
+        output << "      <b>#{now.strftime("%m/%d/%Y")}</b>\n"
+      end        
 			output << "    </td>\n"
 			output << "    <td style=\"width: 90%;"
       if lastday != now.day
