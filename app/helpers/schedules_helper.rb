@@ -23,18 +23,28 @@ module SchedulesHelper
   
   def schedule_body_table(block)
     now = block.start
+    lastday = now.day
     interval = block.interval
     output = "<table class=\"schedulebody\">\n"
     rownum = 0
     while now < block.end
       output << "  <tr style=\"height: 20px;\">\n"
-      output << "    <td style=\"width: 10%; border-right: 1px dotted #aaa;\">\n"
+      output << "    <td style=\"width: 10%; border-right: 1px dotted #aaa;"
+      if lastday != now.day
+        output << " border-top: 1px dashed #333;"
+      end
+      output << "\">\n"
 			if rownum % 2 == 0
-        output << "      #{now.strftime("%I:%M %p")}\n"
+        fstr = "%I:%M %p"   
+        if lastday != now.day
+          fstr << " %m/%d/%Y"
+        end
+        output << "      #{now.strftime(fstr)}\n"
 			end
 			output << "    </td>\n"
 			output << "    <td style=\"width: 90%;\">&nbsp;</td>\n"
     	output << "  </tr>\n"
+      lastday = now.day
     	now += interval
     	rownum += 1
     end

@@ -24,17 +24,25 @@ class ScheduleBlock < ActiveRecord::Base
     
     if not block.interval
       block.interval = 30.minutes
-      shortest_event_length = block.interval * 4
-      
-      # calculate last event end and which tracks are used in this block
-      block.events.each do |event|
-        if shortest_event_length > event.length and event.length > 0
-          shortest_event_length = event.length
+      if block.events.size > 0
+        shortest_event_length = block.events[0].length
+        
+        # calculate last event end and which tracks are used in this block
+        block.events.each do |event|
+          if shortest_event_length > event.length and event.length > 0
+            shortest_event_length = event.length
+          end
         end
-      end
-  
-      if shortest_event_length < (block.interval * 4)
-        block.interval = shortest_event_length / 4
+    
+        # get more granular if we need to
+        while shortest_event_length < (block.interval * 4) and block.interval > 60 do
+          block.interval /= 2
+        end
+        
+        # get less granular if we need to
+        while shortest_event_length > (block.interval * 8) do
+          block.interval *= 2
+        end
       end
     end
     
