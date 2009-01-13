@@ -1,0 +1,44 @@
+<h1><%= event.fullname %></h1>
+<p style="font-style: italic;">
+	<%= render :partial => "schedulingdetails", :locals => { :event => event } %>
+</p>
+
+<% attendees = event.counted_attendees -%>
+
+<% counter = 1 -%>
+<% attendees.each do |att| -%>
+	<div class="slot">
+		<b><%=counter%>.</b> <%= att.name %>
+	</div>
+	<% counter += 1 -%>
+<% end -%>
+
+<% if event.kind_of?(LimitedCapacityEvent) -%>
+	<% event.attendee_slots.each do |slot| -%>
+		<% if not slot.full? -%>
+			<% (slot.max - slot.count).times do -%>
+				<div class="slot" style="border-bottom: 1px black solid;">
+					<b><%=counter%>.</b>
+					<% if slot.gendered? -%>
+						<i>(<%= slot.gender %>)</i>
+					<% end -%>
+				</div>
+				<% counter += 1 -%>
+			<% end -%>
+		<% end -%>
+	<% end -%>
+<% end -%>
+
+<% attendees = event.waitlist_attendees -%>
+
+<% if attendees.length > 0 -%>
+	<h2>Waitlist</h2>
+	
+	<% counter = 1 -%>
+	<% attendees.each do |att| -%>
+		<div class="slot">
+			<b><%=counter%>.</b> <%= att.name %>
+		</div>
+		<% counter += 1 -%>
+	<% end -%>
+<% end -%>

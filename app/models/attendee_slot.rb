@@ -19,8 +19,12 @@ class AttendeeSlot < ActiveRecord::Base
     event.pull_from_waitlist
   end
   
+  def gendered?
+  	not (gender.nil? or gender == 'neutral')
+  end
+  
   def count
-    if gender.nil? or gender == 'neutral'
+    if not gendered?
       # sum other slots and take what's left
       total = 0
       event.attendee_slots.each do |slot|

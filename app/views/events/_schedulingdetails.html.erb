@@ -1,0 +1,5 @@
+<b>Time:</b> <%= event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
+<b>Length:</b> <%= event_length event %>
+<% if event.locations.size > 0 -%>
+  <br/><b>Location:</b> <%= event_locations event %>
+<% end -%>

@@ -18,11 +18,8 @@
 	<% end -%>
 </div>
 
-<p id="schedulingdetails"><b>Time:</b> <%= @event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
-<b>Length:</b> <%= event_length @event %>
-<% if @event.locations.size > 0 -%>
-  <br/><b>Location:</b> <%= event_locations @event %>
-<% end -%>
+<p id="schedulingdetails">
+  <%= render :partial => "schedulingdetails", :locals => { :event => @event } %>
 </p>
 
 <% if @event.staff.length > 0 -%>
@@ -70,6 +67,8 @@
 	  	<% if not @noninteractive -%>
 		    <br/>
 		    <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
+		    <br/>
+		    <%= link_to "Printable signup sheet", :controller => "events", :action => "signup_sheet", :id => @event.id %>
 		    <% if @event.children.count > 0 -%>
 		      <br/><%= link_to "Pull attendees from children", :controller => "events", :action => "pull_from_children", :id => @event.id %>
 		    <% end -%>

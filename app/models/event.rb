@@ -33,6 +33,9 @@ class Event < ActiveRecord::Base
   has_many :waitlist_attendances, :class_name => "Attendance", :order => "created_at", 
     :conditions => ["is_waitlist = ?", true], :dependent => :destroy
   get_people_method "counted_attendees", ["counts = ?", true]
+  has_many :counted_attendances, :class_name => "Attendance", :order => "created_at", 
+    :conditions => ["counts = ?", true], :dependent => :destroy
+  
     
   has_many :event_locations, :dependent => :destroy
   has_many :locations, :through => :event_locations, :dependent => :destroy
