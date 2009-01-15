@@ -1,32 +1,13 @@
-<html>
-  <head>
-    <title>Signup sheet for <%=h @event.fullname%></title>
-    <style type="text/css">
-    	body {
-    		font-family: sans-serif;
-    	}
-    	
-    	.slot {
-    		width: 45%;
-    		display: inline-block;
-    		line-height: 150%;
-    	}
-    	
-    	.sheet {
-    		page-break-after: always;
-    	}
-    </style>
-  </head>
-  <body>
-  	<div class="sheet">
-	    <%= render :partial => "signup_list", :locals => { :event => @event } %>
-	</div>
-    
+<% if not @exclude_event -%>
+  <div class="sheet">
+	    <%= render :partial => "signup_list", :locals => @options.update({ :event => @event }) %>
+  </div>
+<% end -%>
+
+  <% if @include_children -%>
     <% @event.children.each do |child| -%>
     	<div class="sheet">
-    		<%= render :partial => "signup_list", :locals => { :event => child } %>
+    		<%= render :partial => "signup_list", :locals => @options.update({ :event => child }) %>
     	</div>
     <% end -%>
-    	
-  </body>
-</html>
+  <% end -%>

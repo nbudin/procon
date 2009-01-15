@@ -1,0 +1,12 @@
+<% if event.staff.length > 0 -%>
+	<div id="stafflist">
+	  <h2>Event Staff</h2>
+	  <ul>
+	    <% event.staff.each do |staff| -%>
+	      <li><%= staff.name %></li>
+	    <% end -%>
+	  </ul>
+	</div>
+<% end -%>
+
+

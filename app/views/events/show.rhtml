@@ -22,16 +22,7 @@
   <%= render :partial => "schedulingdetails", :locals => { :event => @event } %>
 </p>
 
-<% if @event.staff.length > 0 -%>
-	<div id="stafflist">
-	  <h2>Event Staff</h2>
-	  <ul>
-	    <% @event.staff.each do |staff| -%>
-	      <li><%= staff.name %></li>
-	    <% end -%>
-	  </ul>
-	</div>
-<% end -%>
+<%= render :partial => "stafflist", :locals => { :event => @event } %>
 
 <% if @event.blurb and @event.blurb.length > 0 -%>
 <div id="blurb">

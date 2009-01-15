@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Signup sheet for <%=h @event.fullname%></title>
+    <style type="text/css">
+    	body {
+    		font-family: sans-serif;
+    	}
+    	
+    	.slot {
+    		width: 45%;
+    		display: inline-block;
+    		line-height: 150%;
+      }
+
+      .empty {
+        border-bottom: 1px black solid;
+      }
+    	
+    	.sheet {
+    		page-break-after: always;
+    	}
+    </style>
+  </head>
+  <body>
+
+    <%= @content_for_layout %>
+
+  </body>
+</html>

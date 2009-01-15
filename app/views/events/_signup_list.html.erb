@@ -1,11 +1,31 @@
 <h1><%= event.fullname %></h1>
-<p style="font-style: italic;">
-	<%= render :partial => "schedulingdetails", :locals => { :event => event } %>
-</p>
+<% if include_scheduling_details -%>
+  <p style="font-style: italic;">
+	  <%= render :partial => "schedulingdetails", :locals => { :event => event } %>
+  </p>
+<% end -%>
+
+<% if include_blurb -%>
+ <% if not event.description.blank? -%>
+    <h2>Description</h2>
+
+    <p><%= event.description %></p>
+  <% elsif not event.blurb.blank? -%>
+    <h2>Blurb</h2>
+
+    <p><%= event.blurb %></p>
+  <% end -%>
+<% end -%>
+
+<% if include_stafflist -%>
+  <%= render :partial => "stafflist", :locals => { :event => event } %>
+<% end -%>
 
 <% attendees = event.counted_attendees -%>
+<% empty_slot_min ||= 6 -%>
 
 <% counter = 1 -%>
+<% empty_slots = 0 -%>
 <% attendees.each do |att| -%>
 	<div class="slot">
 		<b><%=counter%>.</b> <%= att.name %>
@@ -17,21 +37,30 @@
 	<% event.attendee_slots.each do |slot| -%>
 		<% if not slot.full? -%>
 			<% (slot.max - slot.count).times do -%>
-				<div class="slot" style="border-bottom: 1px black solid;">
+				<div class="slot empty">
 					<b><%=counter%>.</b>
 					<% if slot.gendered? -%>
 						<i>(<%= slot.gender %>)</i>
-					<% end -%>
+          <% end -%>
+          <% empty_slots += 1 -%>
 				</div>
 				<% counter += 1 -%>
 			<% end -%>
 		<% end -%>
 	<% end -%>
+<% else -%>
+  <% empty_slot_min.times do -%>
+    <div class="slot empty">
+      <b><%=counter%>.</b>
+      <% counter += 1 -%>
+      <% empty_slots += 1 -%>
+    </div>
+  <% end -%>
 <% end -%>
 
 <% attendees = event.waitlist_attendees -%>
 
-<% if attendees.length > 0 -%>
+<% if attendees.length > 0 or empty_slots < empty_slot_min -%>
 	<h2>Waitlist</h2>
 	
 	<% counter = 1 -%>
@@ -41,4 +70,12 @@
 		</div>
 		<% counter += 1 -%>
 	<% end -%>
+  <% if empty_slots < empty_slot_min -%>
+    <% (empty_slot_min - empty_slots).times do -%>
+      <div class="slot empty">
+        <b><%=counter%>.</b>
+      </div>
+      <% counter += 1 -%>
+    <% end -%>
+  <% end -%>
 <% end -%>

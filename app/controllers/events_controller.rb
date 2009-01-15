@@ -7,7 +7,19 @@ class EventsController < ApplicationController
   
   def signup_sheet
   	@event = Event.find(params[:id])
-  	render :layout => false
+    if request.post?
+      @options = {}
+      @options[:include_scheduling_details] = params[:include_scheduling_details]
+      @options[:include_blurb] = params[:include_blurb]
+      @options[:include_stafflist] = params[:include_stafflist]
+      @options[:empty_slot_min] = params[:empty_slot_min].to_i
+      @include_children = params[:include_children]
+      @exclude_event = params[:exclude_event]
+
+  	  render :layout => "signup_sheet"
+    else
+      render :action => "signup_sheet_form"
+    end
   end
   
   def index

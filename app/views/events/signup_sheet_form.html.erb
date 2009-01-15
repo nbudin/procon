@@ -1,0 +1,24 @@
+<% form_tag({ :action => "signup_sheet", :id => @event.id }) do -%>
+  <h1>Printable signup sheet for <%=h @event.fullname %></h1>
+
+  <p>This will generate a signup sheet you can print out and have at your event.  If you're 
+  generating multiple sheets for child events, they will each print out on a separate page.</p>
+
+  <h3>Options</h3>
+  <p>
+    <% if @event.children.size > 0 -%>
+      <%= check_box_tag "include_children", 1, true %> Also generate signup sheets for child events
+      <br/>
+      &nbsp;&nbsp;&nbsp;
+      <%= check_box_tag "exclude_event", 1, false %> ...but not a signup sheet for the event itself
+      <br/>
+    <% end -%>
+    <%= check_box_tag "include_scheduling_details", 1, true %> Include the event's time and location<br/>
+    <%= check_box_tag "include_stafflist", 1, true %> Include a list of event staff<br/>
+    <%= check_box_tag "include_blurb", 1, true %> Include the event's blurb and/or description<br/>
+    Include at least <%= text_field_tag "empty_slot_min", "6" %> empty slots
+  </p>
+  <p>
+    <%= submit_tag "Go" %>
+  </p>
+<% end -%>
