@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_filter :check_edit_permissions, :only => [:new, :create, :destroy, :edit, :update, :email_list, :signup_sheet, :pull_from_children]
+  before_filter :check_edit_permissions, :except => [:show, :show_description]
   
   def email_list
     @event = Event.find(params[:id])
