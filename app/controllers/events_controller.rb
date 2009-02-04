@@ -24,6 +24,11 @@ class EventsController < ApplicationController
   
   def index
     @events = visible_events
+    
+    respond_to do |format|
+      format.html # index.rhtml
+      format.xml  { render :xml => @events.to_xml }
+    end
   end
   
   def new
