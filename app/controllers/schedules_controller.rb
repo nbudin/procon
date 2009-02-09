@@ -1,14 +1,24 @@
 class SchedulesController < ApplicationController
   before_filter :check_edit_permissions, :except => [:index, :show]
+  before_filter :check_published, :only => [:show]
   
   # GET /schedules
   # GET /schedules.xml
   def index
+    show_unpublished = (logged_in? and logged_in_person.procon_profile.has_edit_permissions?(@context))
     if @context
-      @schedules = @context.schedules
+      if show_unpublished
+        @schedules = @context.schedules
+      else
+        @schedules = @context.schedules.find_by_published(true)
+      end
       @schedule = Schedule.new :event => @context
     else
-      @schedules = Schedule.find(:all)
+      if show_unpublished
+        @schedules = Schedule.find(:all)
+      else
+        @schedules = Schedule.find_all_by_published(true)
+      end
       @schedule = Schedule.new
     end
     
@@ -22,7 +32,6 @@ class SchedulesController < ApplicationController
   # GET /schedules/1.xml
   def show
     @interval = params[:interval] ? params[:interval].to_i : 30.minutes
-    @schedule = Schedule.find(params[:id])
     @events = @schedule.events
     @blocks = @schedule.obtain_blocks
     @blocks.sort! { |a, b| a.start <=> b.start }
@@ -159,6 +168,18 @@ class SchedulesController < ApplicationController
       return
     end
     flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
+    redirect_to schedules_url
+  end
+  
+  def check_published
+    if logged_in? and logged_in_person.procon_profile.has_edit_permissions?(@context)
+      return
+    end
+    @schedule = Schedule.find(params[:id])
+    if @schedule and @schedule.published
+      return
+    end
+    flash[:error_messages] = ["That schedule has not yet been published."]
     redirect_to schedules_url
   end
 end

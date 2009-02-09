@@ -27,6 +27,16 @@ table.events {
 <%= error_messages_for :schedule %>
 
 <% form_for @schedule do |f| -%>
+
+  <h2>Publishing</h2>
+
+  <p>To allow the general public to view this schedule, you must publish it.  You can change the publication status using
+	this menu: <%= f.select "published", [["Publish this schedule", 1], ["Unpublish this schedule", 0]], 
+    { :selected => @schedule.published ? 1 : 0 } %></p>
+	
+  <p><%= submit_tag %></p>
+
+
   <% @schedule.tracks.each do |track| -%>
     <div class="track" style="background-color: <%= track.color ? track.color : "#fff" %>;">
     <h2>Track: <%=h track.name %></h2>

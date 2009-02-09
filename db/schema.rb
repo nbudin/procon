@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 45) do
+ActiveRecord::Schema.define(:version => 46) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(:version => 45) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id"
+    t.boolean  "published"
   end
 
   create_table "site_templates", :force => true do |t|
