@@ -32,6 +32,7 @@ class SchedulesController < ApplicationController
   # GET /schedules/1.xml
   def show
     @interval = params[:interval] ? params[:interval].to_i : 30.minutes
+    @schedule = Schedule.find(params[:id])
     @events = @schedule.events
     @blocks = @schedule.obtain_blocks
     @blocks.sort! { |a, b| a.start <=> b.start }
