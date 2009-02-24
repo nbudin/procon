@@ -71,6 +71,8 @@ class ScheduleBlock < ActiveRecord::Base
       usetracks = obtain_tracks
       schedlen = self.end - self.start
 
+      # structure of grabbed_columns:
+      # grabbed_columns[track][subcol] = end_time
       grabbed_columns = {}
       pregrabs = {}
       usetracks.each do |track|

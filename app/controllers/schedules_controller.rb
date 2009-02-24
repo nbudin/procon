@@ -10,7 +10,7 @@ class SchedulesController < ApplicationController
       if show_unpublished
         @schedules = @context.schedules
       else
-        @schedules = @context.schedules.find_by_published(true)
+        @schedules = @context.schedules.find_all_by_published(true)
       end
       @schedule = Schedule.new :event => @context
     else
