@@ -3,8 +3,6 @@ class Event < ActiveRecord::Base
   
   has_many :attendances, :order => "created_at", :dependent => :destroy
   
-  has_many :features, :as => :feature
-  
   private
   # convenience method for getting the actual people associated with a group
   # of attendances
