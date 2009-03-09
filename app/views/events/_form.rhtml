@@ -128,7 +128,7 @@
     <% else -%>
       <p>There are currently no staff listed for this event.</p>
     <% end -%>
-    <p>Add staff by name: <%= text_field_tag "add_staff[firstname]" %> <%= text_field_tag "add_staff[lastname]" %></p>
+    <p>Add staff by name: <%= user_picker "add_staff" %></p>
   </div>
 
   <%= submit_tag %>

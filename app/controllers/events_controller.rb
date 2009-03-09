@@ -114,18 +114,12 @@ class EventsController < ApplicationController
       end
     end
     
-    if params[:add_staff][:firstname].length > 0 or params[:add_staff][:lastname].length > 0
-      results = Person.find :all, :conditions => ["firstname LIKE ? AND lastname LIKE ?", 
-        "%#{params[:add_staff][:firstname]}%", "%#{params[:add_staff][:lastname]}%"]
-      if results.length == 1
-        a = Attendance.new :person => results[0], :event => @event, :is_staff => true, :counts => false
-        if not a.save
-          flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
-        end
-      elsif results.length == 0
-        flash[:error_messages].push("Couldn't find a person by the name specified.")
-      else
-        flash[:error_messages].push("Found multiple people by the name specified.  Please be more specific.")
+    if not params[:add_staff].blank?
+      person_id = params[:add_staff].sub(/^(\D+)/, "")
+      staffer = Person.find(person_id)
+      a = Attendance.new :person => staffer, :event => @event, :is_staff => true, :counts => false
+      if not a.save
+        flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
       end
     end
     

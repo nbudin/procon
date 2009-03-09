@@ -6,7 +6,7 @@
 
   <p>
     <b>Person</b>
-    <%= f.select :person, Person.find(:all).collect {|p| [p.name, p.id]} %>
+    <%= user_picker('attendance[person]') %>
   </p>
   
   <p>
