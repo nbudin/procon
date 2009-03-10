@@ -36,7 +36,6 @@ table.events {
 	
   <p><%= submit_tag %></p>
 
-
   <% @schedule.tracks.each do |track| -%>
     <div class="track" style="background-color: <%= track.color ? track.color : "#fff" %>;">
     <h2>Track: <%=h track.name %></h2>
@@ -46,15 +45,15 @@ table.events {
       <% track.events.each do |event| -%>
         <tr class="<%= cycle "odd", "even" %>">
           <td><%=link_to event.shortname, edit_event_path(event) %></td>
-          <td>Starts at <%= datetime_select "event[#{event.id}]", "start", :default => event.start %></td>
-          <td>Ends at <%= datetime_select "event[#{event.id}]", "end", :default => event.end %></td>
+          <td>Starts on <%= event_datetime_select event, "start" %></td>
+          <td>Ends on <%= event_datetime_select event, "end" %></td>
           <td>Remove <%= check_box_tag "remove_event_from_track[#{track.id}]", event.id %></td>
         </tr>
       <% end -%>
       <tr class="<%= cycle "odd", "even" %>">
         <td><%= text_field_tag "create_event_in_track[#{track.id}][fullname]" %></td>
-        <td>Starts at <%= datetime_select "create_event_in_track[#{track.id}]", "start" %></td>
-        <td>Ends at <%= datetime_select "create_event_in_track[#{track.id}]", "end" %></td>
+        <td>Starts on <%= constrained_datetime_select "create_event_in_track[#{track.id}]", "start", @schedule.event.start, @schedule.event.end %></td>
+        <td>Ends on <%= constrained_datetime_select "create_event_in_track[#{track.id}]", "end", @schedule.event.start, @schedule.event.end %></td>
         <td></td>
       </tr>
       <tr class="<%= cycle "odd", "even" %>">

@@ -13,6 +13,7 @@
   <%= ae_form_stylesheet %>
   <%= stylesheet_link_tag "thickbox", "jquery.autocomplete.css" %>
   <%= javascript_include_tag "jquery", "thickbox", "jquery.ui.all.packed.js", "jquery.bgiframe.min.js", "jquery.autocomplete.pack.js" %>
+  <%= javascript_include_tag "application" %>
   <% if @rss_url %>
     <link rel="alternate" title="RSS Feed" href="<%=@rss_url%>" type="application/rss+xml"/>
   <% end %>

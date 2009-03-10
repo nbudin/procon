@@ -1,5 +1,7 @@
 # Settings specified here will take precedence over those in config/environment.rb
 
+config.action_controller.relative_url_root = '/procon'
+
 # In the development environment your application's code is reloaded on
 # every request.  This slows down response time but is perfect for development
 # since you don't have to restart the webserver when you make code changes.
@@ -14,7 +16,6 @@ config.whiny_nils = true
 # Show full error reports and disable caching
 config.action_controller.consider_all_requests_local = true
 config.action_controller.perform_caching             = false
-config.action_view.cache_template_extensions         = false
 config.action_view.debug_rjs                         = true
 
 # Don't care if the mailer can't send
@@ -25,8 +26,3 @@ ActionMailer::Base.smtp_settings = {
   :port  => 25, 
   :domain  => 'brandeislarp.com'
     }
-
-# fix engines reloading crap - probably remove once Engines 2.0 comes out
-config.after_initialize {
-  Dependencies.load_once_paths = Dependencies.load_once_paths.select { |path| (path =~ /app/).nil? }
-}

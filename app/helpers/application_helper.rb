@@ -21,6 +21,81 @@ module ApplicationHelper
     locs = Location.roots(event.locations)
     return h(locs.collect { |l| l.name }.join(", "))
   end
+
+  def jqid(id)
+    escid = id.gsub(/(\W)/, "\\\\\\\\\\1")
+    return "'##{escid}'"
+  end
+
+  def instance_id(object_name, method)
+    "#{object_name}_#{method}".gsub(/\W/, "_").gsub(/_+/, "_").sub(/_^/, "")
+  end
+
+  def constrained_date_select(object_name, method, start_time, end_time, options = {}, html_options = {})
+    options = options.dup
+    html_options = html_options.dup
+
+    html = ""
+    if start_time and end_time
+      options[:default] ||= start_time
+      cur = start_time.beginning_of_day
+      date_options = []
+      default = nil
+      while cur <= end_time do
+        date_options.push([ cur.strftime("%A, %b %d"), cur.to_i ])
+        if options[:default] >= cur and options[:default] < (cur + 1.day)
+          default = cur.to_i
+        end
+        cur += 1.day
+      end
+      shim_id = instance_id("date_shim_#{object_name}", method)
+      html << select_tag(shim_id, options_for_select(date_options, default), html_options)
+      html << <<-ENDOFHTML
+<script type="text/javascript">
+$(function() {
+  $('##{shim_id}').eventDateShim("#{instance_id(object_name, method)}");
+});
+</script>
+ENDOFHTML
+      html_options[:style] ||= ""
+      html_options[:style] = "display: none; #{html_options[:style]}"
+    end
+    html << content_tag(:span, html_options) do 
+      date_select(object_name, method, options)
+    end
+  end
+
+  def event_date_select(event, method, options = {}, html_options = {})
+    start_time = event.parent ? event.parent.start : nil
+    end_time = event.parent ? event.parent.end : nil
+    return constrained_date_select("event[#{event.id}]", method, start_time, end_time, 
+                                   options.update(:default => event.send(method)), html_options)
+  end
+
+  def constrained_time_select(object_name, method, start_time, end_time, options = {}, html_options = {})
+    return content_tag(:span, html_options) do 
+      time_select(object_name, method, options.update(:ignore_date => true, :minute_step => 15))
+    end
+  end
+
+  def event_time_select(event, method, options = {}, html_options = {})
+    return constrained_time_select("event[#{event.id}]", method, event.start, event.end,
+                                   options.update(:default => event.send(method)), html_options)
+  end
+
+  def event_datetime_select(event, method, options = {}, html_options = {})
+    html = event_date_select(event, method, options, html_options)
+    html << " at "
+    html << event_time_select(event, method, options, html_options)
+    return html
+  end
+
+  def constrained_datetime_select(object_name, method, start_time, end_time, options = {}, html_options = {})
+    html = constrained_date_select(object_name, method, start_time, end_time, options, html_options)
+    html << " at "
+    html << constrained_time_select(object_name, method, start_time, end_time, options, html_options)
+    return html
+  end
   
   def signup_url(event)
     if logged_in?

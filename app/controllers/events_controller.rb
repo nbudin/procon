@@ -33,6 +33,9 @@ class EventsController < ApplicationController
   
   def new
     @event = Event.new
+    if @context
+      @event.parent = @context
+    end
     calculate_edit_vars
   end
   

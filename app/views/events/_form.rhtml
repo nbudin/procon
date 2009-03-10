@@ -13,8 +13,10 @@
     <h2>Basic Information</h2>
     <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
       <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
-      <b>Starts at:</b> <%= datetime_select "event", "start" %><br/>
-      <b>Ends at:</b> <%= datetime_select "event", "end" %></p>
+      <% parent_start = @event.parent && @event.parent.start
+         parent_end = @event.parent && @event.parent.end %>
+      <b>Starts:</b> <%= constrained_datetime_select @event, "start", parent_start, parent_end, :default => @event.start %><br/>
+      <b>Ends:</b> <%= constrained_datetime_select @event, "end", parent_start, parent_end, :default => @event.end %></p>
   </div>
 
   <script type="text/javascript">
