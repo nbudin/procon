@@ -19,7 +19,7 @@ production:
   host: 127.0.0.1
   username: procon
   password: procon
-  database: procon_production
+  database: procon_dev
   port: 3306
   
 users:
