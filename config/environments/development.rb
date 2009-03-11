@@ -1,6 +1,6 @@
 # Settings specified here will take precedence over those in config/environment.rb
 
-config.action_controller.relative_url_root = '/procon'
+#config.action_controller.relative_url_root = '/procon'
 
 # In the development environment your application's code is reloaded on
 # every request.  This slows down response time but is perfect for development

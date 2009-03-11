@@ -28,12 +28,11 @@ module ApplicationHelper
   end
 
   def instance_id(object_name, method)
-    "#{object_name}_#{method}".gsub(/\W/, "_").gsub(/_+/, "_").sub(/_^/, "")
+    "#{object_name}_#{method}".gsub(/\W/, "_").gsub(/_+/, "_").sub(/_+$/, "")
   end
 
   def constrained_date_select(object_name, method, start_time, end_time, options = {}, html_options = {})
     options = options.dup
-    html_options = html_options.dup
 
     html = ""
     if start_time and end_time
@@ -57,11 +56,13 @@ $(function() {
 });
 </script>
 ENDOFHTML
-      html_options[:style] ||= ""
-      html_options[:style] = "display: none; #{html_options[:style]}"
-    end
-    html << content_tag(:span, html_options) do 
-      date_select(object_name, method, options)
+      html << hidden_field_tag("#{object_name}[#{method}(1i)]", options[:default].year, :id => instance_id(object_name, "#{method}(1i)"))
+      html << hidden_field_tag("#{object_name}[#{method}(2i)]", options[:default].month, :id => instance_id(object_name, "#{method}(2i)"))
+      html << hidden_field_tag("#{object_name}[#{method}(3i)]", options[:default].day, :id => instance_id(object_name, "#{method}(3i)"))
+    else
+      html << content_tag(:span, html_options) do 
+        date_select(object_name, method, options)
+      end
     end
   end
 
@@ -72,10 +73,16 @@ ENDOFHTML
                                    options.update(:default => event.send(method)), html_options)
   end
 
+  def time_options(options, default)
+    options_for_select(options.collect {|o| sprintf("%02d", o) }, sprintf("%02d", default))
+  end
+
   def constrained_time_select(object_name, method, start_time, end_time, options = {}, html_options = {})
-    return content_tag(:span, html_options) do 
-      time_select(object_name, method, options.update(:ignore_date => true, :minute_step => 15))
-    end
+    default = options[:default] || Time.new
+    html = select_tag("#{object_name}[#{method}(4i)]", time_options(0..23, default.hour), html_options)
+    html << " : "
+    html << select_tag("#{object_name}[#{method}(5i)]", time_options(%w{00 15 30 45}, default.min), html_options)
+    return html
   end
 
   def event_time_select(event, method, options = {}, html_options = {})
