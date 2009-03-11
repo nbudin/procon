@@ -21,11 +21,11 @@
 
   <script type="text/javascript">
   function updateCapacityLimitsVisibility() {
-    if ($('#limited_capacity').attr("checked")) {
-      $('#capacity_limits').show();
-    } else {
-      $('#capacity_limits').hide();
-    }
+      if ($('#limited_capacity_true').attr("checked")) {
+	  $('#capacity_limits').show();
+      } else {
+	  $('#capacity_limits').hide();
+      }
   }
 
   $(document).ready(updateCapacityLimitsVisibility);
@@ -68,21 +68,28 @@
 
     <table>
       <tr>
-        <td><%= check_box_tag "registration_open", "open", @registration_open %></td>
-        <td>Event registration is open</td>
+        <td>Event registration is:</td>
+        <td>open <%= radio_button_tag "event[registration_open]", "true", @registration_open %>
+	&nbsp;&nbsp;&nbsp;
+        closed <%= radio_button_tag "event[registration_open]", "false", !@registration_open %></td>
       </tr>
       <tr>
-        <td><%= check_box_tag "non_exclusive", "nonexclusive", @non_exclusive %></td>
-        <td>People can attend this event at the same time as other events</td>
+        <td>Can people attend this event at the same time as other events?</td>
+        <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @non_exclusive %>
+	&nbsp;&nbsp;&nbsp;
+        no <%= radio_button_tag "event[non_exclusive]", "false", !@non_exclusive %></td>
       </tr>
       <tr>
-        <td><%= check_box_tag "age_restricted", "agerestricted", @age_restricted %></td>
-        <td>This event has a minimum age of <%= text_field_tag "min_age", @min_age %></td>
+        <td>This event has a minimum age of:</td>
+	<td><%= text_field_tag "event[min_age]", @min_age %></td>
       </tr>
       <tr>
-        <td><%= check_box_tag "limited_capacity", "limited", @limited_capacity,
+        <td>Limit the number of people who can sign up for this event?</td>
+        <td>yes <%= radio_button_tag "limited_capacity", "true", @limited_capacity,
+                :onChange => "updateCapacityLimitsVisibility();"%>
+	&nbsp;&nbsp;&nbsp;
+        no <%= radio_button_tag "limited_capacity", "false", !@limited_capacity,
                 :onChange => "updateCapacityLimitsVisibility();"%></td>
-        <td>Limited capacity</td>
       </tr>
       <tr id="capacity_limits">
         <td></td>

@@ -15,6 +15,13 @@ class Schedule < ActiveRecord::Base
     end
     return events.sort {|a,b| a.start == b.start ? a.end <=> b.end : a.start <=> b.start }
   end
+
+  def all_events_registration_open=(status)
+    events.each do |event|
+      event.registration_open = status
+      event.save
+    end
+  end
   
   def obtain_blocks
     # heuristically split events into logical "blocks" of time

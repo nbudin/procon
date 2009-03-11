@@ -58,6 +58,12 @@ class EventsController < ApplicationController
   def show
     @event = Event.find params[:id]
     @public_info_fields = @event.public_info_fields
+
+    respond_to do |format|
+      format.html # show.rhtml
+      format.json { render :json => @event.to_json }
+      format.xml  { render :xml => @event.to_xml }
+    end
   end
   
   def show_description
@@ -92,21 +98,23 @@ class EventsController < ApplicationController
     
     flash[:error_messages] ||= []
     
-    locs = params[:locations] || []
-    @event.event_locations.each do |booking|
-      if not locs.include? booking.location.id
-        booking.destroy
-      end
-    end
-    
-    locs.each do |locid|
-      loc = Location.find(locid)
-      if not @event.locations.include? Location.find(locid)
-        booking = EventLocation.new(:event => @event, :location => loc, :exclusive => true)
-        if not booking.save
-          flash[:error_messages].push("Could not add the location #{loc.name}: #{booking.errors.full_messages.join(", ")}")
+    if params[:locations]
+      locs = params[:locations]
+      @event.event_locations.each do |booking|
+        if not locs.include? booking.location.id
+          booking.destroy
         end
       end
+
+      locs.each do |locid|
+        loc = Location.find(locid)
+        if not @event.locations.include? Location.find(locid)
+          booking = EventLocation.new(:event => @event, :location => loc, :exclusive => true)
+          if not booking.save
+            flash[:error_messages].push("Could not add the location #{loc.name}: #{booking.errors.full_messages.join(", ")}")
+          end
+        end
+      end    
     end
     
     if params[:remove_staff]
@@ -141,7 +149,7 @@ class EventsController < ApplicationController
       end
     end
     
-    if params[:add_virtual_site][:domain].length > 0
+    if params[:add_virtual_site] and not params[:add_virtual_site][:domain].blank?
       site_template_id = params[:add_virtual_site][:site_template]
       if site_template_id and site_template_id != ''
         site_template = SiteTemplate.find(site_template_id)
@@ -160,14 +168,16 @@ class EventsController < ApplicationController
       end
     end
     
-    if (params[:limited_capacity] and not (@event.kind_of? LimitedCapacityEvent))
-      @event.type = "LimitedCapacityEvent"
-      @event.save
-      @event = Event.find(@event.id)
-    elsif (not params[:limited_capacity] and (@event.kind_of? LimitedCapacityEvent))
-      @event.type = "Event"
-      @event.save
-      @event = Event.find(@event.id)
+    if params[:limited_capacity]
+      if (params[:limited_capacity] == "true" and not (@event.kind_of? LimitedCapacityEvent))
+        @event.type = "LimitedCapacityEvent"
+        @event.save
+        @event = Event.find(@event.id)
+      elsif (params[:limited_capacity] == "false" and (@event.kind_of? LimitedCapacityEvent))
+        @event.type = "Event"
+        @event.save
+        @event = Event.find(@event.id)
+      end
     end
     
     if @event.kind_of? LimitedCapacityEvent and params[:limits]
@@ -180,48 +190,19 @@ class EventsController < ApplicationController
       end
     end
     
-    policy = @event.obtain_registration_policy
-    
-    if not params[:registration_open]
-      if not policy.contains_rule_type? ClosedEventRule
-        ClosedEventRule.create :policy => policy
-      end
-    else
-      policy.each_rule_of_type ClosedEventRule do |rule|
-        rule.destroy
-      end
-    end
-    
-    if not params[:non_exclusive]
-      if not policy.contains_rule_type? ExclusiveEventRule
-        ExclusiveEventRule.create :policy => policy
-      end
-    else
-      policy.each_rule_of_type ExclusiveEventRule do |rule|
-        rule.destroy
-      end
-    end
-    
-    if params[:age_restricted]
-      if not policy.contains_rule_type? AgeRestrictionRule
-        AgeRestrictionRule.create :policy => policy
-      end
-      policy.reload
-      policy.each_rule_of_type AgeRestrictionRule do |rule|
-        rule.min_age = params[:min_age]
-        rule.save
-      end
-    else
-      policy.each_rule_of_type AgeRestrictionRule do |rule|
-        rule.destroy
-      end
-    end
-    
     if @event.update_attributes(params[:event]) and flash[:error_messages].length == 0
-       redirect_to(event_url(@event))
+      respond_to do |format|
+        format.html { redirect_to(event_url(@event)) }
+        format.json { redirect_to(formatted_event_url(@event, :json)) }
+        format.xml  { redirect_to(formatted_event_url(@event, :xml)) }
+      end
     else
-       flash[:error_messages] += @event.errors.full_messages
-       redirect_to(edit_event_url(@event))
+      flash[:error_messages] += @event.errors.full_messages
+      respond_to do |format|
+        format.html { redirect_to(edit_event_url(@event)) }
+        format.json { render :json => @event.errors.to_json }
+        format.xml  { render :xml => @event.errors.to_xml }
+      end
     end
   end
   
@@ -244,22 +225,10 @@ class EventsController < ApplicationController
       end
     end
     
-    @registration_open = true
-    @non_exclusive = true
-    if @event.registration_policy
-      @event.registration_policy.rules.each do |rule|
-        if rule.kind_of? ClosedEventRule
-          @registration_open = false
-        end
-        if rule.kind_of? ExclusiveEventRule
-          @non_exclusive = false
-        end
-        if rule.kind_of? AgeRestrictionRule
-          @age_restricted = true
-          @min_age = rule.min_age
-        end
-      end
-    end
+    @registration_open = @event.registration_open
+    @non_exclusive = @event.non_exclusive
+    @age_restricted = @event.age_restricted
+    @min_age = @event.min_age
   end
   
   def check_edit_permissions

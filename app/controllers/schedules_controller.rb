@@ -131,8 +131,6 @@ class SchedulesController < ApplicationController
       end
     end
     
-
-    
     if params[:new_track]
       if params[:new_track][:name] and params[:new_track][:name] != ''
         @schedule.tracks.create(params[:new_track])

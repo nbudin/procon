@@ -31,7 +31,8 @@ role :db,  "sakai.natbudin.com", :primary => true
 # =============================================================================
 # OPTIONAL VARIABLES
 # =============================================================================
-set :deploy_to, "/var/www/events.brandeislarp.com" # defaults to "/u/apps/#{application}"
+#set :deploy_to, "/var/www/events.brandeislarp.com"
+set :deploy_to, "/var/www/procon-staging.natbudin.com"
 set :use_sudo, false
 set :checkout, "export"
 set :user, "www-data"            # defaults to the currently logged in user

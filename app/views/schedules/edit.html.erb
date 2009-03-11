@@ -24,15 +24,77 @@ table.events {
 }
 </style>
 
+<script type="text/javascript">
+function setRegistrationOpen(eventId, value) {
+  if (!confirm("Are you sure?")) {
+    return;
+  }
+
+  eventUrl = '<%= events_url %>/' + eventId + '.xml';
+  $.ajax({
+    type: "PUT",
+    url: eventUrl,
+    dataType: "xml",
+    data: { "event[registration_open]": value },
+    success: function (msg) {
+      id = $('id', msg).text();
+      if ($('registration-open', msg).text() == "true") {
+        $('#open_event_' + id).hide();
+        $('#close_event_' + id).show();
+      } else {
+        $('#close_event_' + id).hide();
+        $('#open_event_' + id).show();
+      }
+    },
+    error: function (req, status, err) {
+      alert("Operation failed: "+status);
+    }
+  });
+}
+
+function setAllEventsRegistrationOpen(scheduleId, value) {
+  if (!confirm("This will affect ALL events on this schedule.  Are you sure?")) {
+    return;
+  }
+
+  scheduleUrl = '<%= schedules_url %>/' + scheduleId + ".xml";
+  $.ajax({
+    type: "PUT",
+    url: scheduleUrl,
+    data: { "schedule[all_events_registration_open]": value },
+    dataType: "text",
+    success: function (msg) {
+      if (value) {
+        $('*[id^=open_event_]').hide();
+        $('*[id^=close_event_]').show();
+      } else {
+        $('*[id^=close_event_]').hide();
+        $('*[id^=open_event_]').show();
+      }
+    },
+    error: function (req, status, err) {
+      alert("Operation failed: "+status);
+    }
+  });
+}
+</script>
+
 <%= error_messages_for :schedule %>
 
 <% form_for @schedule do |f| -%>
 
-  <h2>Publishing</h2>
+  <h2>Administration</h2>
+
+  <h3>Publishing</h3>
 
   <p>To allow the general public to view this schedule, you must publish it.  You can change the publication status using
 	this menu: <%= f.select "published", [["Publish this schedule", 1], ["Unpublish this schedule", 0]], 
     { :selected => @schedule.published ? 1 : 0 } %></p>
+
+  <h3>The Big Switch</h3>
+
+  <p><%= button_to_function "Open all events", "setAllEventsRegistrationOpen(#{@schedule.id}, true);" %><br/>
+     <%= button_to_function "Close all events", "setAllEventsRegistrationOpen(#{@schedule.id}, false);" %></p>
 	
   <p><%= submit_tag %></p>
 
@@ -44,6 +106,10 @@ table.events {
     <table class="events">
       <% track.events.each do |event| -%>
         <tr class="<%= cycle "odd", "even" %>">
+	  <td><%= button_to_function "Close", "setRegistrationOpen(#{event.id}, false);", 
+	          :id => "close_event_#{event.id}", :style => event.registration_open ? "" : "display: none;" %>
+  	    <%= button_to_function "Open", "setRegistrationOpen(#{event.id}, true);", 
+	          :id => "open_event_#{event.id}", :style => event.registration_open ? "display: none;" : "" %></td>
           <td><%=link_to event.shortname, edit_event_path(event) %></td>
           <td>Starts on <%= event_datetime_select event, "start" %></td>
           <td>Ends on <%= event_datetime_select event, "end" %></td>
@@ -51,12 +117,14 @@ table.events {
         </tr>
       <% end -%>
       <tr class="<%= cycle "odd", "even" %>">
+        <td></td>
         <td><%= text_field_tag "create_event_in_track[#{track.id}][fullname]" %></td>
         <td>Starts on <%= constrained_datetime_select "create_event_in_track[#{track.id}]", "start", @schedule.event.start, @schedule.event.end %></td>
         <td>Ends on <%= constrained_datetime_select "create_event_in_track[#{track.id}]", "end", @schedule.event.start, @schedule.event.end %></td>
         <td></td>
       </tr>
       <tr class="<%= cycle "odd", "even" %>">
+        <td></td>
         <td>Add existing event</td>
         <td><%= select_tag "add_event_to_track[#{track.id}]",
             options_for_select([['', '']] + @schedule.event.children.select {|e| not track.events.include? e}.collect {|e| [e.shortname, e.id]}) %>

@@ -21,7 +21,7 @@ class SignupController < ApplicationController
     end
 
     if proceed
-      @att = Attendance.new :person => @person, :event => @event, :is_waitlist => is_waitlist, :counts => true
+      @att = Attendance.new :person => @person, :event => @event, :is_waitlist => is_waitlist, :counts => !is_waitlist
       begin
         @att.save!
         @event.public_info_fields.each do |field|

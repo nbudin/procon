@@ -255,12 +255,82 @@ class Event < ActiveRecord::Base
   def registration_open
     not obtain_registration_policy.contains_rule_type? ClosedEventRule
   end
+
+  def registration_open=(reg_open)
+    policy = obtain_registration_policy
+
+    if param_to_bool(reg_open)
+      policy.each_rule_of_type ClosedEventRule do |rule|
+        rule.destroy
+      end
+    else
+      if not policy.contains_rule_type? ClosedEventRule
+        ClosedEventRule.create :policy => policy
+      end
+    end
+  end
   
   def non_exclusive
     not obtain_registration_policy.contains_rule_type? ExclusiveEventRule
   end
+
+  def non_exclusive=(non_exc)
+    policy = obtain_registration_policy
+
+    if param_to_bool(non_exc)
+      policy.each_rule_of_type ExclusiveEventRule do |rule|
+        rule.destroy
+      end
+    else
+      if not policy.contains_rule_type? ExclusiveEventRule
+        ExclusiveEventRule.create :policy => policy
+      end
+    end
+  end
   
   def age_restricted
     obtain_registration_policy.contains_rule_type? AgeRestrictionRule
+  end
+
+  def min_age
+    policy = obtain_registration_policy
+
+    if policy.contains_rule_type? AgeRestrictionRule
+      return policy.rules.find_all_by_type('AgeRestrictionRule').collect { |r| r.min_age }.max
+    else
+      return nil
+    end
+  end
+
+  def min_age=(ma)
+    policy = obtain_registration_policy
+
+    if ma.to_i > 0
+      if not policy.contains_rule_type? AgeRestrictionRule
+        AgeRestrictionRule.create :policy => policy
+      end
+      policy.reload
+      policy.each_rule_of_type AgeRestrictionRule do |rule|
+        rule.min_age = ma
+        rule.save
+      end
+    else
+      policy.each_rule_of_type AgeRestrictionRule do |rule|
+        rule.destroy
+      end
+    end
+  end
+        
+  def to_xml
+    super(:methods => [:min_age, :age_restricted, :registration_open, :non_exclusive])
+  end
+
+  private
+  def param_to_bool(param)
+    if param.blank?
+      return false
+    else
+      return param.to_s.downcase == "true"
+    end
   end
 end
