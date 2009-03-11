@@ -1,11 +1,15 @@
 <% if @att -%>
-  <% if @att.is_waitlist -%>
-    <p>You are now #<%= @event.waitlist_number(@person) %> in the waitlist for <%= @event.fullname %>.</p>
-  <% else -%>
-    <p>Congratulations!  You are now signed up for <%= @event.fullname %>.</p>
-  <% end -%>
+  <% if @att.errors.empty? -%>
+    <% if @att.is_waitlist -%>
+      <p>You are now #<%= @event.waitlist_number(@person) %> in the waitlist for <%= @event.fullname %>.</p>
+    <% else -%>
+      <p>Congratulations!  You are now signed up for <%= @event.fullname %>.</p>
+    <% end -%>
   
-  <%= button_to_function " OK ", "self.parent.window.location.reload();" %>
+    <%= button_to_function " OK ", "self.parent.window.location.reload();" %>
+  <% else -%>
+    <%= button_to_function " Close ", "self.parent.window.location.reload();" %>
+  <% end -%>
 <% else -%>
   <% form_tag({ :controller => 'signup', :action => 'signup', :event => @event.id }) do -%>
     <% if @event.public_info_fields.length > 0 -%>
