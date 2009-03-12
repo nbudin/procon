@@ -6,7 +6,11 @@ class AddGenderToAttendances < ActiveRecord::Migration
     Attendance.find(:all).each do |att|
       if att.person
         att.gender = att.person.gender
-        att.save!
+        if not att.save
+          att.errors.each do |attr, msg|
+            puts "WARNING: Attendance #{att.id} failed validation - #{attr}: #{msg}\n"
+          end
+        end
       end
     end
   end
