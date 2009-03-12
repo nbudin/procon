@@ -1,6 +1,6 @@
 class GenderRule < RegistrationRule
   def attendance_valid?(attendance)
-    return attendance.person.gender == self.gender
+    return attendance.gender == self.gender
   end
   
   def error_message(attendance)

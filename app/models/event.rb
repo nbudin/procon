@@ -190,8 +190,7 @@ class Event < ActiveRecord::Base
     if gender.nil?
       attendances.count :all, :conditions => ["counts = ?", true]
     else
-      person_ids = attendances.find_all_by_counts(true, :select => "person_id").map(&:person_id)
-      Person.count(:all, :conditions => ["gender = ? and id in (?)", gender, person_ids])
+      attendances.count(:conditions => ["counts = ? and gender = ?", true, gender])
     end
   end
   
@@ -199,8 +198,7 @@ class Event < ActiveRecord::Base
     if gender.nil?
       attendances.count :all, :conditions => ["is_waitlist = ?", true]
     else
-      person_ids = attendances.find_all_by_is_waitlist(true, :select => "person_id").map(&:person_id)
-      Person.count(:all, :conditions => ["gender = ? and id in (?)", gender, person_ids])
+      attendances.count(:conditions => ["is_waitlist = ? and gender = ?", true, gender])
     end
   end
   

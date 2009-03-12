@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 48) do
+ActiveRecord::Schema.define(:version => 49) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -31,12 +31,14 @@ ActiveRecord::Schema.define(:version => 48) do
     t.boolean  "is_staff"
     t.boolean  "is_waitlist", :default => false
     t.datetime "deleted_at"
+    t.string   "gender"
   end
 
   add_index "attendances", ["event_id"], :name => "index_attendances_on_event_id"
   add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
   add_index "attendances", ["deleted_at"], :name => "index_attendances_on_deleted_at"
   add_index "attendances", ["counts"], :name => "index_attendances_on_counts"
+  add_index "attendances", ["gender"], :name => "index_attendances_on_gender"
 
   create_table "attendee_slots", :force => true do |t|
     t.integer  "event_id",   :null => false

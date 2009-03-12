@@ -34,7 +34,12 @@
       <td>
         <%= attendance.age %>
       </td>
-      <td><%=h attendance.person.gender %></td>
+      <td>
+        <%=h attendance.gender %>
+	<% if attendance.gender != attendance.person.gender -%>
+	  (crosscast)
+	<% end -%>
+      </td>
     <% else -%>
       <td colspan="4">
         <b>No person attached to this attendance.  This is probably the result of a bug.</b>

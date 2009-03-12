@@ -7,10 +7,17 @@ class Attendance < ActiveRecord::Base
   
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."
   after_destroy :pull_from_waitlist
+
+  validates_inclusion_of :gender, :in => ["male", "female"]
+
+  before_validation :ensure_gender_set
+  after_save :check_waitlist
   
   def validate
-    event.attendance_errors(self).each do |err|
-      errors.add_to_base err
+    unless event.nil?
+      event.attendance_errors(self).each do |err|
+        errors.add_to_base err
+      end
     end
   end
   
@@ -39,8 +46,23 @@ class Attendance < ActiveRecord::Base
   def age
     person.age_as_of event.start
   end
-  
+
   def value_for_public_info_field(field)
     public_info_values.find_by_public_info_field_id(field.id)
+  end
+
+  private
+  def ensure_gender_set
+    if self.gender.nil? and self.person
+      self.gender = self.person.gender
+    end
+  end
+
+  def check_waitlist
+    if self.event.kind_of? LimitedCapacityEvent
+      if not self.event.full? and self.event.waitlist_attendees.size > 0
+        self.event.pull_from_waitlist
+      end
+    end
   end
 end

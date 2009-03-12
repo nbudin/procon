@@ -20,6 +20,14 @@
     <%= f.check_box :counts %>
   </p>
 
+  <% if @event.respond_to?('gendered?') and @event.gendered? -%>
+    <p>
+      <b>Gender (for this event):</b>
+      <% genders = %w{male female}.collect { |g| ["#{g}#{@attendance.person.gender == g ? '' : ' (crosscast)'}", g] } -%>
+      <%= f.select :gender, genders %>
+    </p>
+  <% end -%>
+
   <p>
     <%= submit_tag "Update" %>
   </p>

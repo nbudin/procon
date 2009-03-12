@@ -2,12 +2,21 @@ class LimitedCapacityEvent < Event
   has_many :attendee_slots, :foreign_key => "event_id"
   has_many :registration_buckets, :foreign_key => "event_id"
   
+  alias_method :attendance_invalid_without_limit_checks?, :attendance_invalid?
   def attendance_invalid?(attendance)
-    if err = super(attendance)
+    if err = attendance_invalid_without_limit_checks?(attendance)
       return err
     end
     
     return attendance_over_limit?(attendance)
+  end
+
+  def attendance_invalid_if_new?(attendance)
+    if err = attendance_invalid_without_limit_checks?(attendance)
+      return err
+    end
+    
+    return attendance_over_limit_if_new?(attendance)
   end
   
   def attendance_errors(attendance)
@@ -23,17 +32,23 @@ class LimitedCapacityEvent < Event
   
   def attendance_over_limit?(attendance)
     if not attendance.counts or attendances.include? attendance
+      # don't invalidate attendances that are already signed up
       return false
     else
-      attendee_slots.each do |slot|
-        if slot.gender.nil? or slot.gender == 'neutral' or slot.gender == attendance.person.gender
-          if not slot.full?
-            return false
-          end
+      # this attendance is new to this event
+      return attendance_over_limit_if_new?(attendance)
+    end
+  end
+
+  def attendance_over_limit_if_new?(attendance)
+    attendee_slots.each do |slot|
+      if slot.gender.nil? or slot.gender == 'neutral' or slot.gender == attendance.gender
+        if not slot.full?
+          return false
         end
       end
-      return "That event has reached its capacity."
     end
+    return "That event has reached its capacity."
   end
   
   def slot_count(gender, threshold)
@@ -147,7 +162,8 @@ class LimitedCapacityEvent < Event
       waitlist_attendances.each do |wa|
         wa.is_waitlist = false
         wa.counts = true
-        if not attendance_invalid?(wa)
+        # treat this as if if was a new signup for validation purposes
+        if not attendance_invalid_if_new?(wa)
           wa.save
           successful = true
           break
