@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 47) do
+ActiveRecord::Schema.define(:version => 48) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(:version => 47) do
   add_index "attendances", ["event_id"], :name => "index_attendances_on_event_id"
   add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
   add_index "attendances", ["deleted_at"], :name => "index_attendances_on_deleted_at"
+  add_index "attendances", ["counts"], :name => "index_attendances_on_counts"
 
   create_table "attendee_slots", :force => true do |t|
     t.integer  "event_id",   :null => false
