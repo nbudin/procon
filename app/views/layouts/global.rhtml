@@ -68,6 +68,9 @@
                 <span id="admin_open" style="display: none;">
                   <a href="#" onClick="$('#admin_open').hide(); $('#admin_closed').show();" id="admin_closed">&laquo;</a>
                   <%= link_to "Events", events_path %>
+		  <% if @context -%>
+		    <%= link_to "Attendees", :controller => "agenda", :action => "attendees" %>
+		  <% end -%>
                   <%= link_to "Locations", locations_path %>
                   <%= link_to "Site Templates", site_templates_path %>
                   <%= link_to "Schedules", schedules_path %>
