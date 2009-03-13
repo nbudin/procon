@@ -25,6 +25,26 @@ div#topbar ul.nav_links li {
     margin: 3px;
 }
 
+div#topbar ul.nav_links ul.admin_links {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+div#topbar ul.nav_links ul.admin_links li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+div#topbar ul.nav_links ul.admin_links li:before {
+    content: "\2022 \00A0";
+}
+
+div#topbar ul.nav_links ul.admin_links li.first:before {
+    content: " ";
+}
+
 /*div#topbar ul.nav_links li a {
     color: #000;
 }*/
