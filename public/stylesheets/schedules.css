@@ -1,0 +1,78 @@
+table.schedulebody, table.scheduleheader {
+  border-collapse: collapse;
+  border: 1px #aaa solid;
+  width: 100%;
+}
+
+.schedule {
+  position: relative;
+}
+
+.scheduleheader tr th {
+  border-top: 1px #aaa solid;
+  border-left: 1px #aaa solid;
+}
+
+.schedule tr td {
+  border-top: 1px #aaa solid;
+  background-color: #eee;
+  font-size: 12px;
+}
+
+div.event {
+  position: absolute;
+  vertical-align: middle;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  border: 1px black solid;
+  font-size: 14px;
+}
+
+div.signedup {
+  border: 2px black solid;
+}
+
+div.waitlist {
+  border-style: dashed;
+}
+
+.health_na {
+  background-color: #fff;
+}
+
+.health_full {
+  background-color: #ccf;
+}
+
+.health_below_min {
+  background-color: #fcc;
+}
+
+.health_at_min {
+  background-color: #ffc;
+}
+
+.health_at_preferred {
+  background-color: #cfc;
+}
+
+.legend {
+  list-style-type: none;
+}
+
+.legend li {
+  display: inline-block;
+  padding-right: 3em;
+  min-width: 13em;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.legend_color {
+  width: 3em;
+  height: 3em;
+  border: 1px black solid;
+  display: inline-block;
+  vertical-align: middle;
+}

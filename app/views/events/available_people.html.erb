@@ -1,0 +1,9 @@
+<% if @available_people.size > 0 -%>
+  <ul>
+    <% @available_people.each do |person| -%>
+      <li><%=h person.lastname %>, <%=h person.firstname %></li>
+    <% end -%>
+  </ul>
+<% else -%>
+  <p>Sorry, nobody is available during that event.</p>
+<% end -%>

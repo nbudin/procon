@@ -17,23 +17,25 @@ class ProconProfile < ActiveRecord::Base
     attendances.collect { |a| a.event }
   end
   
-  def ignore_events_cond(ignore_events)
-    if ignore_events.length > 0
-      return "AND events.id NOT IN ("+ignore_events.collect { |e| e.id }.join(',') + ")"
+  def events_cond(events)
+    if events.length > 0
+      return "AND events.id IN ("+events.collect { |e| e.id }.join(',') + ")"
     else
       return ""
     end
   end
-  
-  def busy_at?(time, ignore_events=[])
-    return events.count(:all, 
-      :conditions => ["start <= ? AND end > ? #{ignore_events_cond ignore_events}", time, time]) > 0
+
+  def busy_at?(time, events=[])
+    return Attendance.count(:conditions => ["start <= ? AND end > ? and person_id = ? #{events_cond events}", 
+                                            time, time, person.id],
+                            :joins => :event) > 0
   end
   
-  def busy_between?(start_time, end_time, ignore_events=[])
-    return (busy_at?(start_time, ignore_events) or 
-      events.count(:all, :conditions => ["(end > ? AND start <= ?) #{ignore_events_cond ignore_events}", 
-        start_time, end_time]) > 0)
+  def busy_between?(start_time, end_time, events=[])
+    return (busy_at?(start_time, events) or 
+            Attendance.count(:conditions => ["(end > ? AND start <= ?) and person_id = ? #{events_cond events}", 
+                                             start_time, end_time, person.id],
+                             :joins => :event) > 0)
   end
   
   def has_edit_permissions?(event=nil)

@@ -43,6 +43,21 @@ class SchedulesController < ApplicationController
     end
   end
 
+  # GET /schedules/1/health
+  # GET /schedules/1/health.xml
+  def health
+    @interval = params[:interval] ? params[:interval].to_i : 30.minutes
+    @schedule = Schedule.find(params[:id])
+    @events = @schedule.events
+    @blocks = @schedule.obtain_blocks
+    @blocks.sort! { |a, b| a.start <=> b.start }
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @schedule }
+    end
+  end
+
   # GET /schedules/new
   # GET /schedules/new.xml
   def new

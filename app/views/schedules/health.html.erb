@@ -1,0 +1,34 @@
+<%= stylesheet_link_tag "schedules.css" %>
+
+<h2>Legend</h2>
+
+<ul class="legend">
+  <li>
+    <div class="legend_color health_below_min"></div>
+    Below minimum
+  </li>
+  <li>
+    <div class="legend_color health_at_min"></div>
+    Has met minimum
+  </li>
+  <li>
+    <div class="legend_color health_at_preferred"></div>
+    Has met preferred count
+  </li>
+  <li>
+    <div class="legend_color health_full"></div>
+    Full
+  </li>
+  <li>
+    <div class="legend_color health_na"></div>
+    N/A
+  </li>
+</ul>
+
+<% if @events.size == 0 -%>
+  <p>There are no events on this schedule.</p>
+<% else -%>
+  <% @blocks.each do |block| -%>
+    <%= health_block(@schedule, block) %>
+  <% end -%>
+<% end -%>

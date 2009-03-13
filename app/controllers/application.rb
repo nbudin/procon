@@ -29,4 +29,7 @@ class ApplicationController < ActionController::Base
     @context = @virtual_site.event
   end
   
+  def sort_people(people)
+    people.sort {|a, b| "#{a.lastname}#{a.firstname}".downcase <=> "#{b.lastname}#{b.firstname}".downcase}
+  end
 end

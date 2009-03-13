@@ -1,43 +1,13 @@
-<style type="text/css">
-table.schedulebody, table.scheduleheader {
-  border-collapse: collapse;
-  border: 1px #aaa solid;
-  width: 100%;
-}
+<%= stylesheet_link_tag "schedules.css" %>
 
-.schedule {
-  position: relative;
-}
+<% if logged_in_person_can_edit? @context -%>
+  <h2>Administration</h2>
 
-.scheduleheader tr th {
-  border-top: 1px #aaa solid;
-  border-left: 1px #aaa solid;
-}
-
-.schedule tr td {
-  border-top: 1px #aaa solid;
-  background-color: #eee;
-  font-size: 12px;
-}
-
-div.event {
-  position: absolute;
-  vertical-align: middle;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  border: 1px black solid;
-  font-size: 14px;
-}
-
-div.signedup {
-  border: 2px black solid;
-}
-
-div.waitlist {
-  border-style: dashed;
-}
-</style>
+  <ul>
+    <li><%= link_to "Edit schedule", edit_schedule_path(@schedule) %></li>
+    <li><%= link_to "Check event health", :controller => "schedules", :action => "health", :id => @schedule.id %></li>
+  </ul>
+<% end -%>
 
 <% if @events.size == 0 -%>
   <p>There are no events on this schedule.</p>

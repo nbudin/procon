@@ -6,7 +6,7 @@ class EventsController < ApplicationController
   end
   
   def signup_sheet
-  	@event = Event.find(params[:id])
+    @event = Event.find(params[:id])
     if request.post?
       @options = {}
       @options[:include_scheduling_details] = params[:include_scheduling_details]
@@ -20,6 +20,22 @@ class EventsController < ApplicationController
     else
       render :action => "signup_sheet_form"
     end
+  end
+
+  def available_people
+    @event = Event.find(params[:id])
+    @check_events = @event.parent ? @event.parent.children : Event.find(:all)
+    @all_people = @event.parent ? @event.parent.all_attendees : People.find(:all)
+    @available_people = @all_people.select do |person|
+      if not person.procon_profile
+        logger.debug "Rejecting #{person.name} due to no profile"
+        false
+      else
+        logger.debug "Evaluating #{person.name} availability"
+        not person.procon_profile.busy_between?(@event.start, @event.end, @check_events)
+      end
+    end
+    @available_people = sort_people(@available_people)
   end
   
   def index

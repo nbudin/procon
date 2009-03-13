@@ -1,7 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :locations
 
-  map.resources :schedules
+  map.resources :schedules, :member => { :health => :get }
   map.resources :registration_rules
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -18,7 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   # -- just remember to delete public/index.html.
   map.connect '', :controller => "main"
   
-  map.resources :events, :collection => {:schedule => :get} do |events|
+  map.resources :events, :collection => {:schedule => :get}, :member => {:available_people => :get} do |events|
     events.resources :attendances
   end
   

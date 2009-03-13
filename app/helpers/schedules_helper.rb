@@ -55,6 +55,30 @@ module SchedulesHelper
     output << "</table>"
     return output
   end
+
+  def health_event(position, healthclass)
+    event = position.event
+    output = <<-ENDHTML
+      <div style="left: #{position.left}%;
+                  width: #{position.width}%;
+                  top: #{position.top}%;
+                  height: #{position.height}%;"
+           class="event #{healthclass}">
+        <b>#{h event.shortname}</b>
+    ENDHTML
+    if event.kind_of? LimitedCapacityEvent
+      output << "<br/>\n"
+      output << registration_count(event)
+    end
+
+    output << "<br/>\n"
+    output << link_to("Who's free\?", 
+                      url_for(:controller => 'events', :action => 'available_people', :id => event.id) + thickbox_params, 
+                      :class => 'thickbox', :style => 'font-weight: bold;')
+
+    output << "</div>\n"
+    return output
+  end
   
   def schedule_event(position)
     event = position.event
@@ -86,18 +110,48 @@ ENDHTML
     output << "</div>\n"
     return output
   end
-  
-  def schedule_block(schedule, block)
+
+  def with_schedule_block(schedule, block, skip_header = false)
     positions = block.obtain_event_positions
     
     output = "<h2>#{ block.start.strftime("%A, %B %d, %Y") }</h2>\n\n"
-    output << schedule_header(block.obtain_tracks)
+    unless skip_header
+      output << schedule_header(block.obtain_tracks)
+    end
     output << "\n\n<div class=\"schedule\">\n"
     output << schedule_body_table(block)
     positions.each do |position|
-      output << schedule_event(position)
+      output << yield(position)
     end
     output << "</div>"
     return output
+  end
+  
+  def schedule_block(schedule, block)
+    with_schedule_block(schedule, block) do |position|
+      schedule_event(position)
+    end
+  end
+
+  def health_class(event)
+    if event.kind_of? LimitedCapacityEvent
+      if event.full?
+        "health_full"
+      elsif event.at_preferred?
+        "health_at_preferred"
+      elsif event.at_min?
+        "health_at_min"
+      else
+        "health_below_min"
+      end
+    else
+      "health_na"
+    end
+  end
+
+  def health_block(schedule, block)
+    with_schedule_block(schedule, block, true) do |position|
+      health_event(position, health_class(position.event))
+    end
   end
 end

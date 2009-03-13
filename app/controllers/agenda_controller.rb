@@ -7,7 +7,7 @@ class AgendaController < ApplicationController
   
   def attendees
     @attendees = @context.all_attendees
-    @attendees.sort! {|a, b| "#{a.lastname}#{a.firstname}".downcase <=> "#{b.lastname}#{b.firstname}".downcase}
+    @attendees = sort_people(@attendees)
   end
 
   private
