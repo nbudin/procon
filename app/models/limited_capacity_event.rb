@@ -131,20 +131,20 @@ class LimitedCapacityEvent < Event
   
   def at_min?
     attendee_slots.each do |slot| 
-      if not slot.at_min?
+      unless slot.at_min? or slot.gender.nil? or slot.gender == "neutral"
         return false
       end
     end
-    return true
+    return attendee_count >= min_count
   end
   
   def at_preferred?
     attendee_slots.each do |slot| 
-      if not slot.at_preferred?
+      unless slot.at_preferred? or slot.gender.nil? or slot.gender == "neutral"
         return false
       end
     end
-    return true
+    return attendee_count >= preferred_count
   end
   
   def waitlist_number(person)
