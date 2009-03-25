@@ -1,4 +1,4 @@
-<h1 id="pagetitle">Spam all confirmed attendees</h1>
+<h1 id="pagetitle">Spam all <%= @method.humanize.downcase %></h1>
 
 <p>Some email programs like you to type a comma (,) between each email address and some like
   a semicolon (;).  For example, Google's GMail prefers commas, and Microsoft Outlook prefers
@@ -7,15 +7,15 @@
 <h2>Commas</h2>
 
 <p>
-<%=h(@event.confirmed_attendances.collect do |att|
-  "#{att.person.firstname} #{att.person.lastname} <#{att.person.primary_email_address}>"
+<%=h(@attendees.collect do |p|
+  "#{p.firstname} #{p.lastname} <#{p.primary_email_address}>"
 end.join(", "))%>
 </p>
 
 <h2>Semicolons</h2>
 
 <p>
-<%=h(@event.confirmed_attendances.collect do |att|
-  "#{att.person.firstname} #{att.person.lastname} <#{att.person.primary_email_address}>"
+<%=h(@attendees.collect do |p|
+  "#{p.firstname} #{p.lastname} <#{p.primary_email_address}>"
 end.join("; "))%>
 </p>

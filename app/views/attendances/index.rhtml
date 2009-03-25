@@ -6,12 +6,12 @@
 
 <p>Starts at <%= @event.start %>, ends at <%= @event.end %></p>
 
-<% if @event.has_edit_permissions?(logged_in_person) -%>
-	<%= link_to "Spam all confirmed attendees", :controller => "events", :id => @event.id, :action => "email_list" %>
-<% end -%>
-
 <% if @event.confirmed_attendances.count > 0 -%>
   <h2>Confirmed attendees</h2>
+
+  <% if @event.has_edit_permissions?(logged_in_person) -%>
+  	<%= link_to "Spam all confirmed attendees", :controller => "events", :id => @event.id, :action => "email_list" %>
+  <% end -%>
   
   <%= render :partial => 'attendee_table', 
     :locals => { :attendances => @event.confirmed_attendances, :waitlist => false } %>
@@ -19,6 +19,10 @@
 
 <% if @event.waitlist_attendances.count > 0 -%>
   <h2>Waitlisted attendees</h2>
+
+  <% if @event.has_edit_permissions?(logged_in_person) -%>
+	  <%= link_to "Spam all waitlist attendees", :controller => "events", :id => @event.id, :action => "email_list", :waitlist => true %>
+  <% end -%>
 
   <%= render :partial => 'attendee_table', 
     :locals => { :attendances => @event.waitlist_attendances, :waitlist => true } %>

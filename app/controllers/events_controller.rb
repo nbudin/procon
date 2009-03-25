@@ -2,7 +2,13 @@ class EventsController < ApplicationController
   before_filter :check_edit_permissions, :except => [:show, :show_description]
   
   def email_list
+    @method = if params[:waitlist]
+      "waitlist_attendees"
+    else
+      "confirmed_attendees"
+    end
     @event = Event.find(params[:id])
+    @attendees = @event.send(@method)
   end
   
   def signup_sheet
