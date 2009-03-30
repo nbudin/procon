@@ -43,6 +43,9 @@ class Event < ActiveRecord::Base
     :source => :location, :conditions => ["exclusive = ?", true]
   has_many :shareable_locations, :through => :event_locations, :dependent => :destroy,
     :source => :location, :conditions => ["exclusive = ?", false]
+
+  has_many :staff_positions, :dependent => :destroy, :order => "position"
+  get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
     
   belongs_to :registration_policy
   has_many :virtual_sites

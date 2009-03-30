@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 49) do
+ActiveRecord::Schema.define(:version => 50) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -27,11 +27,12 @@ ActiveRecord::Schema.define(:version => 49) do
     t.integer  "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "counts",      :default => true
+    t.boolean  "counts",            :default => true
     t.boolean  "is_staff"
-    t.boolean  "is_waitlist", :default => false
+    t.boolean  "is_waitlist",       :default => false
     t.datetime "deleted_at"
     t.string   "gender"
+    t.integer  "staff_position_id"
   end
 
   add_index "attendances", ["event_id"], :name => "index_attendances_on_event_id"
@@ -228,6 +229,15 @@ ActiveRecord::Schema.define(:version => 49) do
     t.text   "header"
     t.text   "footer"
     t.text   "themeroller_css"
+  end
+
+  create_table "staff_positions", :force => true do |t|
+    t.integer  "event_id"
+    t.string   "name"
+    t.boolean  "publish_email", :default => true
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "tracks", :force => true do |t|

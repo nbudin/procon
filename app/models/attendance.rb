@@ -1,6 +1,7 @@
 class Attendance < ActiveRecord::Base
   belongs_to :person
   belongs_to :event
+  belongs_to :staff_position
   acts_as_paranoid
   
   has_many :public_info_values
