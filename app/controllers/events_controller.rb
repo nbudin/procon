@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_filter :check_edit_permissions, :except => [:show, :show_description, :propose]
-  require_login :only => [:propse, :submit_proposal]
+  require_login :only => [:propose, :submit_proposal]
   
   def email_list
     @method = if params[:waitlist]
