@@ -173,6 +173,15 @@ class EventsController < ApplicationController
         flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
       end
     end
+
+    if @event.kind_of? ProposedEvent
+      if not @event.staff.include? @event.proposer
+        a = Attendance.new :person => @event.proposer, :event => @event, :is_staff => true, :counts => false
+        if not a.save
+          flash[:error_messages].push("Could not add the event proposer as a staff member: #{a.errors.full_messages.join(", ")}")
+        end
+      end
+    end
     
     if not params[:add_public_info_field].blank?
       pif = @event.public_info_fields.new :name => params[:add_public_info_field]
