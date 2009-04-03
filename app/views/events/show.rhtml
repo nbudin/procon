@@ -40,7 +40,8 @@
 </div>
 <% end -%>
 
-<div id="attendeeinfo">
+<% unless @event.kind_of? ProposedEvent -%>
+  <div id="attendeeinfo">
 	<h2>Attendees</h2>
 	<p>
 	  <% if @event.kind_of? LimitedCapacityEvent and @event.gendered? -%>
@@ -89,6 +90,7 @@
 	    <% end -%>
 	  </table>
 	<% end -%>
-</div>
+  </div>
+<% end -%>
   
   

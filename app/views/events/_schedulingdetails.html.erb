@@ -1,5 +1,13 @@
-<b>Time:</b> <%= event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
-<b>Length:</b> <%= event_length event %>
+<% if event.kind_of? ProposedEvent -%>
+  <p><i>This is a proposed event that has not yet been accepted or rejected.  Details are subject to change.</i></p>
+<% end -%>
+
+<% if event.start -%>
+  <b>Time:</b> <%= event.start.strftime "%B %d, %Y at %I:%M %p" %><br/>
+  <% if event.end -%>
+    <b>Length:</b> <%= event_length event %>
+  <% end -%>
+<% end -%>
 <% if event.locations.size > 0 -%>
   <br/><b>Location:</b> <%= event_locations event %>
 <% end -%>

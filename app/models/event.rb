@@ -58,7 +58,7 @@ class Event < ActiveRecord::Base
   
   # possibly replace this with a confirmation check later
   validate do |e|
-    if e.length > 2.weeks
+    if e.length and e.length > 2.weeks
       e.errors.add_to_base "Events cannot be longer than 2 weeks"
     end
   end
@@ -232,7 +232,9 @@ class Event < ActiveRecord::Base
   end
   
   def length
-    self.end - self.start
+    if self.end and self.start
+      self.end - self.start
+    end
   end
   
   def obtain_registration_policy

@@ -1,22 +1,32 @@
 <div id="eventedit">
-  <ul id="contents">
-    <li><a href="#basiceventinfo"><span>Basic Information</span></a></li>
-    <li><a href="#locations"><span>Locations</span></a></li>
-    <li><a href="#descriptionblurb"><span>Description/Blurb</span></a></li>
-    <li><a href="#regoptions"><span>Registration Options</span></a></li>
-    <li><a href="#publicinfo"><span>Public Signup Info</span></a></li>
-    <li><a href="#virtualsites"><span>Virtual Sites</span></a></li>
-    <li><a href="#staff"><span>Staff</span></a></li>
-  </ul>
+  <% unless @event.kind_of? ProposedEvent %>
+    <ul id="contents">
+      <li><a href="#basiceventinfo"><span>Basic Information</span></a></li>
+      <li><a href="#locations"><span>Locations</span></a></li>
+      <li><a href="#descriptionblurb"><span>Description/Blurb</span></a></li>
+      <li><a href="#regoptions"><span>Registration Options</span></a></li>
+      <li><a href="#publicinfo"><span>Public Signup Info</span></a></li>
+      <li><a href="#virtualsites"><span>Virtual Sites</span></a></li>
+      <li><a href="#staff"><span>Staff</span></a></li>
+    </ul>
+  <% end -%>
 
   <div id="basiceventinfo">
     <h2>Basic Information</h2>
     <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
       <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
-      <% parent_start = @event.parent && @event.parent.start
-         parent_end = @event.parent && @event.parent.end %>
-      <b>Starts:</b> <%= constrained_datetime_select "event", "start", parent_start, parent_end, :default => @event.start %><br/>
-      <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
+      
+      <% if @event.kind_of? ProposedEvent -%>
+        </p>
+	<p>What would you like the timing of this event to be?  Please include the length of the event, and any preferences you have
+	for when it should be held, if applicable.</p>
+	<%= text_area "event", "proposed_timing", :default=> @event.proposed_timing, :style => "width: 100%" %>
+      <% else -%>
+        <% parent_start = @event.parent && @event.parent.start
+           parent_end = @event.parent && @event.parent.end %>
+	<b>Starts:</b> <%= constrained_datetime_select "event", "start", parent_start, parent_end, :default => @event.start %><br/>
+        <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
+      <% end -%>
   </div>
 
   <script type="text/javascript">
@@ -33,21 +43,31 @@
 
   <div id="locations">
     <h2>Locations</h2>
-
-    <p id="location_summary">Current locations:
-    <% if @event.locations.size > 0 -%>
-      <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
+    
+    <% if @event.kind_of? ProposedEvent -%>
+      <p id="location_summary">Please tell us what sort of location or space you'd like for this event.  Include as many details as possible.</p>
+      <%= text_area "event", "proposed_location", :default => @event.proposed_location, :style => "width: 100%" %>
     <% else -%>
-      none
-    <% end -%></p>
+      <p id="location_summary">Current locations:
+      <% if @event.locations.size > 0 -%>
+        <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
+      <% else -%>
+        none
+      <% end -%></p>
 
-    <select id="event_locations" multiple="multiple" name="locations[]">
-    	<%= location_options @event.locations %>
-    </select>
+      <select id="event_locations" multiple="multiple" name="locations[]">
+        <%= location_options @event.locations %>
+      </select>
+    <% end -%>
   </div>
 
   <div id="descriptionblurb">
     <h2>Description/Blurb</h2>
+
+    <p>The description and blurb are the main advertising text for this event.  In general, blurbs should be shorter, as they will be used in
+    things like brochures, flyers, and short advertising messages.</p>
+
+    <p>HTML tags, such as &lt;p&gt;, &lt;b&gt;, and &lt;br&gt; can be used for formatting.</p>
 
     <table>
       <tr>
@@ -67,12 +87,14 @@
     <h2>Registration Options</h2>
 
     <table>
-      <tr>
-        <td>Event registration is:</td>
-        <td>open <%= radio_button_tag "event[registration_open]", "true", @registration_open %>
-	&nbsp;&nbsp;&nbsp;
-        closed <%= radio_button_tag "event[registration_open]", "false", !@registration_open %></td>
-      </tr>
+      <% unless @event.kind_of? ProposedEvent -%>
+        <tr>
+          <td>Event registration is:</td>
+          <td>open <%= radio_button_tag "event[registration_open]", "true", @registration_open %>
+  	  &nbsp;&nbsp;&nbsp;
+          closed <%= radio_button_tag "event[registration_open]", "false", !@registration_open %></td>
+        </tr>
+      <% end -%>
       <tr>
         <td>Can people attend this event at the same time as other events?</td>
         <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @non_exclusive %>
@@ -83,29 +105,47 @@
         <td>This event has a minimum age of:</td>
 	<td><%= text_field_tag "event[min_age]", @min_age %></td>
       </tr>
-      <tr>
-        <td>Limit the number of people who can sign up for this event?</td>
-        <td>yes <%= radio_button_tag "limited_capacity", "true", @limited_capacity,
-                :onChange => "updateCapacityLimitsVisibility();"%>
-	&nbsp;&nbsp;&nbsp;
-        no <%= radio_button_tag "limited_capacity", "false", !@limited_capacity,
-                :onChange => "updateCapacityLimitsVisibility();"%></td>
-      </tr>
-      <tr id="capacity_limits">
-        <td></td>
-        <td>
-          <table>
-            <% %w( male female neutral ).each do |gender| -%>
-              <tr>
-                <td><b><%= gender %></b></td>
-                <% %w( min preferred max ).each do |threshold| -%>
-                  <td><%= threshold.humanize %>: <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold] %></td>
-                <% end -%>
-              </tr>
-            <% end %>
-          </table>
-        </td>
-      </tr>
+      <% if @event.kind_of? ProposedEvent -%>
+        <tr>
+	  <td colspan="2">
+	    <h3>Capacity Limits</h3>
+	    
+	    <p>Does this event have a limited capacity for attendees?  If so, please let us know the following things:</p>
+	    <ul>
+	      <li>How many attendees, at minimum, does it need to run?</li>
+	      <li>How many attendees would you <i>prefer</i> to have?</li>
+	      <li>What's the maximum number of attendees the event can take?</li>
+	    </ul>
+	    <p>If there are specific gender limitations for attendee slots, please let us know those here as well.</p>
+
+	    <%= text_area "event", "proposed_capacity_limits", :default => @event.proposed_capacity_limits, :style => "width: 100%" %>
+	  </td>
+	</tr>
+      <% else -%>
+        <tr>
+          <td>Limit the number of people who can sign up for this event?</td>
+          <td>yes <%= radio_button_tag "limited_capacity", "true", @limited_capacity,
+                  :onChange => "updateCapacityLimitsVisibility();"%>
+	  &nbsp;&nbsp;&nbsp;
+          no <%= radio_button_tag "limited_capacity", "false", !@limited_capacity,
+                  :onChange => "updateCapacityLimitsVisibility();"%></td>
+        </tr>
+        <tr id="capacity_limits">
+          <td></td>
+          <td>
+            <table>
+              <% %w( male female neutral ).each do |gender| -%>
+                <tr>
+                  <td><b><%= gender %></b></td>
+                  <% %w( min preferred max ).each do |threshold| -%>
+                    <td><%= threshold.humanize %>: <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold] %></td>
+                  <% end -%>
+                </tr>
+              <% end %>
+            </table>
+          </td>
+        </tr>
+      <% end -%>
     </table>
   </div>
   
@@ -120,11 +160,13 @@
     <%= render :partial => "public_info_form" %>
   </div>
 
-  <div id="virtualsites">
-    <h2>Virtual Sites</h2>
+  <% unless @event.kind_of? ProposedEvent -%>
+    <div id="virtualsites">
+      <h2>Virtual Sites</h2>
 
-    <%= render :partial => "virtual_sites_form" %>
-  </div>
+      <%= render :partial => "virtual_sites_form" %>
+    </div>
+  <% end -%>
 
   <div id="staff">
     <h2>Event Staff</h2>
@@ -139,6 +181,16 @@
     <% end -%>
     <p>Add staff by name: <%= user_picker "add_staff" %></p>
   </div>
+
+  <% if @event.kind_of? ProposedEvent -%>
+    <div id="proposalcomments">
+      <h2>Anything else?</h2>
+      
+      <p>If there's anything else you'd like to tell us, please do so here:</p>
+
+      <%= text_area "event", "proposal_comments", :default => @event.proposal_comments, :style => "width: 100%" %>
+    </div>
+  <% end -%>
 
   <%= submit_tag %>
 </div>

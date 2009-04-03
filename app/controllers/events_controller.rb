@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
-  before_filter :check_edit_permissions, :except => [:show, :show_description]
+  before_filter :check_edit_permissions, :except => [:show, :show_description, :propose]
+  require_login :only => [:propse, :submit_proposal]
   
   def email_list
     @method = if params[:waitlist]
@@ -110,7 +111,24 @@ class EventsController < ApplicationController
     @event = Event.find params[:id]
     save_from_form
   end
+
+  def propose
+    @event = ProposedEvent.new
+    if @context
+      @event.parent = @context
+    end
+    calculate_edit_vars
+  end
   
+  def submit_proposal
+    @event = ProposedEvent.new(params[:event])
+    if @context
+      @event.parent = @context
+    end
+    @event.proposer ||= logged_in_person
+    save_from_form
+  end
+
   private
   def save_from_form
     if @event.new_record?

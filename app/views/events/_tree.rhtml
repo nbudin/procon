@@ -9,7 +9,9 @@ end -%>
     <% roots.each do |event| -%>
       <% if events.include? event -%>
         <li><%= render :partial => "events/link", :locals => { :event => event } %>
-          - <%= event.start.strftime "%B %d, %Y at %I:%M %p" %>, <%= event_length event %>
+	  <% if event.start -%>
+            - <%= event.start.strftime "%B %d, %Y at %I:%M %p" %><% if event.end %>, <%= event_length event %><% end %>
+	  <% end -%>
           <% if event.children.length > 0 -%>
             <%= render :partial => "events/tree", :locals => { :events => events, :roots => event.children } %>
           <% end -%>
