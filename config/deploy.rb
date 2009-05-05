@@ -66,6 +66,8 @@ namespace :deploy do
   task :after_update_code do
     run "rm -f #{release_path}/config/database.yml"
     run "ln -nfs #{deploy_to}/#{shared_dir}/config/database.yml #{release_path}/config/database.yml"
+    run "rm -f #{release_path}/config/scout.yml"
+    run "ln -nfs #{deploy_to}/#{shared_dir}/config/scout.yml #{release_path}/config/scout.yml"
     run "ln -nfs #{deploy_to}/#{shared_dir}/attached_images #{release_path}/public/attached_images"
   end
 end
