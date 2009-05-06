@@ -1,5 +1,5 @@
 # This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of ActiveRecord to incrementally modify your database, and
+# please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your database schema. If you need
@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 51) do
+ActiveRecord::Schema.define(:version => 20090506213221) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -35,11 +35,11 @@ ActiveRecord::Schema.define(:version => 51) do
     t.integer  "staff_position_id"
   end
 
-  add_index "attendances", ["event_id"], :name => "index_attendances_on_event_id"
-  add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
-  add_index "attendances", ["deleted_at"], :name => "index_attendances_on_deleted_at"
   add_index "attendances", ["counts"], :name => "index_attendances_on_counts"
+  add_index "attendances", ["deleted_at"], :name => "index_attendances_on_deleted_at"
+  add_index "attendances", ["event_id"], :name => "index_attendances_on_event_id"
   add_index "attendances", ["gender"], :name => "index_attendances_on_gender"
+  add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
 
   create_table "attendee_slots", :force => true do |t|
     t.integer  "event_id",   :null => false
@@ -68,6 +68,8 @@ ActiveRecord::Schema.define(:version => 51) do
     t.integer "location_id"
     t.boolean "exclusive",   :default => true
   end
+
+  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
 
   create_table "events", :force => true do |t|
     t.string   "fullname",                                                    :null => false
@@ -128,9 +130,9 @@ ActiveRecord::Schema.define(:version => 51) do
     t.boolean "result"
   end
 
-  add_index "permission_caches", ["person_id"], :name => "index_permission_caches_on_person_id"
-  add_index "permission_caches", ["permissioned_id", "permissioned_type"], :name => "index_permission_caches_on_permissioned"
   add_index "permission_caches", ["permission_name"], :name => "index_permission_caches_on_permission_name"
+  add_index "permission_caches", ["permissioned_id", "permissioned_type"], :name => "index_permission_caches_on_permissioned"
+  add_index "permission_caches", ["person_id"], :name => "index_permission_caches_on_person_id"
 
   create_table "permissions", :force => true do |t|
     t.integer "role_id"
@@ -138,6 +140,11 @@ ActiveRecord::Schema.define(:version => 51) do
     t.integer "permissioned_id"
     t.string  "permissioned_type"
     t.integer "person_id"
+  end
+
+  create_table "plugin_schema_info", :id => false, :force => true do |t|
+    t.string  "plugin_name"
+    t.integer "version"
   end
 
   create_table "procon_profiles", :force => true do |t|
@@ -164,8 +171,8 @@ ActiveRecord::Schema.define(:version => 51) do
     t.datetime "updated_at"
   end
 
-  add_index "public_info_values", ["public_info_field_id"], :name => "index_public_info_values_on_public_info_field_id"
   add_index "public_info_values", ["attendance_id"], :name => "index_public_info_values_on_attendance_id"
+  add_index "public_info_values", ["public_info_field_id"], :name => "index_public_info_values_on_public_info_field_id"
 
   create_table "registration_buckets", :force => true do |t|
     t.integer "event_id",  :null => false
