@@ -13,7 +13,21 @@ class Schedule < ActiveRecord::Base
         end
       end
     end
-    return events.sort {|a,b| a.start == b.start ? a.end <=> b.end : a.start <=> b.start }
+    return events.sort do |a,b| 
+      if a.start and b.start
+        if a.start == b.start
+          if a.end and b.end
+            a.end <=> b.end
+          else
+            0
+          end
+        else
+          a.start <=> b.start
+        end
+      else
+        0
+      end
+    end
   end
 
   def all_events_registration_open=(status)
@@ -31,6 +45,10 @@ class Schedule < ActiveRecord::Base
 
     high_water_mark = nil
     non_blocked_events.each do |event|
+      unless event.start and event.end
+        next
+      end
+
       if high_water_mark.nil?
         high_water_mark = event.end
       end
