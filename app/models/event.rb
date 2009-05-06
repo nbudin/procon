@@ -2,7 +2,9 @@ class Event < ActiveRecord::Base
   acts_as_permissioned
   
   has_many :attendances, :order => "created_at", :dependent => :destroy
-  
+  has_many :attendee_slots, :foreign_key => "event_id"
+  has_many :registration_buckets, :foreign_key => "event_id"
+    
   private
   # convenience method for getting the actual people associated with a group
   # of attendances
@@ -191,17 +193,17 @@ class Event < ActiveRecord::Base
   
   def attendee_count(gender=nil)
     if gender.nil?
-      attendances.count :all, :conditions => ["counts = ?", true]
+      attendances.select { |att| att.counts }.size
     else
-      attendances.count(:conditions => ["counts = ? and gender = ?", true, gender])
+      attendances.select { |att| att.counts and att.gender == gender }.size
     end
   end
   
   def waitlist_count(gender=nil)
     if gender.nil?
-      attendances.count :all, :conditions => ["is_waitlist = ?", true]
+      attendances.select { |att| att.is_waitlist }.size
     else
-      attendances.count(:conditions => ["is_waitlist = ? and gender = ?", true, gender])
+      attendances.select { |att| att.is_waitlist and att.gender == gender }.size
     end
   end
   

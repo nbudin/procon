@@ -1,7 +1,4 @@
 class LimitedCapacityEvent < Event
-  has_many :attendee_slots, :foreign_key => "event_id"
-  has_many :registration_buckets, :foreign_key => "event_id"
-  
   alias_method :attendance_invalid_without_limit_checks?, :attendance_invalid?
   def attendance_invalid?(attendance)
     if err = attendance_invalid_without_limit_checks?(attendance)
@@ -50,6 +47,16 @@ class LimitedCapacityEvent < Event
     end
     return "That event has reached its capacity."
   end
+
+  def gender_slot(gender)
+    if @gender_slots.nil?
+      @gender_slots = {}
+      attendee_slots.each do |slot|
+        @gender_slots[slot.gender] = slot
+      end
+    end
+    @gender_slots[gender]
+  end
   
   def slot_count(gender, threshold)
     if gender.nil?
@@ -59,7 +66,7 @@ class LimitedCapacityEvent < Event
       end
       return total
     else
-      slot = attendee_slots.find_by_gender(gender)
+      slot = gender_slot(gender)
       if slot.nil?
         return 0
       else
@@ -148,7 +155,7 @@ class LimitedCapacityEvent < Event
   end
   
   def waitlist_number(person)
-    wa = attendances.find(:all, :conditions => ["person_id = ? and is_waitlist = ?", person.id, true])
+    wa = attendances.select {|att| att.person == person and att.is_waitlist }
     if wa.size > 0
       return waitlist_attendances.index(wa[0]) + 1
     else

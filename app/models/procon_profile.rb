@@ -2,11 +2,25 @@ class ProconProfile < ActiveRecord::Base
   belongs_to :person
   
   def attendances
-    Attendance.find_all_by_person_id(person.id)
+    if @attendances.nil?
+      reload_attendances
+    end
+    @attendances.values
+  end
+
+  def reload_attendances
+    @attendances = {}
+    Attendance.find_all_by_person_id(person.id, :include => [:event]).each do |att|
+      @attendances[att.event.id] = att
+    end
   end
   
   def attendance_for_event(event_id)
-    Attendance.find_by_person_id_and_event_id(person.id, event_id)
+    if @attendances.nil?
+      reload_attendances
+    end
+    key = event_id.respond_to?('id') ? event_id.id : event_id
+    return @attendances[key]
   end
   
   def attending?(event)
