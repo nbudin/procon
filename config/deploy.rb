@@ -13,7 +13,7 @@
 # form the root of the application path.
 
 set :application, "procon"
-set :repository, "http://procon.googlecode.com/svn/trunk"
+set :repository, "git://github.com/nbudin/procon.git"
 
 # =============================================================================
 # ROLES
@@ -36,12 +36,10 @@ set :deploy_to, "/var/www/events.brandeislarp.com"
 set :use_sudo, false
 set :checkout, "export"
 set :user, "www-data"            # defaults to the currently logged in user
-#set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
-set :scm, :subversion               # defaults to :subversion
-# set :svn, "/path/to/svn"       # defaults to searching the PATH
-# set :darcs, "/path/to/darcs"   # defaults to searching the PATH
-# set :cvs, "/path/to/cvs"       # defaults to searching the PATH
-# set :gateway, "gate.host.com"  # default to no gateway
+set :deploy_via, :remote_cache
+set :scm, :git               # defaults to :subversion
+set :git_enable_submodules, 1
+
 
 # =============================================================================
 # SSH OPTIONS
