@@ -9,7 +9,7 @@ context_events(logged_in_person).each do |a|
     past.push a
   elsif e.start and e.start < now
     current.push a
-  else
+  elsif e.start
     upcoming.push a
   end
 end -%>
