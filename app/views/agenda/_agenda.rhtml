@@ -5,9 +5,9 @@ past = []
 now = Time.now
 context_events(logged_in_person).each do |a|
   e = a.event
-  if e.end < now
+  if e.end and e.end < now
     past.push a
-  elsif e.start < now
+  elsif e.start and e.start < now
     current.push a
   else
     upcoming.push a
