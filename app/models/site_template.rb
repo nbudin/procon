@@ -37,6 +37,7 @@ class SiteTemplate < ActiveRecord::Base
   has_many :virtual_sites
   has_many :attached_images, :dependent => :destroy
   acts_as_permissioned
+  after_save :save_attached_images
   
   def themeroller_css()
     data = read_attribute(:themeroller_css)
@@ -60,7 +61,7 @@ class SiteTemplate < ActiveRecord::Base
       Zip::ZipFile.open(tf.path) do |zipfile|
         zipfile.each do |entry|
           if entry.name =~ /images\/.*(png|gif|jpg|jpeg)$/i
-            i = attached_images.create
+            i = attached_images.new
             img = i.image
             img.assign(ZipFileEntryReader.new(entry, zipfile))
             if not img.valid?
@@ -79,5 +80,12 @@ class SiteTemplate < ActiveRecord::Base
       file.read
     end
     write_attribute(:themeroller_css, data)
+  end
+  
+  private
+  def save_attached_images
+    attached_images.each do |i|
+      i.save
+    end
   end
 end
