@@ -67,7 +67,7 @@ class SiteTemplate < ActiveRecord::Base
               log.error "[SiteTemplate] Errors with attachment: #{img.errors.join(", ")}"
             end
             i.save!
-          elsif entry.name == "jquery-ui-themeroller.css"
+          elsif entry.name == "jquery-ui-themeroller.css" or entry.name == "ui.all.css"
             css = zipfile.read(entry.name)
           end
         end
