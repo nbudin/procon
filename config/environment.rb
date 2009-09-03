@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.3' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -40,6 +40,10 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
+
+  config.gem 'aaronchi-jrails', :lib => 'jrails', :source => "http://gems.github.com", :version => "~> 0.5.1"
+  config.gem 'thoughtbot-paperclip', :lib => 'paperclip', :source => "http://gems.github.com", :version => "~> 2.3.1"
+  config.gem 'febeling-rubyzip', :lib => 'zip/zip', :source => "http://gems.github.com", :version => "~> 0.9.2"
   
   config.action_controller.session = { :session_key => '_procon_session',
     :secret => 'bc255802f9d9bc085a354679499f23c59bd5c4750ad7c12e3ddb2b1b1ce65092ad081667da7c798f01fc00e981535f28efa7cef737ec068bffde7598773a663f'
