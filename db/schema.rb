@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090506213221) do
+ActiveRecord::Schema.define(:version => 20090903145935) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -262,7 +262,7 @@ ActiveRecord::Schema.define(:version => 20090506213221) do
   end
 
   create_table "virtual_sites", :force => true do |t|
-    t.integer "event_id",         :null => false
+    t.integer "event_id"
     t.string  "domain",           :null => false
     t.integer "site_template_id"
   end
