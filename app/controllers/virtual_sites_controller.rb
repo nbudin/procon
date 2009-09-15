@@ -33,7 +33,7 @@ class VirtualSitesController < ApplicationController
     
     respond_to do |format|
       if @virtual_site.save
-        format.html { redirect_to virtual_site_url(@virtual_site) }
+        format.html { redirect_to virtual_sites_url }
         format.xml  { head :created, :location => virtual_site_url(@virtual_site) }
       else
         format.html { render :action => "index" }
