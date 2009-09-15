@@ -170,8 +170,8 @@ class LimitedCapacityEvent < Event
         wa.is_waitlist = false
         wa.counts = true
         # treat this as if if was a new signup for validation purposes
-        if not attendance_invalid_if_new?(wa)
-          wa.save
+        unless attendance_invalid_if_new?(wa)
+          wa.save(false)
           successful = true
           break
         end
