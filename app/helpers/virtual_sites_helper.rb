@@ -1,0 +1,2 @@
+module VirtualSitesHelper
+end

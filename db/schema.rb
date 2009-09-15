@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090903145935) do
+ActiveRecord::Schema.define(:version => 20090915171229) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -265,6 +265,7 @@ ActiveRecord::Schema.define(:version => 20090903145935) do
     t.integer "event_id"
     t.string  "domain",           :null => false
     t.integer "site_template_id"
+    t.string  "name"
   end
 
   add_index "virtual_sites", ["domain"], :name => "index_virtual_sites_on_domain"

@@ -1,0 +1,31 @@
+<h1>Edit virtual site</h1>
+
+<% form_for @virtual_site do |f| -%>
+	<table>
+		<tr>
+			<th>Event</th>
+			<td><%= f.select "event_id", 
+					Event.all.collect { |e| [e.shortname, e.id] },
+					:include_blank => true %></td>
+		</tr>
+		<tr>
+			<th>Name</th>
+			<td><%= f.text_field "name" %></td>
+		</tr>
+		<tr>
+			<th>Domain</th>
+			<td><%= f.text_field "domain" %></td>
+		</tr>
+		<tr>
+			<th>Site template</th>
+			<td><%= f.select "site_template_id", 
+							 SiteTemplate.all.collect {|t| [t.name, t.id]},
+							 :include_blank => true %></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><%= submit_tag %></td>
+		</tr>
+	</table>
+
+<% end -%>

@@ -154,8 +154,10 @@ ENDOFHTML
   def page_title
     if @context
       @context.fullname
+    elsif @virtual_site and not @virtual_site.name.blank?
+      @virtual_site.name
     else
-      $application_name
+      "ProCon"
     end
   end
   
@@ -243,5 +245,9 @@ ENDOFHTML
         return p.permitted?(nil, "edit_events")
       end
     end
+  end
+  
+  def global_admin?
+    logged_in_person_can_edit?(nil)
   end
 end

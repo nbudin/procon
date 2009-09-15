@@ -1,0 +1,44 @@
+<h1>Virtual Sites</h1>
+
+<table>
+	<tr>
+		<th>Name/Event</th>
+		<th>Domain</th>
+		<th>Site template</th>
+	</tr>
+	<% @virtual_sites.each do |vs| -%>
+		<tr>
+			<td>
+				<% if vs.event -%>
+					<%= link_to vs.event.shortname, event_path(vs.event) %>
+				<% else -%>
+					<%=h vs.name %>
+				<% end -%>
+			</td>
+			<td>
+				<%=h vs.domain %>
+			</td>
+			<td>
+				<% if vs.site_template -%>
+					<%=h vs.site_template.name %>
+				<% else -%>
+					<i>None</i>
+				<% end -%>
+			</td>
+			<td>
+				<%= link_to "Edit", virtual_site_path(vs) %>
+				<%= link_to "Delete", virtual_site_path(vs), :confirm => 'Are you sure?', :method => :delete %></td>
+			</td>
+		</tr>
+	<% end -%>
+	<% form_for :virtual_site do |f| %>
+		<tr>
+			<td><%= f.text_field "name" %></td>
+			<td><%= f.text_field "domain" %></td>
+			<td><%= f.select "site_template_id", 
+							 SiteTemplate.all.collect { |t| [t.name, t.id] },
+							 :include_blank => true %></td>
+			<td><%= submit_tag "Create" %></td>
+		</tr>
+	<% end -%>
+</table>
