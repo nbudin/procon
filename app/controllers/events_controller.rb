@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_filter :check_edit_permissions, :except => [:show, :show_description, :propose]
+  before_filter :check_event_visibility, :only => [:show, :show_description]
   require_login :only => [:propose, :submit_proposal]
   
   def email_list
@@ -299,6 +300,13 @@ class EventsController < ApplicationController
     end
     flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
     redirect_to events_url
+  end
+  
+  def check_event_visibility
+    @event = Event.find(params[:id])
+    if @event.kind_of? ProposedEvent
+      check_edit_permissions
+    end
   end
   
   def visible_events
