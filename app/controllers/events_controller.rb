@@ -112,23 +112,6 @@ class EventsController < ApplicationController
     save_from_form
   end
 
-  def propose
-    @event = ProposedEvent.new
-    if @context
-      @event.parent = @context
-    end
-    calculate_edit_vars
-  end
-  
-  def submit_proposal
-    @event = ProposedEvent.new(params[:event])
-    if @context
-      @event.parent = @context
-    end
-    @event.proposer ||= logged_in_person
-    save_from_form
-  end
-
   private
   def save_from_form
     if @event.new_record?

@@ -18,9 +18,11 @@ ActionController::Routing::Routes.draw do |map|
   # -- just remember to delete public/index.html.
   map.connect '', :controller => "main"
   
-  map.resources :events, :collection => {:schedule => :get, :propose => :get, :submit_proposal => :post}, :member => {:available_people => :get} do |events|
+  map.resources :events, :member => { :available_people => :get } do |events|
     events.resources :attendances
   end
+  
+  map.resources :proposals
   
   map.resources :site_templates, :member => {:themeroller => :get} do |site_templates|
     site_templates.resources :attached_images
