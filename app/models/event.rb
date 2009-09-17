@@ -126,6 +126,8 @@ class Event < ActiveRecord::Base
   end
   
   def simultaneous_events
+    return [] unless self.start and self.end
+    
     searchpool = if parent.nil?
       Event.find_all_by_parent_id nil
     else
