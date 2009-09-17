@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
   layout "global"
   before_filter :get_virtual_site
   
+  private
+  
   def get_virtual_site
     @virtual_site = VirtualSite.find_by_domain request.host
     if @virtual_site.nil?
