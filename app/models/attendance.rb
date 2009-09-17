@@ -14,6 +14,10 @@ class Attendance < ActiveRecord::Base
   before_validation :ensure_gender_set
   after_save :check_waitlist
   
+  named_scope :staff, :conditions => { :is_staff => true }
+  named_scope :waitlist, :conditions => { :is_waitlist => true }
+  named_scope :counted, :conditions => { :counts => true }
+  
   def validate
     unless event.nil?
       event.attendance_errors(self).each do |err|

@@ -83,6 +83,10 @@ class LimitedCapacityEvent < Event
     ENDCODE
   end
   
+  def capacity_limit(threshold, opts={})
+    slot_count(opts[:gender], threshold)
+  end
+  
   def open_slots(gender=nil)
     if gender == 'neutral'
       gendered_slot_count = {}

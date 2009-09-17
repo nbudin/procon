@@ -59,7 +59,6 @@ class EventsController < ApplicationController
     if @context
       @event.parent = @context
     end
-    calculate_edit_vars
   end
   
   def create
@@ -104,7 +103,7 @@ class EventsController < ApplicationController
   
   def edit
     @event = Event.find params[:id]
-    calculate_edit_vars
+    @event.attendances.build :is_staff => true
   end
   
   def update
@@ -137,25 +136,6 @@ class EventsController < ApplicationController
     end
     
     flash[:error_messages] ||= []
-    
-    if params[:locations]
-      locs = params[:locations]
-      @event.event_locations.each do |booking|
-        if not locs.include? booking.location.id
-          booking.destroy
-        end
-      end
-
-      locs.each do |locid|
-        loc = Location.find(locid)
-        if not @event.locations.include? Location.find(locid)
-          booking = EventLocation.new(:event => @event, :location => loc, :exclusive => true)
-          if not booking.save
-            flash[:error_messages].push("Could not add the location #{loc.name}: #{booking.errors.full_messages.join(", ")}")
-          end
-        end
-      end    
-    end
     
     if params[:remove_staff]
       params[:remove_staff].each_key do |staff_id|
@@ -253,31 +233,6 @@ class EventsController < ApplicationController
         format.xml  { render :xml => @event.errors.to_xml }
       end
     end
-  end
-  
-  def calculate_edit_vars
-    @limited_capacity = @event.kind_of? LimitedCapacityEvent
-    @limits = {}
-    %w(male female neutral).each do |gender|
-      @limits[gender] = {}
-      slot = nil
-      if @limited_capacity
-        slot = @event.attendee_slots.find_by_gender(gender)
-      end
-      %w(min preferred max).each do |threshold|
-        if slot.nil?
-          limit = 0
-        else
-          limit = slot.send(threshold)
-        end
-        @limits[gender][threshold] = limit
-      end
-    end
-    
-    @registration_open = @event.registration_open
-    @non_exclusive = @event.non_exclusive
-    @age_restricted = @event.age_restricted
-    @min_age = @event.min_age
   end
   
   def check_edit_permissions

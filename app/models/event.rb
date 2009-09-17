@@ -4,6 +4,8 @@ class Event < ActiveRecord::Base
   has_many :attendances, :order => "created_at", :dependent => :destroy
   has_many :attendee_slots, :foreign_key => "event_id"
   has_many :registration_buckets, :foreign_key => "event_id"
+  
+  accepts_nested_attributes_for :attendances, :allow_destroy => true
     
   private
   # convenience method for getting the actual people associated with a group
@@ -41,10 +43,6 @@ class Event < ActiveRecord::Base
     
   has_many :event_locations, :dependent => :destroy
   has_many :locations, :through => :event_locations, :dependent => :destroy
-  has_many :exclusive_locations, :through => :event_locations, :dependent => :destroy,
-    :source => :location, :conditions => ["exclusive = ?", true]
-  has_many :shareable_locations, :through => :event_locations, :dependent => :destroy,
-    :source => :location, :conditions => ["exclusive = ?", false]
 
   has_many :staff_positions, :dependent => :destroy, :order => "position"
   get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
@@ -139,7 +137,7 @@ class Event < ActiveRecord::Base
   
   def shared_locations
     simevents = simultaneous_events
-    shareable_locations.select do |loc|
+    event_locations.shareable.collect {|el| el.location}.select do |loc|
       simevents.collect do |e|
         e.locations.include? loc
       end.include? true
@@ -329,6 +327,26 @@ class Event < ActiveRecord::Base
   def to_xml
     super(:methods => [:min_age, :age_restricted, :registration_open, :non_exclusive])
   end
+  
+  def capacity_limit(threshold, opts={})
+    0
+  end
+  
+  def exclusive_location_ids
+    locations.exclusive.collect { |loc| loc.id }
+  end
+  
+  def shareable_location_ids
+    locations.shareable.collect { |loc| loc.id }
+  end
+  
+  def exclusive_location_ids=(loc_ids)
+    set_location_ids(true, loc_ids)
+  end
+  
+  def shareable_location_ids=(loc_ids)
+    set_location_ids(false, loc_ids)
+  end
 
   private
   def param_to_bool(param)
@@ -337,5 +355,16 @@ class Event < ActiveRecord::Base
     else
       return param.to_s.downcase == "true"
     end
+  end
+  
+  def set_location_ids(exclusive, loc_ids)
+    locs = Location.find_all_by_id(loc_ids)
+    keep_els = event_locations.select { |el| el.exclusive ^ exclusive }
+    locs.each do |loc|
+      keep_el = event_locations.select { |el| el.location == loc }.first
+      keep_el ||= EventLocation.new :location => loc, :exclusive => exclusive
+      keep_els << keep_el
+    end
+    self.event_locations = keep_els
   end
 end

@@ -55,9 +55,7 @@
         none
       <% end -%></p>
 
-      <select id="event_locations" multiple="multiple" name="locations[]">
-        <%= location_options @event.locations %>
-      </select>
+	  <%= f.select "exclusive_location_ids", location_options(@event.locations.exclusive), {}, {:multiple => "multiple"} %>
     <% end -%>
   </div>
 
@@ -90,20 +88,20 @@
       <% unless @event.kind_of? ProposedEvent -%>
         <tr>
           <td>Event registration is:</td>
-          <td>open <%= radio_button_tag "event[registration_open]", "true", @registration_open %>
+          <td>open <%= radio_button_tag "event[registration_open]", "true", @event.registration_open %>
   	  &nbsp;&nbsp;&nbsp;
-          closed <%= radio_button_tag "event[registration_open]", "false", !@registration_open %></td>
+          closed <%= radio_button_tag "event[registration_open]", "false", !@event.registration_open %></td>
         </tr>
       <% end -%>
       <tr>
         <td>Can people attend this event at the same time as other events?</td>
-        <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @non_exclusive %>
+        <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @event.non_exclusive %>
 	&nbsp;&nbsp;&nbsp;
-        no <%= radio_button_tag "event[non_exclusive]", "false", !@non_exclusive %></td>
+        no <%= radio_button_tag "event[non_exclusive]", "false", !@event.non_exclusive %></td>
       </tr>
       <tr>
         <td>This event has a minimum age of:</td>
-	<td><%= text_field_tag "event[min_age]", @min_age %></td>
+	<td><%= text_field_tag "event[min_age]", @event.min_age %></td>
       </tr>
       <% if @event.kind_of? ProposedEvent -%>
         <tr>
@@ -124,10 +122,12 @@
       <% else -%>
         <tr>
           <td>Limit the number of people who can sign up for this event?</td>
-          <td>yes <%= radio_button_tag "limited_capacity", "true", @limited_capacity,
+          <td>yes <%= radio_button_tag "limited_capacity", "true", 
+				  @event.kind_of?(LimitedCapacityEvent),
                   :onChange => "updateCapacityLimitsVisibility();"%>
 	  &nbsp;&nbsp;&nbsp;
-          no <%= radio_button_tag "limited_capacity", "false", !@limited_capacity,
+          no <%= radio_button_tag "limited_capacity", "false", 
+				  !@event.kind_of?(LimitedCapacityEvent),
                   :onChange => "updateCapacityLimitsVisibility();"%></td>
         </tr>
         <tr id="capacity_limits">
@@ -138,7 +138,10 @@
                 <tr>
                   <td><b><%= gender %></b></td>
                   <% %w( min preferred max ).each do |threshold| -%>
-                    <td><%= threshold.humanize %>: <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold] %></td>
+                    <td>
+                      <%= threshold.humanize %>: 
+					  <%= text_field_tag "limits[#{gender}][#{threshold}]", 
+                                         @event.capacity_limit(threshold, :gender => gender) %></td>
                   <% end -%>
                 </tr>
               <% end %>
@@ -170,14 +173,29 @@
 
   <div id="staff">
     <h2>Event Staff</h2>
-    <% if @event.staff.length > 0 -%>
-      <ul>
-        <% @event.staff.each do |staff| -%>
-          <li><%= staff.name %> (Remove: <%= check_box_tag "remove_staff[#{staff.id}]" %>)</li>
-        <% end -%>
-      </ul>
+	
+	
+	<% if @event.attendances.staff.length > 0 -%>
+  	  <ul>
+		<% f.fields_for :attendances do |att_fields| -%>
+		  <% if att_fields.object.is_staff -%>
+			<li>
+			  <% att_fields.hidden_field "is_staff" -%>
+			  <% att_fields.hidden_field "counts" -%>
+			  
+			  <% if att_fields.object.new_record? -%>
+				<%= att_fields.select "person_id", Person.all.collect {|p| [p.name, p.id]} %>
+			  <% else -%>
+				<%= att_fields.object.person.name %>
+			  <% end -%>
+			  
+			  (<%= att_fields.label :_delete, "Remove:" %> <%= att_fields.check_box :_delete %>)
+		    </li>
+		  <% end -%>
+	    <% end -%>
+	  </ul>
     <% else -%>
-      <p>There are currently no staff listed for this event.</p>
+	  <p>There are currently no staff listed for this event.</p>
     <% end -%>
     <p>Add staff by name: <%= user_picker "add_staff" %></p>
   </div>
