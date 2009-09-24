@@ -87,6 +87,18 @@ class LimitedCapacityEvent < Event
     slot_count(opts[:gender], threshold)
   end
   
+  def capacity_limits
+    limits = {}
+    %w{male female neutral}.each do |gender|
+      gender_limits = {}
+      %w{min preferred max}.each do |threshold|
+        gender_limits[threshold] = capacity_limit(threshold, :gender => gender)
+      end
+      limits[gender] = gender_limits
+    end
+    return limits
+  end
+  
   def open_slots(gender=nil)
     if gender == 'neutral'
       gendered_slot_count = {}

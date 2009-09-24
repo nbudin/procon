@@ -9,6 +9,7 @@ class Attendance < ActiveRecord::Base
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."
   after_destroy :pull_from_waitlist
 
+  validates_presence_of :person
   validates_inclusion_of :gender, :in => ["male", "female"]
 
   before_validation :ensure_gender_set

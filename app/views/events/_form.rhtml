@@ -134,16 +134,18 @@
           <td></td>
           <td>
             <table>
-              <% %w( male female neutral ).each do |gender| -%>
-                <tr>
-                  <td><b><%= gender %></b></td>
-                  <% %w( min preferred max ).each do |threshold| -%>
-                    <td>
-                      <%= threshold.humanize %>: 
-					  <%= text_field_tag "limits[#{gender}][#{threshold}]", 
-                                         @event.capacity_limit(threshold, :gender => gender) %></td>
-                  <% end -%>
-                </tr>
+			  <% %w{male female neutral}.each do |gender| -%>
+                <% f.fields_for :attendee_slots, @event.attendee_slots.find_by_gender(gender) do |slot_fields| -%>
+                  <tr>
+                    <td><b><%= slot_fields.object.gender %></b></td>
+					<% %w{min preferred max}.each do |threshold| -%>
+                      <td style="width: 10em;">
+                        <%= threshold.humanize %>:
+						<%= slot_fields.text_field threshold.to_sym, :style => "width: 2em;" %>
+    					</td>
+    				  <% end -%>
+                  </tr>
+				<% end -%>
               <% end %>
             </table>
           </td>
@@ -160,14 +162,14 @@
     <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process. 
       The answers to these questions will be publicly shown next to the attendee's name.</i></p>
     
-    <%= render :partial => "public_info_form" %>
+    <%= render :partial => "public_info_form", :locals => { :f => f } %>
   </div>
 
   <% unless @event.kind_of? ProposedEvent -%>
     <div id="virtualsites">
       <h2>Virtual Sites</h2>
 
-      <%= render :partial => "virtual_sites_form" %>
+      <%= render :partial => "virtual_sites_form", :locals => { :f => f } %>
     </div>
   <% end -%>
 
@@ -180,16 +182,15 @@
 		<% f.fields_for :attendances do |att_fields| -%>
 		  <% if att_fields.object.is_staff -%>
 			<li>
-			  <% att_fields.hidden_field "is_staff" -%>
-			  <% att_fields.hidden_field "counts" -%>
+			  <%= att_fields.hidden_field :is_staff -%>
+			  <%= att_fields.hidden_field :counts -%>
 			  
 			  <% if att_fields.object.new_record? -%>
-				<%= att_fields.select "person_id", Person.all.collect {|p| [p.name, p.id]} %>
+				<%= att_fields.person_field :person_id %>
 			  <% else -%>
 				<%= att_fields.object.person.name %>
+				(<%= att_fields.label :_delete, "Remove:" %> <%= att_fields.check_box :_delete %>)
 			  <% end -%>
-			  
-			  (<%= att_fields.label :_delete, "Remove:" %> <%= att_fields.check_box :_delete %>)
 		    </li>
 		  <% end -%>
 	    <% end -%>
@@ -197,7 +198,6 @@
     <% else -%>
 	  <p>There are currently no staff listed for this event.</p>
     <% end -%>
-    <p>Add staff by name: <%= user_picker "add_staff" %></p>
   </div>
 
   <% if @event.kind_of? ProposedEvent -%>

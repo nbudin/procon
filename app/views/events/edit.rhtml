@@ -1,5 +1,5 @@
 <h1 id="pagetitle">Editing <%=@event.shortname%></h1>
 
-<% form_for @event, :url => event_path(@event), :html => { :method => :put } do |f| %>
+<% form_for :event, @event, :url => event_path(@event), :html => { :method => :put } do |f| %>
   <%=render :partial => "form", :locals => { :f => f } %>
 <% end %>

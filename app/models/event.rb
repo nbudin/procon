@@ -3,9 +3,15 @@ class Event < ActiveRecord::Base
   
   has_many :attendances, :order => "created_at", :dependent => :destroy
   has_many :attendee_slots, :foreign_key => "event_id"
-  has_many :registration_buckets, :foreign_key => "event_id"
+  has_many :registration_buckets, :foreign_key => "event_id"  
+  has_many :public_info_fields, :dependent => :destroy
+  has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
+  has_many :virtual_sites
   
   accepts_nested_attributes_for :attendances, :allow_destroy => true
+  accepts_nested_attributes_for :attendee_slots, :allow_destroy => true
+  accepts_nested_attributes_for :public_info_fields, :allow_destroy => true
+  accepts_nested_attributes_for :virtual_sites, :allow_destroy => true
     
   private
   # convenience method for getting the actual people associated with a group
@@ -48,7 +54,7 @@ class Event < ActiveRecord::Base
   get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
     
   belongs_to :registration_policy
-  has_many :virtual_sites
+  
     
   has_many :schedules
   has_and_belongs_to_many :tracks
@@ -62,9 +68,6 @@ class Event < ActiveRecord::Base
       e.errors.add_to_base "Events cannot be longer than 2 weeks"
     end
   end
-  
-  has_many :public_info_fields, :dependent => :destroy
-  has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
     
   acts_as_tree :order => "start"
   
@@ -130,7 +133,7 @@ class Event < ActiveRecord::Base
       Event.find_all_by_parent_id nil
     else
       parent.children
-    end.reject { |e| e == self }
+    end.reject { |e| e == self or e.start.nil? or e.end.nil? }
     
     searchpool.select do |e|
       (e.end > self.start and e.start < self.end) 
@@ -332,6 +335,10 @@ class Event < ActiveRecord::Base
   
   def capacity_limit(threshold, opts={})
     0
+  end
+  
+  def capacity_limits()
+    {}
   end
   
   def exclusive_location_ids

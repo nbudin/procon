@@ -1,23 +1,30 @@
 <table>
   <tr>
-    <th></th>
     <th>Domain</th>
     <th>Site Template</th>
-    <th>Delete?</th>
   </tr>
-  <% @event.virtual_sites.each do |vs| -%>
+  <% f.fields_for :virtual_sites do |vs| -%>
     <tr>
-      <td></td>
-      <td><i><%=h vs.domain %></i></td>
-      <td><%=h vs.site_template.name %></td>
-      <td><%= check_box_tag "delete_virtual_site[#{vs.id}]" %></td>
+      <td>
+        <% if vs.object.new_record? -%>
+          <%= vs.text_field :domain %>
+        <% else -%>
+          <i><%=h vs.object.domain %></i>
+        <% end -%>
+      </td>
+      <td>
+        <% if vs.object.new_record? -%>
+          <%= vs.select :site_template_id, SiteTemplate.all.collect { |t| [t.name, t.id]} %>
+        <% else -%>
+          <%=h vs.object.site_template.name %>
+        <% end -%>
+      </td>
+      <td>
+        <% unless vs.object.new_record? -%>
+          (<%= vs.label :_delete, "Remove:" %>
+          <%= vs.check_box :_delete %>)
+        <% end -%>
+      </td>
     </tr>
   <% end -%>
-  <tr>
-    <td>Add new virtual site:</td>
-    <td><%= text_field_tag "add_virtual_site[domain]" %></td>
-    <td><%= select_tag "add_virtual_site[site_template]",
-      options_for_select(SiteTemplate.find(:all).collect { |t| [t.name, t.id] }) %></td>
-    <td></td>
-  </tr>
 </table>
