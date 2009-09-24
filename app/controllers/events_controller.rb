@@ -104,7 +104,6 @@ class EventsController < ApplicationController
   
   def edit
     @event = Event.find params[:id]
-    @event.attendances.build :is_staff => true
   end
   
   def update
