@@ -129,6 +129,18 @@ class EventsController < ApplicationController
     @event.proposer ||= logged_in_person
     save_from_form
   end
+  
+  def add_virtual_site
+	@event = Event.find(params[:id])
+	respond_to do |format|
+	  format.js do
+		render :update do |page|
+		  page.insert_html :bottom, 'virtual_sites', :partial => 'virtual_site',
+						   :locals => { :vs => @event.virtual_sites.build }
+		end
+	  end
+	end
+  end
 
   private
   def save_from_form

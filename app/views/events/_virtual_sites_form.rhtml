@@ -1,30 +1,12 @@
-<table>
+<table id="virtual_sites">
   <tr>
     <th>Domain</th>
     <th>Site Template</th>
   </tr>
-  <% f.fields_for :virtual_sites do |vs| -%>
-    <tr>
-      <td>
-        <% if vs.object.new_record? -%>
-          <%= vs.text_field :domain %>
-        <% else -%>
-          <i><%=h vs.object.domain %></i>
-        <% end -%>
-      </td>
-      <td>
-        <% if vs.object.new_record? -%>
-          <%= vs.select :site_template_id, SiteTemplate.all.collect { |t| [t.name, t.id]} %>
-        <% else -%>
-          <%=h vs.object.site_template.name %>
-        <% end -%>
-      </td>
-      <td>
-        <% unless vs.object.new_record? -%>
-          (<%= vs.label :_delete, "Remove:" %>
-          <%= vs.check_box :_delete %>)
-        <% end -%>
-      </td>
-    </tr>
+  <% f.fields_for :virtual_sites do |vs_fields| -%>
+    <%= render :partial => 'virtual_site', :locals => { :fields => vs_fields } %>
   <% end -%>
 </table>
+
+<%= add_object_link "Add virtual site", f, :virtual_sites, @event.virtual_sites.build, 'virtual_site', 'virtual_sites' %>
+  

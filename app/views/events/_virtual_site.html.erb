@@ -1,0 +1,22 @@
+    <tr>
+      <td>
+        <% if fields.object.new_record? -%>
+          <%= fields.text_field :domain %>
+        <% else -%>
+          <i><%=h fields.object.domain %></i>
+        <% end -%>
+      </td>
+      <td>
+        <% if fields.object.new_record? -%>
+          <%= fields.select :site_template_id, SiteTemplate.all.collect { |t| [t.name, t.id]} %>
+        <% else -%>
+          <%=h fields.object.site_template.name %>
+        <% end -%>
+      </td>
+      <td>
+        <% unless fields.object.new_record? -%>
+          (<%= fields.label :_delete, "Remove:" %>
+          <%= fields.check_box :_delete %>)
+        <% end -%>
+      </td>
+    </tr>

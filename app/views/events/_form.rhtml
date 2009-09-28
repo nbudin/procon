@@ -177,27 +177,18 @@
     <h2>Event Staff</h2>
 	
 	
-	<% if @event.attendances.staff.length > 0 -%>
-  	  <ul>
+	  <ul id="staff_list">
 		<% f.fields_for :attendances do |att_fields| -%>
 		  <% if att_fields.object.is_staff -%>
-			<li>
-			  <%= att_fields.hidden_field :is_staff -%>
-			  <%= att_fields.hidden_field :counts -%>
-			  
-			  <% if att_fields.object.new_record? -%>
-				<%= att_fields.person_field :person_id %>
-			  <% else -%>
-				<%= att_fields.object.person.name %>
-				(<%= att_fields.label :_delete, "Remove:" %> <%= att_fields.check_box :_delete %>)
-			  <% end -%>
-		    </li>
+			<%= render :partial => 'staff', :locals => { :fields => att_fields } %>
 		  <% end -%>
 	    <% end -%>
+		
 	  </ul>
-    <% else -%>
-	  <p>There are currently no staff listed for this event.</p>
-    <% end -%>
+	  
+  	  <%= add_object_link "Add staff", f, :attendances,
+						@event.attendances.build(:is_staff => true, :counts => false), 'staff', 'staff_list' %>
+
   </div>
 
   <% if @event.kind_of? ProposedEvent -%>
