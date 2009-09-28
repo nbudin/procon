@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_filter :check_edit_permissions, :except => [:show, :show_description, :propose]
+  before_filter :check_edit_permissions, :except => [:show, :show_description, :propose, :submit_proposal]
   before_filter :check_event_visibility, :only => [:show, :show_description]
   require_login :only => [:propose, :submit_proposal]
   
