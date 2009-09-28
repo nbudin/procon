@@ -1,19 +1,8 @@
-<table>
+<table id="public_info_fields">
   <% f.fields_for :public_info_fields do |pif| -%>
-    <tr>
-      <td>
-        <% if pif.object.new_record? -%>
-          <%= pif.text_field :name %>
-        <% else -%>
-          <%=h pif.object.name %>
-        <% end -%>
-      </td>
-      <td>
-        <% unless pif.object.new_record? -%>
-          (<%= pif.label :_delete, "Remove:" %>
-          <%= pif.check_box :_delete %>)
-        <% end -%>
-      </td>
-    </tr>
+    <%= render :partial => "public_info_field", :locals => { :fields => pif } %>
   <% end -%>
 </table>
+
+<%= add_object_link "Add field", f, :public_info_fields, @event.public_info_fields.build, 'public_info_field', 'public_info_fields' %>
+  
