@@ -51,8 +51,8 @@ module ApplicationHelper
       html << select_tag(shim_id, options_for_select(date_options, default), html_options)
       html << <<-ENDOFHTML
 <script type="text/javascript">
-$(function() {
-  $('##{shim_id}').eventDateShim("#{instance_id(object_name, method)}");
+jQuery(function() {
+  jQuery('##{shim_id}').eventDateShim("#{instance_id(object_name, method)}");
 });
 </script>
 ENDOFHTML

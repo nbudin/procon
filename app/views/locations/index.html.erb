@@ -38,7 +38,7 @@ li.addnew {
 <script type="text/javascript">
 function makeCollapsible(i) {
     // Find this list's parent list item.
-    var parent_li = $(this).parent('li');
+    var parent_li = jQuery(this).parent('li');
 
     // Style the list item as folder.
     parent_li.addClass('folder');
@@ -46,7 +46,7 @@ function makeCollapsible(i) {
     // Temporarily remove the list from the
     // parent list item, wrap the remaining
     // text in an anchor, then reattach it.
-    var sub_ul = $(this).remove();
+    var sub_ul = jQuery(this).remove();
     parent_li.wrapInner('<a/>').find('a').click(function() {
         // Make the anchor toggle the leaf display.
         sub_ul.toggle();
@@ -55,17 +55,17 @@ function makeCollapsible(i) {
 }
 
 function makeCollapsibleById(id) {
-  $('#' + id).each(makeCollapsible);
+  jQuery('#' + id).each(makeCollapsible);
 }
 
-$(function() {
+jQuery(function() {
   // Find list items representing folders and
   // style them accordingly.  Also, turn them
   // into links that can expand/collapse the
   // tree leaf.
-  $('li > ul').each(makeCollapsible);
+  jQuery('li > ul').each(makeCollapsible);
 
   // Hide all lists except the outermost.
-  $('ul ul').hide();
+  jQuery('ul ul').hide();
 });
 </script>

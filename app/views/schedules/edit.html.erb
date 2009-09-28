@@ -31,19 +31,19 @@ function setRegistrationOpen(eventId, value) {
   }
 
   eventUrl = '<%= events_url %>/' + eventId + '.xml';
-  $.ajax({
+  jQuery.ajax({
     type: "PUT",
     url: eventUrl,
     dataType: "xml",
     data: { "event[registration_open]": value },
     success: function (msg) {
-      id = $('id', msg).text();
-      if ($('registration-open', msg).text() == "true") {
-        $('#open_event_' + id).hide();
-        $('#close_event_' + id).show();
+      id = jQuery('id', msg).text();
+      if (jQuery('registration-open', msg).text() == "true") {
+        jQuery('#open_event_' + id).hide();
+        jQuery('#close_event_' + id).show();
       } else {
-        $('#close_event_' + id).hide();
-        $('#open_event_' + id).show();
+        jQuery('#close_event_' + id).hide();
+        jQuery('#open_event_' + id).show();
       }
     },
     error: function (req, status, err) {
@@ -58,18 +58,18 @@ function setAllEventsRegistrationOpen(scheduleId, value) {
   }
 
   scheduleUrl = '<%= schedules_url %>/' + scheduleId + ".xml";
-  $.ajax({
+  jQuery.ajax({
     type: "PUT",
     url: scheduleUrl,
     data: { "schedule[all_events_registration_open]": value },
     dataType: "text",
     success: function (msg) {
       if (value) {
-        $('*[id^=open_event_]').hide();
-        $('*[id^=close_event_]').show();
+        jQuery('*[id^=open_event_]').hide();
+        jQuery('*[id^=close_event_]').show();
       } else {
-        $('*[id^=close_event_]').hide();
-        $('*[id^=open_event_]').show();
+        jQuery('*[id^=close_event_]').hide();
+        jQuery('*[id^=open_event_]').show();
       }
     },
     error: function (req, status, err) {

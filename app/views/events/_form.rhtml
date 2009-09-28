@@ -31,14 +31,14 @@
 
   <script type="text/javascript">
   function updateCapacityLimitsVisibility() {
-      if ($('#limited_capacity_true').attr("checked")) {
-	  $('#capacity_limits').show();
+      if (jQuery('#limited_capacity_true').attr("checked")) {
+	  jQuery('#capacity_limits').show();
       } else {
-	  $('#capacity_limits').hide();
+	  jQuery('#capacity_limits').hide();
       }
   }
 
-  $(document).ready(updateCapacityLimitsVisibility);
+  jQuery(document).ready(updateCapacityLimitsVisibility);
   </script>
 
   <div id="locations">
@@ -214,7 +214,7 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() { 
-  $('#eventedit > ul').tabs(); 
+jQuery(function() { 
+  jQuery('#eventedit').tabs(); 
 });
 </script>
