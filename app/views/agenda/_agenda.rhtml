@@ -13,7 +13,7 @@ context_events(logged_in_person).each do |a|
     upcoming.push a
   end
 end -%>
-<div class="agenda">
+<div class="agenda ui-widget ui-widget-content ui-corner-all" style="padding: 0.5em;">
   <h2>My events
     <% if @context -%>
       at <%= @context.fullname %>
