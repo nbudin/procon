@@ -15,9 +15,6 @@
       <th>Length</th>
     </tr>
     <% @upcoming.each do |e|
-      if not e.visible_to? @person
-        next
-      end
       
       busy = false
       signup_allowed = true

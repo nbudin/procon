@@ -147,16 +147,6 @@ class Event < ActiveRecord::Base
       end.include? true
     end
   end
-  
-  def visible_to?(person)
-    if globally_visible?
-      return true
-    end
-    if not person.nil? and parent.attendances.count(:conditions => ["person_id = ?", person.id]) > 0
-      return true
-    end
-    return false
-  end
    
   def attendees_visible_to?(person)
     if has_edit_permissions?(person)
@@ -182,10 +172,6 @@ class Event < ActiveRecord::Base
   end
   
   def attendance_invalid?(attendance)
-    if not visible_to? attendance.person
-      return "That event is not visible to you.  To make it visible, sign up for its parent event: #{parent.fullname}"
-    end
-    
     if not attendance.event.registration_policy.nil?
       if not attendance.event.registration_policy.attendance_valid?(attendance)
         return "The event's registration policy does not allow you to sign up."
