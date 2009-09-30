@@ -43,6 +43,10 @@ div.error_messages {
     background-color: #ffcccc;
 }
 
+textarea {
+	max-width: 60em;
+	width: 100%;
+}
 
 div.agenda h3 {
     margin-bottom: 0;
