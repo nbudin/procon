@@ -1,0 +1,105 @@
+<% form_for @event, :url => proposals_path do |f| -%>
+  
+  <h1 class="ui-widget-header ui-corner-all">Propose an event</h1>
+  
+  <div id="basiceventinfo">
+    <h2>Basic Information</h2>
+    <p><b>Event name:</b> <%= f.text_field "fullname" %><br/>
+      <b>Short name:</b> <%= f.text_field "shortname" %></p>
+        
+    <p>What would you like the timing of this event to be?  Please include the length of the event, and any preferences you have
+      for when it should be held, if applicable.</p>
+  
+    <%= text_area "event", "proposed_timing", :default=> @event.proposed_timing %>
+  </div>
+  
+  <div id="locations">
+    <h2>Locations</h2>
+    <p id="location_summary">Please tell us what sort of location or space you'd like for this event.  Include as many details as possible.</p>
+    <%= text_area "event", "proposed_location", :default => @event.proposed_location %>
+  </div>
+  
+  <div id="descriptionblurb">
+    <h2>Description/Blurb</h2>
+  
+    <p>The description and blurb are the main advertising text for this event.  In general, blurbs should be shorter, as they will be used in
+    things like brochures, flyers, and short advertising messages.</p>
+  
+    <p>HTML tags, such as &lt;p&gt;, &lt;b&gt;, and &lt;br&gt; can be used for formatting.</p>
+  
+    <table>
+      <tr>
+        <td>
+          <p>Blurb:<br/>
+            <%= text_area "event", "blurb", :style => "width: auto;" %></p>
+        </td>
+        <td>      
+          <p>Description:<br/>
+            <%= text_area "event", "description", :style => "width: auto;" %></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+  
+  <div id="regoptions">
+    <h2>Registration Options</h2>
+  
+    <table>
+      <tr>
+        <td>Can people attend this event at the same time as other events?</td>
+        <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @event.non_exclusive %>
+    &nbsp;&nbsp;&nbsp;
+        no <%= radio_button_tag "event[non_exclusive]", "false", !@event.non_exclusive %></td>
+      </tr>
+      <tr>
+        <td>This event has a minimum age of:</td>
+        <td><%= text_field_tag "event[min_age]", @event.min_age %></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h3>Capacity Limits</h3>
+          
+          <p>Does this event have a limited capacity for attendees?  If so, please let us know the following things:</p>
+          <ul>
+            <li>How many attendees, at minimum, does it need to run?</li>
+            <li>How many attendees would you <i>prefer</i> to have?</li>
+            <li>What's the maximum number of attendees the event can take?</li>
+          </ul>
+          <p>If there are specific gender limitations for attendee slots, please let us know those here as well.</p>
+    
+          <%= text_area "event", "proposed_capacity_limits", :default => @event.proposed_capacity_limits %>
+        </td>
+      </tr>
+    </table>
+  </div>
+  
+  <div id="staff">
+    <h2>Event Staff</h2>
+    
+    <p>Will this event have staff members other than you?  If so, please enter their names here.</p>
+    
+    <ul id="staff_list">
+      <li><%=h @event.proposer.name %></li>
+      <% f.fields_for :attendances do |att_fields| -%>
+        <% if att_fields.object.is_staff -%>
+          <%= render :partial => 'staff', :locals => { :fields => att_fields } %>
+        <% end -%>
+      <% end -%>
+      
+    </ul>
+    
+    <%= add_object_link "Add staff", f, :attendances,
+                      @event.attendances.build(:is_staff => true, :counts => false), 'events/staff', 'staff_list' %>
+  
+  </div>
+  
+  <div id="proposalcomments">
+    <h2>Anything else?</h2>
+      
+    <p>If there's anything else you'd like to tell us, please do so here:</p>
+
+    <%= text_area "event", "proposal_comments", :default => @event.proposal_comments %>
+  </div>
+  
+  <%= f.submit "Submit proposal" %>
+<% end -%>

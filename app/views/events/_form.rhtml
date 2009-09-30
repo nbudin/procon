@@ -15,18 +15,11 @@
     <h2>Basic Information</h2>
     <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
       <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
-      
-      <% if @event.kind_of? ProposedEvent -%>
-        </p>
-	<p>What would you like the timing of this event to be?  Please include the length of the event, and any preferences you have
-	for when it should be held, if applicable.</p>
-	<%= text_area "event", "proposed_timing", :default=> @event.proposed_timing, :style => "width: 100%" %>
-      <% else -%>
-        <% parent_start = @event.parent && @event.parent.start
-           parent_end = @event.parent && @event.parent.end %>
+	
+    <% parent_start = @event.parent && @event.parent.start
+       parent_end = @event.parent && @event.parent.end %>
 	<b>Starts:</b> <%= constrained_datetime_select "event", "start", parent_start, parent_end, :default => @event.start %><br/>
-        <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
-      <% end -%>
+    <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
   </div>
 
   <script type="text/javascript">
@@ -44,19 +37,14 @@
   <div id="locations">
     <h2>Locations</h2>
     
-    <% if @event.kind_of? ProposedEvent -%>
-      <p id="location_summary">Please tell us what sort of location or space you'd like for this event.  Include as many details as possible.</p>
-      <%= text_area "event", "proposed_location", :default => @event.proposed_location, :style => "width: 100%" %>
+    <p id="location_summary">Current locations:
+    <% if @event.locations.size > 0 -%>
+      <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
     <% else -%>
-      <p id="location_summary">Current locations:
-      <% if @event.locations.size > 0 -%>
-        <%= @event.locations.collect { |l| h(l.name) }.join(", ") %>
-      <% else -%>
-        none
-      <% end -%></p>
+      none
+    <% end -%></p>
 
-	  <%= f.select "exclusive_location_ids", location_options(@event.locations.exclusive), {}, {:multiple => "multiple"} %>
-    <% end -%>
+    <%= f.select "exclusive_location_ids", location_options(@event.locations.exclusive), {}, {:multiple => "multiple"} %>
   </div>
 
   <div id="descriptionblurb">
@@ -71,11 +59,11 @@
       <tr>
         <td>
           <p>Blurb:<br/>
-            <%= text_area "event", "blurb" %></p>
+            <%= text_area "event", "blurb", :style => "width: auto;" %></p>
         </td>
         <td>      
           <p>Description:<br/>
-            <%= text_area "event", "description" %></p>
+            <%= text_area "event", "description", :style => "width: auto;" %></p>
         </td>
       </tr>
     </table>
@@ -85,14 +73,12 @@
     <h2>Registration Options</h2>
 
     <table>
-      <% unless @event.kind_of? ProposedEvent -%>
-        <tr>
-          <td>Event registration is:</td>
-          <td>open <%= radio_button_tag "event[registration_open]", "true", @event.registration_open %>
-  	  &nbsp;&nbsp;&nbsp;
-          closed <%= radio_button_tag "event[registration_open]", "false", !@event.registration_open %></td>
-        </tr>
-      <% end -%>
+	  <tr>
+		<td>Event registration is:</td>
+		<td>open <%= radio_button_tag "event[registration_open]", "true", @event.registration_open %>
+	&nbsp;&nbsp;&nbsp;
+		closed <%= radio_button_tag "event[registration_open]", "false", !@event.registration_open %></td>
+	  </tr>
       <tr>
         <td>Can people attend this event at the same time as other events?</td>
         <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @event.non_exclusive %>
@@ -101,25 +87,8 @@
       </tr>
       <tr>
         <td>This event has a minimum age of:</td>
-	<td><%= text_field_tag "event[min_age]", @event.min_age %></td>
+		<td><%= text_field_tag "event[min_age]", @event.min_age %></td>
       </tr>
-      <% if @event.kind_of? ProposedEvent -%>
-        <tr>
-	  <td colspan="2">
-	    <h3>Capacity Limits</h3>
-	    
-	    <p>Does this event have a limited capacity for attendees?  If so, please let us know the following things:</p>
-	    <ul>
-	      <li>How many attendees, at minimum, does it need to run?</li>
-	      <li>How many attendees would you <i>prefer</i> to have?</li>
-	      <li>What's the maximum number of attendees the event can take?</li>
-	    </ul>
-	    <p>If there are specific gender limitations for attendee slots, please let us know those here as well.</p>
-
-	    <%= text_area "event", "proposed_capacity_limits", :default => @event.proposed_capacity_limits, :style => "width: 100%" %>
-	  </td>
-	</tr>
-      <% else -%>
         <tr>
           <td>Limit the number of people who can sign up for this event?</td>
           <td>yes <%= radio_button_tag "limited_capacity", "true", 
@@ -150,7 +119,6 @@
             </table>
           </td>
         </tr>
-      <% end -%>
     </table>
   </div>
   
@@ -190,16 +158,6 @@
 						@event.attendances.build(:is_staff => true, :counts => false), 'staff', 'staff_list' %>
 
   </div>
-
-  <% if @event.kind_of? ProposedEvent -%>
-    <div id="proposalcomments">
-      <h2>Anything else?</h2>
-      
-      <p>If there's anything else you'd like to tell us, please do so here:</p>
-
-      <%= text_area "event", "proposal_comments", :default => @event.proposal_comments, :style => "width: 100%" %>
-    </div>
-  <% end -%>
 
   <%= submit_tag %>
 </div>

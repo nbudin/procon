@@ -1,0 +1,17 @@
+<h1>Proposed events</h1>
+
+<table style="max-width: 60em; width: 100%;" class="ui-widget ui-widget-content ui-corner-all">
+  <tr class="ui-widget-header">
+    <th>Name</th>
+    <th>Proposer</th>
+    <th>Date</th>
+  </tr>
+  <% @events.each do |event| -%>
+    <tr>
+      <td><%= link_to event.fullname, proposal_path(event) %></td>
+      <td><%=h event.proposer.name %></td>
+      <td><%= event.created_at.strftime("%m/%d/%Y") %></td>
+    </tr>
+  <% end -%>
+</table>
+    

@@ -1,0 +1,63 @@
+  <h1 class="ui-widget-header ui-corner-all">Proposed Event: <%= @event.fullname %></h1>
+  
+  <div id="basiceventinfo">
+    <h2>Basic Information</h2>
+    <p><b>Event name:</b> <%=h @event.fullname %><br/>
+      <b>Short name:</b> <%=h @event.shortname %></p>
+
+    <h3>Proposed scheduling</h3>
+    <%= simple_format @event.proposed_timing %>
+  </div>
+  
+  <div id="locations">
+    <h2>Proposed location</h2>
+    <%= simple_format @event.proposed_location %>
+  </div>
+  
+  <div id="descriptionblurb">
+    <h2>Blurb</h2>
+    <%= sanitize @event.blurb %>
+    
+    <h2>Description</h2>
+    <%= sanitize @event.description %>
+  </div>
+  
+  <div id="regoptions">
+    <h2>Registration Options</h2>
+  
+    <ul>
+        <li>
+            <% if @event.non_exclusive -%>
+                People <b>can</b> attend this event at the same time as other events.
+            <% else -%>
+                People attending this event <b>cannot</b> attend other events at the same time.
+            <% end -%>
+        </li>
+        <li>
+            <% if @event.min_age -%>
+                This event has a minimum age of <%= @event.min_age %>.
+            <% else -%>
+                This event has no age restrictions.
+            <% end -%>
+        </li>
+    </ul>
+    
+    <h3>Capacity limits</h3>
+    <%= simple_format @event.proposed_capacity_limits %>
+  </div>
+  
+  <div id="staff">
+    <h2>Event Staff</h2>
+    
+    <ul id="staff_list">
+        <li><%=h @event.proposer.name %></li>
+        <% @event.staff.each do |staff| -%>
+            <li><%=h staff.name %></li>
+        <% end -%>
+    </ul>
+  </div>
+  
+  <div id="proposalcomments">
+    <h2>Anything else?</h2>
+    <%= simple_format @event.proposal_comments %>
+  </div>
