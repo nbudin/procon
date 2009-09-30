@@ -165,19 +165,30 @@ class LimitedCapacityEvent < Event
   
   def pull_from_waitlist
     while not full? and waitlist_attendances.count > 0
+      puts "Attempting waitlist pull for #{fullname} (#{id})"
       successful = false
       waitlist_attendances.each do |wa|
+        next unless wa.person
+        puts "Trying to pull #{wa.person.name} from the waitlist"
+        
         wa.is_waitlist = false
         wa.counts = true
         # treat this as if if was a new signup for validation purposes
         unless attendance_invalid_if_new?(wa)
+          puts "Successful!"
           wa.save(false)
           successful = true
+          self.reload
           break
+        else
+          puts "Couldn't pull #{wa.person.name} because #{attendance_invalid_if_new?(wa)}"
         end
       end
-      if not successful
+      unless successful
+        puts "Couldn't pull anyone, giving up"
         break
+      else
+        puts "Pull was successful; checking to see if we need to pull more"
       end
     end
     self.reload
