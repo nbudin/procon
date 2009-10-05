@@ -1,0 +1,4 @@
+aaronchi-jrails --source http://gems.github.com --version ">= 0.5.1"
+thoughtbot-paperclip --source http://gems.github.com --version ">= 2.3.1"
+febeling-rubyzip --source http://gems.github.com --version ">= 0.9.2"
+
