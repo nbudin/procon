@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RegistrationBucketTest < Test::Unit::TestCase
+class RegistrationBucketTest < ActiveSupport::TestCase
   fixtures :registration_buckets
 
   # Replace this with your real tests.

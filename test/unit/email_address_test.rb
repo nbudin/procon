@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class EmailAddressTest < Test::Unit::TestCase
+class EmailAddressTest < ActiveSupport::TestCase
   fixtures :accounts
   fixtures :email_addresses
 
