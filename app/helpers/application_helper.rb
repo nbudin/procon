@@ -239,11 +239,7 @@ ENDOFHTML
     if p.nil?
       return false
     else
-      if event
-        return event.has_edit_permissions?(p)
-      else
-        return p.permitted?(nil, "edit_events")
-      end
+      return p.has_role?("edit", event)
     end
   end
   

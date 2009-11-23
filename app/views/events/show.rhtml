@@ -7,7 +7,7 @@
 		<% end -%>
 	<% else -%>
 		<% if logged_in? -%>
-		  <% if @event.has_edit_permissions? logged_in_person -%>
+		  <% if can_edit_event?(logged_in_person, :event => @event) -%>
 		    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
 		    [<%= link_to "Edit", edit_event_url(@event) %>]
 		  <% end -%>
@@ -55,7 +55,7 @@
 	    <br/><%= pluralize(@event.open_slots, "open slot")%>:
 	    <%= open_slot_count(@event) %>
 	  <% end -%>
-	  <% if @event.has_edit_permissions? logged_in_person -%>
+	  <% if can_edit_event?(logged_in_person, :event => @event) -%>
 	  	<% if not @noninteractive -%>
 		    <br/>
 		    <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
