@@ -1,24 +1,21 @@
 development:
   adapter: mysql
   host: 127.0.0.1
-  username: procon
-  password: procon
+  username: root
   database: procon_dev
   port: 3306
 
 test:
   adapter: mysql
   host: 127.0.0.1
-  username: procon
-  password: procon
+  username: root
   database: procon_test
   port: 3306
     
 production:
   adapter: mysql
   host: 127.0.0.1
-  username: procon
-  password: procon
+  username: root
   database: procon_dev
   port: 3306
   
@@ -27,5 +24,5 @@ users:
   host: 127.0.0.1
   username: root
   password: 
-  database: ae_users
+  database: ae_users_07
   port: 3306
