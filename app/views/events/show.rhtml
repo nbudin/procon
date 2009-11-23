@@ -2,12 +2,12 @@
 
 <div id="signupcontrols">
 	<% if @noninteractive -%>
-		<% if logged_in? and logged_in_person.app_profile.events.include? @event -%>
+		<% if procon_profile and procon_profile.events.include? @event -%>
 			View this event from the "My Events" page to drop out of the event.
 		<% end -%>
 	<% else -%>
 		<% if logged_in? -%>
-		  <% if can_edit_event?(logged_in_person, :event => @event) -%>
+		  <% if can_edit_event?(procon_profile, :event => @event) -%>
 		    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
 		    [<%= link_to "Edit", edit_event_url(@event) %>]
 		  <% end -%>
@@ -55,7 +55,7 @@
 	    <br/><%= pluralize(@event.open_slots, "open slot")%>:
 	    <%= open_slot_count(@event) %>
 	  <% end -%>
-	  <% if can_edit_event?(logged_in_person, :event => @event) -%>
+	  <% if can_edit_event?(procon_profile, :event => @event) -%>
 	  	<% if not @noninteractive -%>
 		    <br/>
 		    <%= link_to "View/edit attendee list", event_attendances_url(@event) %>

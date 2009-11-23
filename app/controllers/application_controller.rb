@@ -20,11 +20,12 @@ class ApplicationController < ActionController::Base
     allow :effective_staff, :of => :event
   end
   
-  private
-  
   def procon_profile
     @procon_profile ||= logged_in_person && logged_in_person.app_profile
   end
+  helper_method :procon_profile
+
+  private
   
   def get_virtual_site
     @virtual_site = VirtualSite.find_by_domain request.host

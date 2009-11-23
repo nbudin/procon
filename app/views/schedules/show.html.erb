@@ -1,6 +1,6 @@
 <%= stylesheet_link_tag "schedules.css" %>
 
-<% if logged_in_person_can_edit? @context -%>
+<% if can_edit_event?(procon_profile, :event => @context) -%>
   <h2>Administration</h2>
 
   <ul>

@@ -49,7 +49,7 @@
       <td><%=h attendance.is_staff %></td>
       <td><%=h attendance.counts %></td>
     <% end -%>
-	<% if can_edit_event?(logged_in_person, :event => @event) -%>
+	<% if can_edit_event?(procon_profile, :event => @event) -%>
 	    <td><%= link_to 'Edit', edit_event_attendance_path(@event, attendance) %></td>
 	    <td><%= link_to 'Drop', event_attendance_path(@event, attendance), :confirm => 'Are you sure?', :method => :delete %></td>
 	<% end -%>
