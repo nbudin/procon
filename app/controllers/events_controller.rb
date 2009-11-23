@@ -1,7 +1,14 @@
 class EventsController < ApplicationController
-  before_filter :check_edit_permissions, :except => [:show, :show_description, :propose, :submit_proposal]
-  before_filter :check_event_visibility, :only => [:show, :show_description]
-  require_login :only => [:propose, :submit_proposal]
+  before_filter :attempt_login_from_params
+  before_filter :get_event
+  
+  access_control do
+    allow :superadmin
+    allow :effective_staff, :of => :event
+    allow :proposer, :of => :event
+    allow logged_in, :to => [:propose, :submit_proposal]
+    allow all, :to => [:show, :show_description], :unless => :is_proposed_event
+  end
   
   def email_list
     @method = if params[:waitlist]
@@ -14,7 +21,6 @@ class EventsController < ApplicationController
   end
   
   def signup_sheet
-    @event = Event.find(params[:id])
     if request.post?
       @options = {}
       @options[:include_scheduling_details] = params[:include_scheduling_details]
@@ -31,7 +37,6 @@ class EventsController < ApplicationController
   end
 
   def available_people
-    @event = Event.find(params[:id])
     @check_events = @event.parent ? @event.parent.children : Event.find(:all)
     @all_people = @event.parent ? @event.parent.all_attendees : People.find(:all)
     @available_people = @all_people.select do |person|
@@ -72,7 +77,6 @@ class EventsController < ApplicationController
   end
   
   def destroy
-    @event = Event.find params[:id]
     if params[:sure]
       @event.destroy
       redirect_to events_url
@@ -80,7 +84,6 @@ class EventsController < ApplicationController
   end
   
   def show
-    @event = Event.find params[:id]
     @public_info_fields = @event.public_info_fields
 
     respond_to do |format|
@@ -91,25 +94,21 @@ class EventsController < ApplicationController
   end
   
   def show_description
-    @event = Event.find params[:id]
     @public_info_fields = @event.public_info_fields
     @noninteractive = true
     render :action => "show"
   end
   
   def pull_from_children
-    @event = Event.find params[:id]
     @event.pull_from_children
     redirect_to @event
   end
   
   def edit
-    @event = Event.find params[:id]
     calculate_edit_vars
   end
   
   def update
-    @event = Event.find params[:id]
     save_from_form
   end
 
@@ -281,39 +280,22 @@ class EventsController < ApplicationController
     @min_age = @event.min_age
   end
   
-  def check_edit_permissions
-    if params[:id] or @context
-      event = Event.find params[:id] || @context
-      if logged_in?
-        person = logged_in_person
-        if event.has_edit_permissions? person
-          return
-        end
-      end
-    else
-      if logged_in?
-        person = logged_in_person
-        if person.permitted? nil, "edit_events"
-          return
-        end
-      end
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to events_url
-  end
-  
-  def check_event_visibility
-    @event = Event.find(params[:id])
-    if @event.kind_of? ProposedEvent
-      check_edit_permissions
-    end
-  end
-  
   def visible_events
     if @context
       return @context.children
     else
       return Event.find(:all)
     end
+  end
+  
+  private
+  def get_event
+	if params[:id]
+	  @event ||= Event.find(params[:id])
+	end
+  end
+  
+  def is_proposed_event
+	@event.kind_of? ProposedEvent
   end
 end

@@ -105,7 +105,7 @@ class LocationsController < ApplicationController
   end
   
   def check_edit_permissions
-    if logged_in? and logged_in_person.procon_profile.has_edit_permissions?(@context)
+    if can_edit_event?(:event => @context)
       return
     end
     flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]

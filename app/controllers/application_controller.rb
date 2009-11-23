@@ -2,12 +2,29 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_procon_session_id'
   layout "global"
   before_filter :get_virtual_site
+  helper 'ae_users'
+  
+  access_control :helper => :can_edit_event? do
+    allow :superadmin
+    allow :effective_staff, :of => :event
+  end
+  
+  alias_method :can_edit_events?, :can_edit_event?  
+  helper_method :can_edit_event?
+  helper_method :can_edit_events?
+  
+  access_control :helper => :can_view_attendees? do
+    allow :superadmin
+    allow :effective_staff, :of => :event
+  end
   
   private
+  
+  def procon_profile
+    @procon_profile ||= logged_in_person && logged_in_person.app_profile
+  end
   
   def get_virtual_site
     @virtual_site = VirtualSite.find_by_domain request.host
