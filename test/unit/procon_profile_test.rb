@@ -30,8 +30,9 @@ class ProconProfileTest < ActiveSupport::TestCase
       assert @profile.events.first.staff.include? @profile.person
     end
     
-    should "have the staff role with respect to its event" do
+    should "have the staff and effective_staff roles with respect to its event" do
       assert @profile.has_role?(:staff, @profile.events.first)
+      assert @profile.has_role?(:effective_staff, @profile.events.first)
     end
     
     context "for an event with child events" do
@@ -39,8 +40,12 @@ class ProconProfileTest < ActiveSupport::TestCase
         @child = Factory.create(:event, :parent => @profile.events.first)
       end
       
-      should "have the staff role with respect to the child event" do
-        assert @profile.has_role?(:staff, @child)
+      should "not have the staff role on the child event" do
+        assert !@profile.has_role?(:staff, @child)
+      end
+      
+      should "have the effective_staff role with respect to the child event" do
+        assert @profile.has_role?(:effective_staff, @child)
       end
     end
   end

@@ -5,7 +5,11 @@ class ProconProfile < ActiveRecord::Base
     case role_name.to_sym
     when :staff
       if obj.kind_of? Event
-        obj.staff.include?(person) or (obj.parent && self.has_role?(:staff, obj.parent))
+        obj.staff.include?(person)
+      end
+    when :effective_staff
+      if obj.kind_of? Event
+        self.has_role?(:staff, obj) or (obj.parent && self.has_role?(:staff, obj.parent))
       end
     when :proposer
       if obj.kind_of? ProposedEvent
