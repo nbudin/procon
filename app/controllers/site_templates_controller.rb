@@ -1,6 +1,10 @@
 class SiteTemplatesController < ApplicationController
   layout "global"
-  rest_edit_permissions
+  
+  access_control do
+    allow :superadmin
+    allow :effective_staff, :of => :context
+  end
   
   # GET /site_templates
   # GET /site_templates.xml

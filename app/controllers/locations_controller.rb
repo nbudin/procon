@@ -1,5 +1,8 @@
 class LocationsController < ApplicationController
-  before_filter :check_edit_permissions
+  access_control do
+    allow :superadmin
+    allow :effective_staff, :of => :context
+  end
   
   # GET /locations
   # GET /locations.xml
@@ -102,13 +105,5 @@ class LocationsController < ApplicationController
     else
       return Location.find(:all)
     end
-  end
-  
-  def check_edit_permissions
-    if can_edit_event?(:event => @context)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to "/"
   end
 end
