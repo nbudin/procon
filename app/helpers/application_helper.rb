@@ -233,17 +233,4 @@ ENDOFHTML
       return "Available: " + open_slot_count(event)
     end
   end
-  
-  def logged_in_person_can_edit?(event=nil)
-    p = logged_in_person
-    if p.nil?
-      return false
-    else
-      return p.has_role?("edit", event)
-    end
-  end
-  
-  def global_admin?
-    logged_in_person_can_edit?(nil)
-  end
 end

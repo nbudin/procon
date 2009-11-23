@@ -20,6 +20,11 @@ class ApplicationController < ActionController::Base
     allow :effective_staff, :of => :event
   end
   
+  access_control :helper => :superadmin? do
+    allow :superadmin
+  end
+  helper_method :superadmin?
+  
   def procon_profile
     @procon_profile ||= logged_in_person && logged_in_person.app_profile
   end

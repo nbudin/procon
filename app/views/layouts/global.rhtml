@@ -74,7 +74,7 @@
                     <li><%= link_to "Locations", locations_path %></li>
                     <li><%= link_to "Site Templates", site_templates_path %></li>
                     <li><%= link_to "Schedules", schedules_path %></li>
-					<% if global_admin? -%>
+					<% if superadmin?(procon_profile) -%>
 						<li><%= link_to "Virtual Sites", virtual_sites_path %></li>
 					<% end -%>
 		  </ul>

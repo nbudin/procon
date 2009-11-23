@@ -1,5 +1,7 @@
 class VirtualSitesController < ApplicationController
-  require_class_permission "edit", :class_name => "Event"
+  access_control do
+    allow :superadmin
+  end
   
   def index
     @virtual_sites = VirtualSite.all
