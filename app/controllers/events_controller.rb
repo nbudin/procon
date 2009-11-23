@@ -4,7 +4,7 @@ class EventsController < ApplicationController
   
   access_control do
     allow :superadmin
-    allow :effective_staff, :of => :event
+    allow :staff, :of => :event
     allow :proposer, :of => :event
     allow logged_in, :to => [:propose, :submit_proposal]
     allow all, :to => [:show, :show_description], :unless => :is_proposed_event
