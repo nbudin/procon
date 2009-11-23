@@ -9,7 +9,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090915171229) do
+ActiveRecord::Schema.define(:version => 20091112141024) do
+
+  create_table "accounts", :force => true do |t|
+    t.string   "password"
+    t.boolean  "active"
+    t.string   "activation_key"
+    t.integer  "person_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -54,22 +63,28 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
   add_index "attendee_slots", ["event_id"], :name => "index_attendee_slots_on_event_id"
 
   create_table "auth_tickets", :force => true do |t|
-    t.string   "secret",     :limit => 40
+    t.string   "secret"
     t.integer  "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "expires_at"
   end
 
-  add_index "auth_tickets", ["secret"], :name => "secret", :unique => true
+  add_index "auth_tickets", ["secret"], :name => "index_auth_tickets_on_secret", :unique => true
+
+  create_table "email_addresses", :force => true do |t|
+    t.string   "address"
+    t.boolean  "primary"
+    t.integer  "person_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "event_locations", :force => true do |t|
     t.integer "event_id"
     t.integer "location_id"
     t.boolean "exclusive",   :default => true
   end
-
-  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
 
   create_table "events", :force => true do |t|
     t.string   "fullname",                                                    :null => false
@@ -102,6 +117,20 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
     t.integer "track_id"
   end
 
+  create_table "groups", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "groups_people", :id => false, :force => true do |t|
+    t.integer "person_id", :null => false
+    t.integer "group_id",  :null => false
+  end
+
+  create_table "groups_roles", :id => false, :force => true do |t|
+    t.integer "group_id"
+    t.integer "role_id"
+  end
+
   create_table "locations", :force => true do |t|
     t.string  "name",      :null => false
     t.integer "parent_id"
@@ -122,6 +151,25 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
     t.string  "salt",       :null => false
   end
 
+  create_table "open_id_identities", :force => true do |t|
+    t.integer "person_id"
+    t.string  "identity_url", :limit => 4000
+  end
+
+  create_table "people", :force => true do |t|
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "gender"
+    t.datetime "birthdate"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "people_roles", :id => false, :force => true do |t|
+    t.integer "person_id"
+    t.integer "role_id"
+  end
+
   create_table "permission_caches", :force => true do |t|
     t.integer "person_id"
     t.integer "permissioned_id"
@@ -133,14 +181,6 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
   add_index "permission_caches", ["permission_name"], :name => "index_permission_caches_on_permission_name"
   add_index "permission_caches", ["permissioned_id", "permissioned_type"], :name => "index_permission_caches_on_permissioned"
   add_index "permission_caches", ["person_id"], :name => "index_permission_caches_on_person_id"
-
-  create_table "permissions", :force => true do |t|
-    t.integer "role_id"
-    t.string  "permission"
-    t.integer "permissioned_id"
-    t.string  "permissioned_type"
-    t.integer "person_id"
-  end
 
   create_table "plugin_schema_info", :id => false, :force => true do |t|
     t.string  "plugin_name"
@@ -199,6 +239,14 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
     t.integer "age_min"
     t.integer "age_max"
     t.integer "min_age"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.string   "authorizable_type"
+    t.integer  "authorizable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "schedule_blocks", :force => true do |t|
