@@ -36,10 +36,6 @@ Factory.define :proposed_event do |e|
   e.fullname "My event that I think will be awesome"
 end
 
-Factory.define :event_with_parent, :parent => :event do |e|
-  e.association :parent, :factory => :event, :fullname => "My awesome convention"
-end
-
 Factory.define :attendance do |att|
   att.association :event, :factory => :event
 end

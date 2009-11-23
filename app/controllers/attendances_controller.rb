@@ -4,8 +4,8 @@ class AttendancesController < ApplicationController
   before_filter :get_event
   
   access_control :subject_method => :procon_profile do
-    allow :superadmin
-    allow :staff, :of => :event
+    #allow :superadmin
+    allow :effective_staff, :of => :event
     allow :attendee, :of => :event, :to => [ :index, :show ], :if => :event_attendees_visible?
   end
   

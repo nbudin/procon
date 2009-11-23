@@ -33,16 +33,6 @@ class ProconProfileTest < ActiveSupport::TestCase
     should "have the staff role with respect to its event" do
       assert @profile.has_role?(:staff, @profile.events.first)
     end
-    
-    context "for an event with child events" do
-      setup do
-        @child = Factory.create(:event, :parent => @profile.events.first)
-      end
-      
-      should "have the staff role with respect to the child event" do
-        assert @profile.has_role?(:staff, @child)
-      end
-    end
   end
   
   context "An event proposer's profile" do

@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   
   access_control :helper => :can_edit_event? do
     allow :superadmin
-    allow :staff, :of => :event
+    allow :effective_staff, :of => :event
   end
   
   alias_method :can_edit_events?, :can_edit_event?  
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   
   access_control :helper => :can_view_attendees? do
     allow :superadmin
-    allow :staff, :of => :event
+    allow :effective_staff, :of => :event
   end
   
   private

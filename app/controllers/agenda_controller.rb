@@ -1,7 +1,7 @@
 class AgendaController < ApplicationController
   access_control do
     allow :superadmin
-    allow :staff, :of => :context, :to => [:attendees]
+    allow :effective_staff, :of => :context, :to => [:attendees]
     allow logged_in, :to => [:index]
   end
   
