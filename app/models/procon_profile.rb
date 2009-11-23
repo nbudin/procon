@@ -1,6 +1,34 @@
 class ProconProfile < ActiveRecord::Base
   belongs_to :person
   
+  def has_role?(role_name, obj=nil)
+    case role_name.to_sym
+    when :staff
+      if obj.kind_of? Event
+        obj.staff.include?(person) or (obj.parent && self.has_role?(:staff, obj.parent))
+      end
+    when :proposer
+      if obj.kind_of? ProposedEvent
+        person == obj.proposer
+      end
+    when :attendee
+      if obj.kind_of? Event
+        attending?(obj)
+      end
+    else
+      person.has_role?(role_name, obj)
+    end
+  end
+  
+  def has_role!(role_name, obj=nil)
+    case role_name.to_sym
+    when :staff, :proposer, :attendee
+      raise "Virtual roles can't be assigned using ProconProfile#has_role!"
+    else
+      person.has_role!(role_name, obj)
+    end
+  end
+  
   def attendances
     if @attendances.nil?
       reload_attendances
@@ -15,12 +43,15 @@ class ProconProfile < ActiveRecord::Base
     end
   end
   
+  def proposals
+    @proposals ||= ProposedEvent.find_all_by_proposer_id(person.id)
+  end
+  
   def attendance_for_event(event_id)
     if @attendances.nil?
       reload_attendances
     end
-    key = event_id.respond_to?('id') ? event_id.id : event_id
-    return @attendances[key]
+    @attendances[event_id] || @attendances[event_id.id]
   end
   
   def attending?(event)
@@ -50,13 +81,5 @@ class ProconProfile < ActiveRecord::Base
             Attendance.count(:conditions => ["(end > ? AND start <= ?) and person_id = ? #{events_cond events}", 
                                              start_time, end_time, person.id],
                              :joins => :event) > 0)
-  end
-  
-  def has_edit_permissions?(event=nil)
-    if event
-      return event.has_edit_permissions?(person)
-    else
-      return person.permitted?(nil, "edit_events")
-    end
   end
 end
