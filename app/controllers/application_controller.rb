@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   layout "global"
   before_filter :get_virtual_site
-  helper 'ae_users'
+  helper 'illyan'
   
   access_control :helper => :can_edit_event? do
     allow :superadmin

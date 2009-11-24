@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  acts_as_ae_users_authorization_object
+  acts_as_illyan_authorization_object
   
   has_many :attendances, :order => "created_at", :dependent => :destroy
   has_many :attendee_slots, :foreign_key => "event_id"

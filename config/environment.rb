@@ -44,7 +44,7 @@ Rails::Initializer.run do |config|
   config.gem 'aaronchi-jrails', :lib => 'jrails', :source => "http://gems.github.com", :version => "~> 0.5.1"
   config.gem 'thoughtbot-paperclip', :lib => 'paperclip', :source => "http://gems.github.com", :version => "~> 2.3.1"
   config.gem 'febeling-rubyzip', :lib => 'zip/zip', :source => "http://gems.github.com", :version => "~> 0.9.2"
-  config.gem 'ae_users', :source => "http://gemcutter.org", :version => ">= 0.6.1"
+  config.gem 'illyan', :source => "http://gemcutter.org", :version => ">= 0.6.1"
   
   config.action_controller.session = { :session_key => '_procon_session',
     :secret => 'bc255802f9d9bc085a354679499f23c59bd5c4750ad7c12e3ddb2b1b1ce65092ad081667da7c798f01fc00e981535f28efa7cef737ec068bffde7598773a663f'

@@ -35,7 +35,7 @@ end
 class SiteTemplate < ActiveRecord::Base
   has_many :virtual_sites
   has_many :attached_images, :dependent => :destroy
-  acts_as_ae_users_authorization_object
+  acts_as_illyan_authorization_object
   after_save :save_attached_images
   
   def themeroller_css()
