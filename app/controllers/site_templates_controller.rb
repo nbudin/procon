@@ -4,6 +4,7 @@ class SiteTemplatesController < ApplicationController
   access_control do
     allow :superadmin
     allow :effective_staff, :of => :context
+    allow all, :to => :themeroller
   end
   
   # GET /site_templates

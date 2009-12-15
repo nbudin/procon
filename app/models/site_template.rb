@@ -41,9 +41,11 @@ class SiteTemplate < ActiveRecord::Base
   def themeroller_css()
     data = read_attribute(:themeroller_css)
     if not data.blank?
-      data.gsub!(/url\(images/, "url(attached_images")
+      data.gsub(/url\(images\/([^\)]+)\)/) do |s|
+        img = attached_images.find_by_image_file_name($1)
+        "url(#{img ? img.image.url : s})"
+      end
     end
-    return data
   end
   
   def themeroller_css=(file)
