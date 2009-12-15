@@ -6,13 +6,14 @@ class ApplicationController < ActionController::Base
   before_filter :get_virtual_site
   helper 'illyan'
   
+  private
+  
   access_control :helper => :can_edit_event? do
     allow :superadmin
     allow :effective_staff, :of => :event
   end
   
   alias_method :can_edit_events?, :can_edit_event?  
-  helper_method :can_edit_event?
   helper_method :can_edit_events?
   
   access_control :helper => :can_view_attendees? do
@@ -23,15 +24,12 @@ class ApplicationController < ActionController::Base
   access_control :helper => :superadmin? do
     allow :superadmin
   end
-  helper_method :superadmin?
   
   def procon_profile
     @procon_profile ||= logged_in_person && logged_in_person.app_profile
   end
   helper_method :procon_profile
 
-  private
-  
   def get_virtual_site
     @virtual_site = VirtualSite.find_by_domain request.host
     if @virtual_site.nil?
