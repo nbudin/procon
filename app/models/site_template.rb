@@ -42,7 +42,7 @@ class SiteTemplate < ActiveRecord::Base
     data = read_attribute(:themeroller_css)
     if not data.blank?
       data.gsub(/url\(images\/([^\)]+)\)/) do |s|
-        img = attached_images.find_by_image_file_name($1)
+        img = attached_images.select { |img| img.image_file_name == $1 }.first
         "url(#{img ? img.image.url : s})"
       end
     end

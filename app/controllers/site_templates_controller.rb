@@ -86,7 +86,7 @@ class SiteTemplatesController < ApplicationController
   end
   
   def themeroller
-    @the_template = SiteTemplate.find(params[:id])
+    @the_template = SiteTemplate.find(params[:id], :include => :attached_images)
     
     respond_to do |format|
       format.css { render :text => @the_template.themeroller_css }
