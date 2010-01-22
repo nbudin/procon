@@ -85,12 +85,7 @@
         </td>
         <td align="right">
           <div id="auth_form">
-          	<% if logged_in? -%>
-				<%= render :partial => "person_sessions/mini_auth_form" %>
-			<% else -%>
-				<p><b>Log in</b></p>
-				<%= link_to "Click here to log into this site.", :controller => "auth", :action => "login" %>
-			<% end -%>
+			<%= render :partial => "person_sessions/mini_auth_form" %>
 		  </div>
         </td>
       </tr>
