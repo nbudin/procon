@@ -148,17 +148,19 @@
       <% end -%>
     </table>
   </div>
-  
-  <div id="publicinfo">
-    <h2>Public Signup Information</h2>
-    
-    <p><%= check_box "event", "attendees_visible" %> Make attendees' names publicly visible</p>
-    
-    <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process. 
-      The answers to these questions will be publicly shown next to the attendee's name.</i></p>
-    
-    <%= render :partial => "public_info_form" %>
-  </div>
+
+  <% unless @event.kind_of? ProposedEvent -%>
+    <div id="publicinfo">
+      <h2>Public Signup Information</h2>
+
+      <p><%= check_box "event", "attendees_visible" %> Make attendees' names publicly visible</p>
+
+      <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process.
+        The answers to these questions will be publicly shown next to the attendee's name.</i></p>
+
+      <%= render :partial => "public_info_form" %>
+    </div>
+  <% end -%>
 
   <% unless @event.kind_of? ProposedEvent -%>
     <div id="virtualsites">
@@ -168,19 +170,21 @@
     </div>
   <% end -%>
 
-  <div id="staff">
-    <h2>Event Staff</h2>
-    <% if @event.staff.length > 0 -%>
-      <ul>
-        <% @event.staff.each do |staff| -%>
-          <li><%= staff.name %> (Remove: <%= check_box_tag "remove_staff[#{staff.id}]" %>)</li>
-        <% end -%>
-      </ul>
-    <% else -%>
-      <p>There are currently no staff listed for this event.</p>
-    <% end -%>
-    <p>Add staff by name: <%= user_picker "add_staff" %></p>
-  </div>
+  <% unless @event.kind_of? ProposedEvent -%>
+    <div id="staff">
+      <h2>Event Staff</h2>
+      <% if @event.staff.length > 0 -%>
+        <ul>
+          <% @event.staff.each do |staff| -%>
+            <li><%= staff.name %> (Remove: <%= check_box_tag "remove_staff[#{staff.id}]" %>)</li>
+          <% end -%>
+        </ul>
+      <% else -%>
+        <p>There are currently no staff listed for this event.</p>
+      <% end -%>
+      <p>Add staff by name: <%= user_picker "add_staff" %></p>
+    </div>
+ <% end -%>
 
   <% if @event.kind_of? ProposedEvent -%>
     <div id="proposalcomments">
