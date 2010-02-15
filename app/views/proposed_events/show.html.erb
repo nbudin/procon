@@ -1,0 +1,56 @@
+<h1 id="pagetitle"><%= @proposed_event.fullname %></h1>
+
+<div id="signupcontrols">
+  <%= link_to "Edit", edit_proposed_event_path(@proposed_event) %>
+  <% if proposal_admin? -%>
+    | <%= link_to "Accept", :action => "accept", :id => @proposed_event.id %>
+  <% end -%>
+</div>
+
+<div id="blurb">
+	<h2>Blurb</h2>
+
+	<p><%= @proposed_event.blurb %></p>
+</div>
+
+<div id="description">
+	<h2>Description</h2>
+
+	<p><%= @proposed_event.description %></p>
+</div>
+
+<div id="logistics">
+<h2>Logistics</h2>
+
+  <div id="locations">
+    <h3>Location</h3>
+
+    <%= simple_format @proposed_event.proposed_location %>
+  </div>
+
+  <div id="timing">
+    <h3>Timing</h3>
+
+    <%= simple_format @proposed_event.proposed_timing %>
+  </div>
+
+  <div id="registration">
+    <h3>Registration</h3>
+
+    <p>
+      People <b><%= @proposed_event.non_exclusive ? "can" : "cannot" %></b>
+      attend this event at the same time as other events.
+      <br/>
+      This event has
+      <b><%= @proposed_event.min_age.nil? ? "no minimum age" : "a minimum age of #{@proposed_event.min_age}" %></b>.
+
+      <%= simple_format @proposed_event.proposed_capacity_limits %>
+    </p>
+  </div>
+</div>
+
+<div id="misc">
+  <h2>Miscellaneous Info</h2>
+
+  <%= simple_format @proposed_event.proposal_comments %>
+</div>

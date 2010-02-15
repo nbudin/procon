@@ -132,7 +132,7 @@ class Event < ActiveRecord::Base
       Event.find_all_by_parent_id nil
     else
       parent.children
-    end.reject { |e| e == self }
+    end.reject { |e| e == self }.select { |e| e.start && e.end}
     
     searchpool.select do |e|
       (e.end > self.start and e.start < self.end) 

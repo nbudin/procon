@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :proposed_events
+
   map.resources :locations
 
   map.resources :schedules, :member => { :health => :get }

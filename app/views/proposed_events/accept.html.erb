@@ -1,0 +1,5 @@
+<h1 id="pagetitle">Accept <%= @proposed_event.fullname %></h1>
+
+<% form_for :event, :url => events_url, :html => { :method => :post } do |f| %>
+<%=render :partial => "events/form" %>
+<% end %>

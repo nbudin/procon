@@ -1,5 +1,25 @@
+<style type="text/css">
+#eventedit > div {
+    clear: both;
+}
+
+.proposal_hint {
+  float: left;
+  background-color: black;
+  color: white;
+  width: 20em;
+  padding: 0.5em;
+  margin-right: 0.5em;
+  min-height: 5em;
+}
+</style>
+
+<% if @proposed_event -%>
+  <%= hidden_field_tag "proposed_event_id", @proposed_event.id %>
+<% end -%>
+
 <div id="eventedit">
-  <% unless @event.kind_of? ProposedEvent %>
+  <% unless @event.kind_of? ProposedEvent or @proposed_event %>
     <ul id="contents">
       <li><a href="#basiceventinfo"><span>Basic Information</span></a></li>
       <li><a href="#locations"><span>Locations</span></a></li>
@@ -13,6 +33,12 @@
 
   <div id="basiceventinfo">
     <h2>Basic Information</h2>
+    <% if @proposed_event -%>
+      <div class="proposal_hint">
+        <%= simple_format @proposed_event.proposed_timing %>
+      </div>
+    <% end -%>
+
     <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
       <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
       
@@ -43,6 +69,12 @@
 
   <div id="locations">
     <h2>Locations</h2>
+
+    <% if @proposed_event -%>
+      <div class="proposal_hint">
+        <%= simple_format @proposed_event.proposed_location %>
+      </div>
+    <% end -%>
     
     <% if @event.kind_of? ProposedEvent -%>
       <p id="location_summary">Please tell us what sort of location or space you'd like for this event.  Include as many details as possible.</p>
@@ -85,6 +117,12 @@
       
   <div id="regoptions">
     <h2>Registration Options</h2>
+
+    <% if @proposed_event -%>
+      <div class="proposal_hint">
+        <%= simple_format @proposed_event.proposed_capacity_limits %>
+      </div>
+    <% end -%>
 
     <table>
       <% unless @event.kind_of? ProposedEvent -%>
@@ -138,7 +176,10 @@
                 <tr>
                   <td><b><%= gender %></b></td>
                   <% %w( min preferred max ).each do |threshold| -%>
-                    <td><%= threshold.humanize %>: <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold] %></td>
+                    <td><%= threshold.humanize %>:
+                      <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold],
+                                         :style => "width: 3em;" %>
+                    </td>
                   <% end -%>
                 </tr>
               <% end %>
@@ -158,7 +199,7 @@
       <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process.
         The answers to these questions will be publicly shown next to the attendee's name.</i></p>
 
-      <%= render :partial => "public_info_form" %>
+      <%= render :partial => "events/public_info_form" %>
     </div>
   <% end -%>
 
@@ -166,13 +207,24 @@
     <div id="virtualsites">
       <h2>Virtual Sites</h2>
 
-      <%= render :partial => "virtual_sites_form" %>
+      <%= render :partial => "events/virtual_sites_form" %>
     </div>
   <% end -%>
 
   <% unless @event.kind_of? ProposedEvent -%>
+
     <div id="staff">
       <h2>Event Staff</h2>
+
+      <% if @proposed_event -%>
+        <div class="proposal_hint">
+          <% if @proposed_event.staff.length > 0 -%>
+          The following people will be automatically added as staff:
+          <%= @proposed_event.staff.collect { |s| s.name }.join(", ") %>
+          <% end -%>
+        </div>
+      <% end -%>
+
       <% if @event.staff.length > 0 -%>
         <ul>
           <% @event.staff.each do |staff| -%>
@@ -186,13 +238,21 @@
     </div>
  <% end -%>
 
-  <% if @event.kind_of? ProposedEvent -%>
+  <% if @event.kind_of? ProposedEvent or @proposed_event -%>
     <div id="proposalcomments">
-      <h2>Anything else?</h2>
-      
-      <p>If there's anything else you'd like to tell us, please do so here:</p>
+      <% if @proposed_event -%>
+        <h2>Additional Comments from Proposer</h2>
 
-      <%= text_area "event", "proposal_comments", :default => @event.proposal_comments, :style => "width: 100%" %>
+        <div style="background-color: black; color: white; padding: 0.5em;">
+            <%= simple_format @proposed_event.proposal_comments  %>
+        </div>
+      <% else -%>
+        <h2>Anything else?</h2>
+
+        <p>If there's anything else you'd like to tell us, please do so here:</p>
+
+        <%= text_area "event", "proposal_comments", :default => @event.proposal_comments, :style => "width: 100%" %>
+      <% end -%>
     </div>
   <% end -%>
 
@@ -200,7 +260,7 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() { 
-  $('#eventedit > ul').tabs(); 
+$(document).ready(function() {
+  $('#eventedit > ul').tabs();
 });
 </script>

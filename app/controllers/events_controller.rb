@@ -47,7 +47,7 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = visible_events
+    @events = visible_events.reject { |e| e.kind_of? ProposedEvent }
     
     respond_to do |format|
       format.html # index.rhtml
@@ -68,6 +68,7 @@ class EventsController < ApplicationController
     if @context
       @event.parent = @context
     end
+
     save_from_form
   end
   
@@ -236,6 +237,17 @@ class EventsController < ApplicationController
         slot.update_attributes(params[:limits][gender])
         if not slot.save
           flash[:error_messages].push("Could not change #{gender} attendee limits: #{slot.errors.full_messages.join(", ")}")
+        end
+      end
+    end
+
+    if params[:proposed_event_id]
+      @proposed_event = ProposedEvent.find(params[:proposed_event_id])
+
+      ([@proposed_event.proposer] + @proposed_event.staff).uniq.each do |staffer|
+        a = Attendance.new :person => staffer, :event => @event, :is_staff => true, :counts => false
+        if not a.save
+          flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
         end
       end
     end

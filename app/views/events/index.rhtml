@@ -1,5 +1,8 @@
-<h1 id="pagetitle">Listing events</h1>
+<h1 id="pagetitle">Confirmed Events</h1>
 
-[<%= link_to "New event", new_event_url %>]
+<div id="signupcontrols">
+  <%= link_to "New event", new_event_url %> | <%= link_to "View proposed events", proposed_events_url %>
+</div>
+
 
 <%= render :partial => "tree", :locals => { :events => @events } %>

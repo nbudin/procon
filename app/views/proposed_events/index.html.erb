@@ -1,0 +1,16 @@
+<h1 id="pagetitle">Proposed Events</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Proposer</th>
+    <th>Date</th>
+  </tr>
+<% @proposed_events.each do |proposed_event| %>
+  <tr>
+    <td><%= link_to proposed_event.fullname, proposed_event %></td>
+    <td><%= proposed_event.proposer.name %></td>
+    <td><%= proposed_event.created_at %></td>
+  </tr>
+<% end %>
+</table>
