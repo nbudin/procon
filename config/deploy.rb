@@ -38,7 +38,7 @@ set :checkout, "export"
 set :user, "www-data"            # defaults to the currently logged in user
 set :deploy_via, :remote_cache
 set :scm, :git               # defaults to :subversion
-set :branch, :stable
+set :branch, "stable"
 set :git_enable_submodules, 1
 
 
