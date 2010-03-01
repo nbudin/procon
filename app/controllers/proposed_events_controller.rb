@@ -1,5 +1,6 @@
 class ProposedEventsController < ApplicationController
   before_filter :check_edit_permissions, :except => [:index, :new, :create]
+  before_filter :check_proposal_admin, :only => [:accept]
   require_login
 
   def proposal_admin?
@@ -145,6 +146,10 @@ class ProposedEventsController < ApplicationController
       end
     end
 
+    check_proposal_admin
+  end
+
+  def check_proposal_admin
     unless proposal_admin?
       flash[:error_messages] = ["You aren't a proposal administrator for #{@context.fullname}."]
       redirect_to event_url(@context)
