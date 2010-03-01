@@ -11,12 +11,11 @@ class ProposedEventsController < ApplicationController
   # GET /proposed_events
   # GET /proposed_events.xml
   def index
-    if proposal_admin?
-      @proposed_events = ProposedEvent.all
-    else
-      @proposed_events = @context.children.all(
-        :conditions => ["type = 'ProposedEvent' and proposer_id = ?", logged_in_person.id])
+    conds = { :type => 'ProposedEvent' }
+    unless proposal_admin?
+      conds[:proposer_id] = logged_in_person.id
     end
+    @proposed_events = @context.children.all(:conditions => conds)
 
     respond_to do |format|
       format.html # index.html.erb
