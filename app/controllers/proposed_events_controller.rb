@@ -138,9 +138,9 @@ class ProposedEventsController < ApplicationController
   
   def check_edit_permissions
     if params[:id]
-      @proposed_event = ProposedEvent.find(params[:id])
+      proposed_event = ProposedEvent.find(params[:id])
 
-      if @proposed_event && @proposed_event.proposer == logged_in_person
+      if proposed_event && proposed_event.proposer == logged_in_person
         return
       end
     end
