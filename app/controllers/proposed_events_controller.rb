@@ -137,6 +137,14 @@ class ProposedEventsController < ApplicationController
   end
   
   def check_edit_permissions
+    if params[:id]
+      @proposed_event = ProposedEvent.find(params[:id])
+
+      if @proposed_event && @proposed_event.proposer == logged_in_person
+        return
+      end
+    end
+
     unless proposal_admin?
       flash[:error_messages] = ["You aren't a proposal administrator for #{@context.fullname}."]
       redirect_to event_url(@context)
