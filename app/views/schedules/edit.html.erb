@@ -127,7 +127,7 @@ function setAllEventsRegistrationOpen(scheduleId, value) {
         <td></td>
         <td>Add existing event</td>
         <td><%= select_tag "add_event_to_track[#{track.id}]",
-            options_for_select([['', '']] + @schedule.event.children.select {|e| not track.events.include? e}.collect {|e| [e.shortname, e.id]}) %>
+            options_for_select([['', '']] + @schedule.event.children.select {|e| !(track.events.include?(e) || e.kind_of?(ProposedEvent))}.collect {|e| [e.shortname, e.id]}) %>
         </td>
         <td></td>
         <td></td>
