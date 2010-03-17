@@ -116,7 +116,7 @@ class LimitedCapacityEvent < Event
   end
   
   def gendered?
-    attendee_slots.any? {|s| s.gender and s.gender != 'neutral' and s.min > 0 }
+    attendee_slots.any? {|s| s.gender and s.gender != 'neutral' and s.min and s.min > 0 }
   end
   
   def full?
