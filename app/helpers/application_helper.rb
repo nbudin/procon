@@ -235,6 +235,54 @@ ENDOFHTML
       return "Available: " + open_slot_count(event)
     end
   end
+
+  def threshold_needed(event, threshold)
+    slot_count = {}
+    ["male", "female", "neutral"].each do |gender|
+      slot_count[gender] = event.slot_count(gender, threshold)
+    end
+
+    male_needed = slot_count["male"] - event.attendee_count("male")
+    female_needed = slot_count["female"] - event.attendee_count("female")
+    neutral_needed = slot_count["neutral"]
+
+    if male_needed < 0
+      neutral_needed += male_needed
+      male_needed = 0
+    end
+
+    if female_needed < 0
+      neutral_needed += female_needed
+      female_needed = 0
+    end
+
+    return {"male" => male_needed, "female" => female_needed, "neutral" => neutral_needed}
+  end
+
+  def threshold_count(event, threshold)
+    tn = threshold_needed(event, threshold)
+    if tn["male"] > 0 or tn["female"] > 0
+      "#{tn["male"]}M, #{tn["female"]}F, #{tn["neutral"]}N needed for #{threshold}"
+    else
+      "#{tn["neutral"]} needed for #{threshold}"
+    end
+  end
+
+  def health_count(event)
+    if event.full?
+      return waitlist_count(event)
+    else
+      next_threshold = if event.at_preferred?
+        "max"
+      elsif event.at_min?
+        "preferred"
+      else
+        "min"
+      end
+
+      threshold_count(event, next_threshold)
+    end
+  end
   
   def logged_in_person_can_edit?(event=nil)
     p = logged_in_person

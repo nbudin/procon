@@ -68,7 +68,7 @@ module SchedulesHelper
     ENDHTML
     if event.kind_of? LimitedCapacityEvent
       output << "<br/>\n"
-      output << registration_count(event)
+      output << health_count(event)
     end
 
     output << "<br/>\n"
