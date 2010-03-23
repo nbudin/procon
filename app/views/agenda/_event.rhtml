@@ -6,7 +6,7 @@
     <% end -%>
   </td>
   <td>
-    <% if event.start -%>
+    <% if event.event.start -%>
       <%= event.event.start.strftime "%B %d, %Y at %I:%M %p" %>
     <% else -%>
       (Unscheduled)
