@@ -1,7 +1,9 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   def event_length(e)
-    if (e.end - e.start) / 60 / 60 < 12
+    return "(Unscheduled)" if e.length.nil?
+
+    if e.length / 60 / 60 < 12
       return distance_of_time_in_words(e.start, e.end)
     end
       
