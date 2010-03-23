@@ -179,3 +179,65 @@ div.agenda table tr.odd {
 div.agenda table tr.even {
     background-color: #bb8;
 }
+
+table.attendances {
+    border-collapse: collapse;
+}
+
+table.attendances td {
+    padding: 2px;
+    border-bottom: 1px #666 solid;
+}
+
+.confirmed {
+    background-color: #cfc;
+}
+
+.confirmed.odd {
+    background-color: #beb;
+}
+
+.waitlist {
+    background-color: #ffc;
+}
+
+.waitlist.odd {
+    background-color: #eeb;
+}
+
+.drop {
+    background-color: #fcc;
+}
+
+.drop.odd {
+    background-color: #ebb;
+}
+
+.uncounted {
+    background-color: #ccf;
+}
+
+.uncounted.odd {
+    background-color: #bbe;
+}
+
+
+.legend {
+  list-style-type: none;
+}
+
+.legend li {
+  display: inline-block;
+  padding-right: 3em;
+  min-width: 13em;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.legend_color {
+  width: 3em;
+  height: 3em;
+  border: 1px black solid;
+  display: inline-block;
+  vertical-align: middle;
+}

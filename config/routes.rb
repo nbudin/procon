@@ -21,7 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '', :controller => "main"
   
   map.resources :events, :collection => {:schedule => :get, :propose => :get, :submit_proposal => :post}, :member => {:available_people => :get} do |events|
-    events.resources :attendances
+    events.resources :attendances, :collection => { :children => :get }
   end
   
   map.resources :site_templates, :member => {:themeroller => :get} do |site_templates|

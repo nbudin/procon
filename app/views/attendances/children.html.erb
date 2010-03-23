@@ -1,0 +1,30 @@
+<h1 id="pagetitle">
+  Signups for events at <%= @context.shortname %>
+</h1>
+
+<%= render :partial => "legend" %>
+
+<table class="attendances" style="width: 100%;">
+  <tr>
+    <th>Event</th>
+    <th>Person</th>
+    <th>Signup Date</th>
+  </tr>
+  <% @attendances.each do |att| -%>
+  <tr class="<%= attendance_class att %> <%= cycle :odd, :even %>">
+    <td><%= link_to att.event.shortname, event_attendances_path(att.event)  %></td>
+    <td>
+      <%= att.person.name %>
+      <% if att.gender != att.person.gender -%>
+	(crosscast)
+      <% end -%>
+    </td>
+    <td>
+      <%= att.created_at.strftime("%a, %b %d at %H:%M") %>
+      <% if att.deleted_at -%>
+        (dropped <%= att.deleted_at.strftime("%b %d at %H:%M") %>)
+      <% end -%>
+    </td>
+  </tr>
+  <% end -%>
+</table>

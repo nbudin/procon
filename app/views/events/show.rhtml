@@ -58,7 +58,13 @@
 	  <% if @event.has_edit_permissions? logged_in_person -%>
 	  	<% if not @noninteractive -%>
 		    <br/>
-		    <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
+                    <% if @event.children.count > 0 -%>
+                      View attendees for
+                      <%= link_to "this event", event_attendances_url(@event) %> or
+                      <%= link_to "child events", event_attendances_url(@event) + "/children" %>
+                    <% else -%>
+                      <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
+                    <% end -%>
 		    <br/>
 		    <%= link_to "Printable signup sheet", :controller => "events", :action => "signup_sheet", :id => @event.id %>
 		    <% if @event.children.count > 0 -%>

@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   layout "global"
   
-  before_filter :check_view_permissions, :only => [ :index, :show ]
+  before_filter :check_view_permissions, :only => [ :index, :show, :children ]
   before_filter :check_edit_permissions, :only => [ :new, :edit, :create, :update, :destroy ]
   
   # GET /attendances
@@ -9,12 +9,30 @@ class AttendancesController < ApplicationController
   def index
     @event = Event.find(params[:event_id])
     @attendances = @event.attendances
+    @deleted_attendances = @event.attendances.all(:only_deleted => true)
 
     respond_to do |format|
       format.html # index.rhtml
       format.xml  { render :xml => @attendances.to_xml }
       format.rss do
         @attendances = @event.attendances.find(:all, :order => "created_at DESC", :limit => 10)
+        render :layout => false
+      end
+    end
+  end
+
+  def children
+    @event = params[:event_id]
+    @children = @context.children.reject { |e| e.kind_of? ProposedEvent }
+    @attendances = @children.collect { |e| e.attendances.all(:with_deleted => true) }.flatten
+    @attendances.reject! { |a| a.person.nil? }
+    @attendances = @attendances.sort_by { |a| a.created_at }.reverse
+
+    respond_to do |format|
+      format.html # index.rhtml
+      format.xml  { render :xml => @attendances.to_xml }
+      format.rss do
+        @attendances = @attendances.slice(0..10)
         render :layout => false
       end
     end
@@ -97,7 +115,11 @@ class AttendancesController < ApplicationController
   end
   
   def check_view_permissions
-    event = Event.find params[:event_id]
+    event = if params[:event_id]
+      Event.find params[:event_id]
+    else
+      @context
+    end
     if event.attendees_visible_to?(logged_in_person)
       return
     end

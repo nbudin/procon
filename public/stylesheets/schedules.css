@@ -56,23 +56,3 @@ div.waitlist {
 .health_at_preferred {
   background-color: #cfc;
 }
-
-.legend {
-  list-style-type: none;
-}
-
-.legend li {
-  display: inline-block;
-  padding-right: 3em;
-  min-width: 13em;
-  vertical-align: middle;
-  font-weight: bold;
-}
-
-.legend_color {
-  width: 3em;
-  height: 3em;
-  border: 1px black solid;
-  display: inline-block;
-  vertical-align: middle;
-}

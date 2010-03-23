@@ -6,6 +6,8 @@
 
 <p>Starts at <%= @event.start %>, ends at <%= @event.end %></p>
 
+<%= render :partial => "legend" %>
+
 <% if @event.confirmed_attendances.count > 0 -%>
   <h2>Confirmed attendees</h2>
 
@@ -26,5 +28,12 @@
 
   <%= render :partial => 'attendee_table', 
     :locals => { :attendances => @event.waitlist_attendances, :waitlist => true } %>
+<% end -%>
+
+<% if @deleted_attendances.count > 0 -%>
+  <h2>Dropped attendees</h2>
+
+  <%= render :partial => 'attendee_table',
+    :locals => { :attendances => @deleted_attendances, :waitlist => false } %>
 <% end -%>
 

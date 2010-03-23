@@ -1,4 +1,4 @@
-<table style="width: 100%">
+<table class="attendances" style="width: 100%">
   <tr>
     <th>#</th>
     <th>Person</th>
@@ -16,7 +16,7 @@
   <% if attendance.counts or waitlist
     count += 1
   end -%>
-  <tr id="attendance_<%=attendance.id%>">
+  <tr id="attendance_<%=attendance.id%>" class="<%= attendance_class attendance %> <%= cycle :odd, :even %>">
     <td>
       <% if attendance.counts or waitlist -%>
         <%= count %>
