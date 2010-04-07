@@ -44,13 +44,7 @@
   <div id="attendeeinfo">
 	<h2>Attendees</h2>
 	<p>
-	  <% if @event.kind_of? LimitedCapacityEvent and @event.gendered? -%>
-		  <%= pluralize(@event.attendee_count, "attendee") %> total: 
-		  <%= @event.attendee_count "male" %> male,
-		  <%= @event.attendee_count "female" %> female
-	  <% else -%>
-	  	  <%= pluralize(@event.attendee_count, "attendee") %>
-	  <% end -%>
+	  <%= signup_count(@event, @event.has_edit_permissions?(logged_in_person)) %>
 	  <% if @event.kind_of? LimitedCapacityEvent -%>
 	    <br/><%= pluralize(@event.open_slots, "open slot")%>:
 	    <%= open_slot_count(@event) %>

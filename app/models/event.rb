@@ -318,6 +318,13 @@ class Event < ActiveRecord::Base
     super(:methods => [:min_age, :age_restricted, :registration_open, :non_exclusive])
   end
 
+  def attendees_with_blank_agenda
+    child_ids = children.collect { |c| c.id }
+    attendance_count = Attendance.count(:group => :person_id, :conditions => { :event_id => child_ids })
+
+    return confirmed_attendees.reject { |p| attendance_count.has_key?(p.id) || attendance_count[p.id] == 0 }
+  end
+
   private
   def param_to_bool(param)
     if param.blank?

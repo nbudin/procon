@@ -236,6 +236,27 @@ ENDOFHTML
     end
   end
 
+  def signup_count(event, show_blank_agenda_count=false)
+    if event.kind_of? LimitedCapacityEvent and event.gendered?
+		  html = pluralize(event.attendee_count, "attendee")
+      html << " total:"
+      html << event.attendee_count("male")
+      html << " male,"
+      html << event.attendee_count("female")
+      html << " female"
+	  else
+	  	html = pluralize(event.attendee_count, "attendee")
+	  end
+
+    if show_blank_agenda_count and event.children.count > 0
+      html << " ("
+      html << event.attendees_with_blank_agenda.count
+      html << " of which not signed up for any child event)"
+    end
+
+    return html
+  end
+
   def threshold_needed(event, threshold)
     slot_count = {}
     ["male", "female", "neutral"].each do |gender|
