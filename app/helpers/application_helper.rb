@@ -250,7 +250,7 @@ ENDOFHTML
 
     if show_blank_agenda_count and event.children.count > 0
       html << " ("
-      html << event.attendees_with_blank_agenda.count
+      html << event.attendees_with_blank_agenda.count.to_s
       html << " of which not signed up for any child event)"
     end
 
