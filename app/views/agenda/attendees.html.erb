@@ -2,7 +2,7 @@
 
 <table style="width: 100%">
   <% @attendees.each do |attendee| -%>
-    <tr><td colspan="4"><h2><%=h attendee.lastname %>, <%=h attendee.firstname %></td></tr>
+    <tr><td colspan="4"><h2><%= attendee.lastname %>, <%= attendee.firstname %></td></tr>
 
     <%= render :partial => 'event', :collection => context_events(attendee) %>
   <% end -%>

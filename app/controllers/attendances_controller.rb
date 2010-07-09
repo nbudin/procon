@@ -106,7 +106,8 @@ class AttendancesController < ApplicationController
   def destroy
     @event = Event.find(params[:event_id])
     @attendance = Attendance.find(params[:id])
-    @attendance.destroy
+    @attendance.deleted_at ||= Time.now
+    @attendance.save!
 
     respond_to do |format|
       format.html { redirect_to event_attendances_url(@event) }

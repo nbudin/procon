@@ -1,6 +1,4 @@
 class Event < ActiveRecord::Base
-  acts_as_permissioned
-  
   has_many :attendances, :order => "created_at", :dependent => :destroy
   has_many :attendee_slots, :foreign_key => "event_id"
   has_many :registration_buckets, :foreign_key => "event_id"

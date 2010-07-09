@@ -2,7 +2,7 @@
 
 <%= error_messages_for :attendance %>
 
-<% form_for(:attendance, :url => event_attendances_path(@event)) do |f| %>
+<%= form_for(:attendance, :url => event_attendances_path(@event)) do |f| %>
 
   <p>
     <b>Person</b>

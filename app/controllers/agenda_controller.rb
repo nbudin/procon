@@ -1,5 +1,5 @@
 class AgendaController < ApplicationController
-  before_filter :check_logged_in
+  before_filter :authenticate_person!
   before_filter :check_view_permissions, :only => [:attendees]
   
   def index
@@ -11,12 +11,6 @@ class AgendaController < ApplicationController
   end
 
   private
-  def check_logged_in
-    if not logged_in?
-      redirect_to :controller => :main, :action => :index
-    end
-  end
-
   def check_view_permissions
     if @context.nil?
       flash[:error_messages] = ["You must be on an event's virtual site to use this function."]

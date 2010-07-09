@@ -1,2 +1,4 @@
-log
-config/scout.yml
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/**/*

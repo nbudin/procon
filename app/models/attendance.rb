@@ -2,17 +2,26 @@ class Attendance < ActiveRecord::Base
   belongs_to :person
   belongs_to :event
   belongs_to :staff_position
-  acts_as_paranoid
+  
+  scope :confirmed, lambda { where(["deleted_at is NULL or deleted_at > ?", Time.now]) }
+  default_scope confirmed
   
   has_many :public_info_values
   
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."
   after_destroy :pull_from_waitlist
+  after_save do |record|
+    record.pull_from_waitlist if record.deleted?
+  end
 
   validates_inclusion_of :gender, :in => ["male", "female"]
 
   before_validation :ensure_gender_set
   after_save :check_waitlist
+  
+  def deleted?
+    deleted_at && deleted_at <= Time.now
+  end
   
   def validate
     unless event.nil?

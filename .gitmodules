@@ -1,3 +1,0 @@
-[submodule "vendor/plugins/ae_users"]
-	path = vendor/plugins/ae_users
-	url = git://github.com/nbudin/ae_users.git

@@ -8,7 +8,8 @@
   <!-- Laid out using built-in ProCon site_template -->
 <% end -%>
 <head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <%= csrf_meta_tag %>
+  
   <%= stylesheet_link_tag 'global.css' %>
   <%= stylesheet_link_tag "thickbox", "jquery.autocomplete.css" %>
   <%= javascript_include_tag "jquery", "thickbox", "jquery.ui.all.packed.js", "jquery.bgiframe.min.js", "jquery.autocomplete.pack.js" %>
@@ -62,7 +63,7 @@
             <% elsif @context and @context.schedules.count(:conditions => ["published = ?", true]) > 1 -%>
               <li class="ui-default-state"><%= link_to "Event Schedules", schedules_path %></li>
             <% end -%>
-            <% if logged_in_person_can_edit?(@context) -%>
+            <% if current_person.try(:can?, :edit, @context) -%>
               <li class="ui-default-state"><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
                 <span id="admin_open" style="display: none;">
 		  <a href="#" onClick="$('#admin_open').hide(); $('#admin_closed').show();" id="admin_closed">&laquo;</a>
@@ -85,11 +86,11 @@
         </td>
         <td align="right">
           <div id="auth_form">
-          	<% if logged_in? -%>
+          	<% if person_signed_in? -%>
 				<%= render :partial => "auth/mini_auth_form" %>
 			<% else -%>
 				<p><b>Log in</b></p>
-				<%= link_to "Click here to log into this site.", :controller => "auth", :action => "login" %>
+				<%= link_to "Click here to log into this site.", new_person_session_path %>
 			<% end -%>
 		  </div>
         </td>
@@ -109,8 +110,11 @@
   </div>
 <% end -%>
 
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
 <div id="content">
-  <%= @content_for_layout %>
+  <%= yield %>
 </div>
 
 <% if not @site_template.footer.blank? -%>
