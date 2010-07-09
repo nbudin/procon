@@ -1,5 +1,0 @@
-<h1 id="pagetitle">Propose an event<% if @event.parent %> for <%= @event.parent.shortname %><% end %></h1>
-
-<% form_for :event, :url => { :action => :submit_proposal }, :html => { :method => :post } do |f| %>
-<%=render :partial => "form" %>
-<% end %>

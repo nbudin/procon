@@ -82,7 +82,7 @@ module SchedulesHelper
   
   def schedule_event(position)
     event = position.event
-    att = logged_in? ? logged_in_person.app_profile.attendance_for_event(event) : nil
+    att = person_signed_in? ? current_person.attendance_for_event(event) : nil
     output = <<-ENDHTML
 <div style="left: #{position.left}%;
             width: #{position.width}%;
@@ -93,7 +93,7 @@ module SchedulesHelper
   #{ link_to event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
     :class => 'thickbox', :style => 'font-weight: bold;' }
 ENDHTML
-    if logged_in?
+    if person_signed_in?
       output << "<br/><br/>\n"
       output << signup_link(event)
     end

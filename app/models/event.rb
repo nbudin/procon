@@ -145,18 +145,7 @@ class Event < ActiveRecord::Base
       end.include? true
     end
   end
-   
-  def attendees_visible_to?(person)
-    if has_edit_permissions?(person)
-      return true
-    else
-      if attendees_visible and all_attendees.include?(person)
-        return true
-      end
-    end
-    return false
-  end
-  
+
   def attendance_errors(attendance)
     errs = []
     if not registration_policy.nil?
@@ -190,19 +179,6 @@ class Event < ActiveRecord::Base
       attendances.select { |att| att.is_waitlist }.size
     else
       attendances.select { |att| att.is_waitlist and att.gender == gender }.size
-    end
-  end
-  
-  def has_edit_permissions?(person)
-    if person.nil?
-      return false
-    end
-    if person.permitted?(self, "edit_events")
-      return true
-    elsif staff.include? person
-      return true
-    elsif parent
-      return parent.has_edit_permissions?(person)
     end
   end
   

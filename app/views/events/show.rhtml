@@ -2,13 +2,15 @@
 
 <div id="signupcontrols">
 	<% if @noninteractive -%>
-		<% if logged_in? and logged_in_person.app_profile.events.include? @event -%>
+		<% if person_signed_in? and current_person.events.include? @event -%>
 			View this event from the "My Events" page to drop out of the event.
 		<% end -%>
 	<% else -%>
-		<% if logged_in? -%>
-		  <% if @event.has_edit_permissions? logged_in_person -%>
+		<% if person_signed_in? -%>
+		  <% if can?(:destroy, @event) -%>
 		    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
+		  <% end -%>
+		  <% if can?(:update, @event) -%>
 		    [<%= link_to "Edit", edit_event_url(@event) %>]
 		  <% end -%>
 		  <%= signup_link @event %>
@@ -24,19 +26,19 @@
 
 <%= render :partial => "stafflist", :locals => { :event => @event } %>
 
-<% if @event.blurb and @event.blurb.length > 0 -%>
+<% unless @event.blurb.blank? %>
 <div id="blurb">
 	<h2>Blurb</h2>
 
-	<p><%= @event.blurb %></p>
+	<p><%=raw @event.blurb %></p>
 </div>
 <% end -%>
 
-<% if @event.description and @event.description.length > 0 -%>
+<% unless @event.description.blank? %>
 <div id="description">
 	<h2>Description</h2>
 
-	<p><%= @event.description %></p>
+	<p><%=raw @event.description %></p>
 </div>
 <% end -%>
 
@@ -44,12 +46,12 @@
   <div id="attendeeinfo">
 	<h2>Attendees</h2>
 	<p>
-	  <%= signup_count(@event, @event.has_edit_permissions?(logged_in_person)) %>
+	  <%= signup_count(@event, can?(:view_attendees, @event)) %>
 	  <% if @event.kind_of? LimitedCapacityEvent -%>
 	    <br/><%= pluralize(@event.open_slots, "open slot")%>:
 	    <%= open_slot_count(@event) %>
 	  <% end -%>
-	  <% if @event.has_edit_permissions? logged_in_person -%>
+	  <% if can?(:view_attendees, @event) -%>
 	  	<% if not @noninteractive -%>
 		    <br/>
                     <% if @event.children.count > 0 -%>

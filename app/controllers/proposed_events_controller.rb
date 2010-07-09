@@ -1,19 +1,13 @@
 class ProposedEventsController < ApplicationController
-  before_filter :check_edit_permissions, :except => [:index, :new, :create]
-  before_filter :check_proposal_admin, :only => [:accept]
-  require_login
-
-  def proposal_admin?
-    logged_in? && logged_in_person.procon_profile.has_edit_permissions?(@context)
-  end
-  helper_method :proposal_admin?
+  before_filter :authenticate_person!
+  load_and_authorize_resource
 
   # GET /proposed_events
   # GET /proposed_events.xml
   def index
     conds = { :type => 'ProposedEvent' }
     unless proposal_admin?
-      conds[:proposer_id] = logged_in_person.id
+      conds[:proposer_id] = current_person.id
     end
     @proposed_events = @context.children.all(:conditions => conds, :order => "created_at desc")
 
@@ -57,7 +51,7 @@ class ProposedEventsController < ApplicationController
     if @context
       @event.parent = @context
     end
-    @event.proposer ||= logged_in_person
+    @event.proposer ||= current_person
 
     if @event.save
       unless @event.staff.include?(@event.proposer)
@@ -134,24 +128,5 @@ class ProposedEventsController < ApplicationController
     @non_exclusive = @event.non_exclusive
     @age_restricted = @event.age_restricted
     @min_age = @event.min_age
-  end
-  
-  def check_edit_permissions
-    if params[:id]
-      proposed_event = ProposedEvent.find(params[:id])
-
-      if proposed_event && proposed_event.proposer == logged_in_person
-        return
-      end
-    end
-
-    check_proposal_admin
-  end
-
-  def check_proposal_admin
-    unless proposal_admin?
-      flash[:error_messages] = ["You aren't a proposal administrator for #{@context.fullname}."]
-      redirect_to event_url(@context)
-    end
   end
 end

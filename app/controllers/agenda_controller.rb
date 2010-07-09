@@ -17,7 +17,7 @@ class AgendaController < ApplicationController
       redirect_to "/"
     end
 
-    if @context.attendees_visible_to?(logged_in_person)
+    if @context.attendees_visible_to?(current_person)
       return
     end
     flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]

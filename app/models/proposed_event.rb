@@ -9,16 +9,4 @@ class ProposedEvent < Event
 
     return attendance_invalid_if_event_accepted?(att)
   end
-
-  alias_method :has_edit_permissions_without_proposer_check?, :has_edit_permissions?
-  def has_edit_permissions?(person)
-    if has_edit_permissions_without_proposer_check?(person)
-      return true
-    else
-      if person == proposer
-        return true
-      end
-    end
-    return false
-  end
 end

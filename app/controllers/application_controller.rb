@@ -1,11 +1,15 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_procon_session_id'
+  protect_from_forgery
   layout "global"
   before_filter :get_virtual_site
+  
+  def current_ability
+    @current_ability ||= Ability.new(current_person)
+  end
+  
+  def context
+    @context ||= (params[:id] && Event.find(params[:id]))
+  end
   
   private
   

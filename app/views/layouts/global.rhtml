@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html>
-<% if @site_template -%>
+<% if @site_template.id -%>
   <!-- Laid out using site_template <%=@site_template.id %> -->
 <% else -%>
   <!-- Laid out using built-in ProCon site_template -->
@@ -63,7 +63,7 @@
             <% elsif @context and @context.schedules.count(:conditions => ["published = ?", true]) > 1 -%>
               <li class="ui-default-state"><%= link_to "Event Schedules", schedules_path %></li>
             <% end -%>
-            <% if current_person.try(:can?, :edit, @context) -%>
+            <% if can?(:update, @context) -%>
               <li class="ui-default-state"><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
                 <span id="admin_open" style="display: none;">
 		  <a href="#" onClick="$('#admin_open').hide(); $('#admin_closed').show();" id="admin_closed">&laquo;</a>
@@ -87,7 +87,10 @@
         <td align="right">
           <div id="auth_form">
           	<% if person_signed_in? -%>
-				<%= render :partial => "auth/mini_auth_form" %>
+				      <h2><%= current_person.name %></h2>
+				      <%= link_to "My account", "http://accounts.sugarpond.net/profile" %>
+				      |
+				      <%= link_to "Log out", destroy_person_session_path %>
 			<% else -%>
 				<p><b>Log in</b></p>
 				<%= link_to "Click here to log into this site.", new_person_session_path %>

@@ -107,7 +107,7 @@ ENDOFHTML
   end
   
   def signup_url(event)
-    if logged_in?
+    if person_signed_in?
       url_for :controller => :signup, :action => :signup, :event => event
     else
       url_for :controller => :signup, :action => :form, :event => event
@@ -119,38 +119,40 @@ ENDOFHTML
   end
   
   def signup_link(event)
-    if not logged_in?
+    if not person_signed_in?
       return ''
     end
-    att = logged_in_person.app_profile.attendance_for_event(event)
-    output = ""
-    if not logged_in_person.app_profile.events.include? event
-      if event.registration_open
-        caption = if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender))
-          "Sign up"
-        else
-          "Waitlist"
+    att = current_person.attendance_for_event(event)
+    with_output_buffer do
+      output_buffer << "["
+      if not current_person.events.include? event
+        if event.registration_open
+          caption = if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(current_person.gender))
+            "Sign up"
+          else
+            "Waitlist"
+          end
+          output_buffer << link_to(caption, signup_url(event) + thickbox_params + '&modal=true', :class => 'thickbox')
         end
-        output += "[#{ link_to caption, signup_url(event) + thickbox_params + '&modal=true', :class => 'thickbox' }]"
-      end
-    else
-      link_caption = "Drop out"
-      
-      if att.is_staff
-        confirm_msg = "WARNING: You are a staff member for this event!  Dropping this event will "
-        confirm_msg += "cause you to lose your edit privileges for the event.  Are you sure you "
-        confirm_msg += "want to proceed?"
-      elsif att.is_waitlist
-        confirm_msg = "Are you sure you want to drop off the waitlist for this event?  If you do so, "
-        confirm_msg += "you will lose your place in line."
-        link_caption = "Drop from waitlist"
       else
-        confirm_msg = "Are you sure you want to drop out of #{event.shortname}?"
+        link_caption = "Drop out"
+      
+        if att.is_staff
+          confirm_msg = "WARNING: You are a staff member for this event!  Dropping this event will "
+          confirm_msg += "cause you to lose your edit privileges for the event.  Are you sure you "
+          confirm_msg += "want to proceed?"
+        elsif att.is_waitlist
+          confirm_msg = "Are you sure you want to drop off the waitlist for this event?  If you do so, "
+          confirm_msg += "you will lose your place in line."
+          link_caption = "Drop from waitlist"
+        else
+          confirm_msg = "Are you sure you want to drop out of #{event.shortname}?"
+        end
+        output_buffer << link_to(link_caption, url_for(:controller => 'signup', :action => 'dropout', :event => event),
+                              :confirm => confirm_msg)
       end
-      output += "[#{ link_to link_caption, url_for(:controller => 'signup', :action => 'dropout', :event => event),
-                      :confirm => confirm_msg}]"
+      output_buffer << "]"
     end
-    return output
   end
   
   def page_title
@@ -217,8 +219,8 @@ ENDOFHTML
       return "Full, no waitlist"
     else
       wlnumber = nil
-      if logged_in?
-        wlnumber = event.waitlist_number(logged_in_person)
+      if person_signed_in?
+        wlnumber = event.waitlist_number(current_person)
       end
       if wlnumber
         return "You are \##{wlnumber} in the waitlist"
@@ -303,22 +305,5 @@ ENDOFHTML
 
       threshold_count(event, next_threshold)
     end
-  end
-  
-  def logged_in_person_can_edit?(event=nil)
-    p = logged_in_person
-    if p.nil?
-      return false
-    else
-      if event
-        return event.has_edit_permissions?(p)
-      else
-        return p.permitted?(nil, "edit_events")
-      end
-    end
-  end
-  
-  def global_admin?
-    logged_in_person_can_edit?(nil)
   end
 end

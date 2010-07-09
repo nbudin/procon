@@ -121,7 +121,7 @@ class AttendancesController < ApplicationController
     else
       @context
     end
-    if event.attendees_visible_to?(logged_in_person)
+    if event.attendees_visible_to?(current_person)
       return
     end
     flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
@@ -130,7 +130,7 @@ class AttendancesController < ApplicationController
   
   def check_edit_permissions
     event = Event.find params[:event_id]
-    if event.has_edit_permissions?(logged_in_person)
+    if can?(:update, event)
       return
     end
     flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
