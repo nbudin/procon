@@ -1,7 +1,15 @@
 class Event < ActiveRecord::Base
   has_many :attendances, :order => "created_at", :dependent => :destroy
   has_many :attendee_slots, :foreign_key => "event_id"
-  has_many :registration_buckets, :foreign_key => "event_id"
+  has_many :registration_buckets, :foreign_key => "event_id"  
+  has_many :public_info_fields, :dependent => :destroy
+  has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
+  has_many :virtual_sites
+  
+  accepts_nested_attributes_for :attendances, :allow_destroy => true
+  accepts_nested_attributes_for :attendee_slots, :allow_destroy => true
+  accepts_nested_attributes_for :public_info_fields, :allow_destroy => true
+  accepts_nested_attributes_for :virtual_sites, :allow_destroy => true
     
   private
   # convenience method for getting the actual people associated with a group
@@ -39,16 +47,12 @@ class Event < ActiveRecord::Base
     
   has_many :event_locations, :dependent => :destroy
   has_many :locations, :through => :event_locations, :dependent => :destroy
-  has_many :exclusive_locations, :through => :event_locations, :dependent => :destroy,
-    :source => :location, :conditions => ["exclusive = ?", true]
-  has_many :shareable_locations, :through => :event_locations, :dependent => :destroy,
-    :source => :location, :conditions => ["exclusive = ?", false]
 
   has_many :staff_positions, :dependent => :destroy, :order => "position"
   get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
     
   belongs_to :registration_policy
-  has_many :virtual_sites
+  
     
   has_many :schedules
   has_and_belongs_to_many :tracks
@@ -62,9 +66,6 @@ class Event < ActiveRecord::Base
       e.errors.add_to_base "Events cannot be longer than 2 weeks"
     end
   end
-  
-  has_many :public_info_fields, :dependent => :destroy
-  has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
     
   acts_as_tree :order => "start"
   
@@ -130,7 +131,7 @@ class Event < ActiveRecord::Base
       Event.find_all_by_parent_id nil
     else
       parent.children
-    end.reject { |e| e == self }.select { |e| e.start && e.end}
+    end.reject { |e| e == self or e.start.nil? or e.end.nil? }
     
     searchpool.select do |e|
       (e.end > self.start and e.start < self.end) 
@@ -139,7 +140,7 @@ class Event < ActiveRecord::Base
   
   def shared_locations
     simevents = simultaneous_events
-    shareable_locations.select do |loc|
+    event_locations.shareable.collect {|el| el.location}.select do |loc|
       simevents.collect do |e|
         e.locations.include? loc
       end.include? true
@@ -291,6 +292,30 @@ class Event < ActiveRecord::Base
   def to_xml
     super(:methods => [:min_age, :age_restricted, :registration_open, :non_exclusive])
   end
+  
+  def capacity_limit(threshold, opts={})
+    0
+  end
+  
+  def capacity_limits()
+    {}
+  end
+  
+  def exclusive_location_ids
+    locations.exclusive.collect { |loc| loc.id }
+  end
+  
+  def shareable_location_ids
+    locations.shareable.collect { |loc| loc.id }
+  end
+  
+  def exclusive_location_ids=(loc_ids)
+    set_location_ids(true, loc_ids)
+  end
+  
+  def shareable_location_ids=(loc_ids)
+    set_location_ids(false, loc_ids)
+  end
 
   def attendees_with_blank_agenda
     child_ids = children.collect { |c| c.id }
@@ -306,5 +331,16 @@ class Event < ActiveRecord::Base
     else
       return param.to_s.downcase == "true"
     end
+  end
+  
+  def set_location_ids(exclusive, loc_ids)
+    locs = Location.find_all_by_id(loc_ids)
+    keep_els = event_locations.select { |el| el.exclusive ^ exclusive }
+    locs.each do |loc|
+      keep_el = event_locations.select { |el| el.location == loc }.first
+      keep_el ||= EventLocation.new :location => loc, :exclusive => exclusive
+      keep_els << keep_el
+    end
+    self.event_locations = keep_els
   end
 end

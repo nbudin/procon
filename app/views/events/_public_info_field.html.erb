@@ -1,0 +1,15 @@
+<tr>
+  <td>
+    <% if fields.object.new_record? -%>
+      <%= fields.text_field :name %>
+    <% else -%>
+      <%=h fields.object.name %>
+    <% end -%>
+  </td>
+  <td>
+    <% unless fields.object.new_record? -%>
+      (<%= fields.label :_delete, "Remove:" %>
+      <%= fields.check_box :_delete %>)
+    <% end -%>
+  </td>
+</tr>

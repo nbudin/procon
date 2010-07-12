@@ -1,19 +1,8 @@
-<table>
-  <tr>
-    <th></th>
-    <th>Question</th>
-    <th>Delete?</th>
-  </tr>
-  <% @event.public_info_fields.each do |pif| -%>
-    <tr>
-      <td></td>
-      <td><%=h pif.name %></td>
-      <td><%= check_box_tag "delete_public_info_field[#{pif.id}]" %></td>
-    </tr>
+<table id="public_info_fields">
+  <% f.fields_for :public_info_fields do |pif| -%>
+    <%= render :partial => "public_info_field", :locals => { :fields => pif } %>
   <% end -%>
-  <tr>
-    <td>Add new question:</td>
-    <td><%= text_field_tag "add_public_info_field" %></td>
-    <td></td>
-  </tr>
 </table>
+
+<%= add_object_link "Add field", f, :public_info_fields, @event.public_info_fields.build, 'public_info_field', 'public_info_fields' %>
+  

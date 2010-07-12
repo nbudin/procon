@@ -29,14 +29,6 @@
   </style>
   <% end -%>
   <title><%= page_title %></title>
-  <script type="text/javascript">
-  $(document).ready(function () {
-    $('.ui-default-state').hover(
-       function(){$(this).addClass('ui-hover-state');}, 
-       function(){$(this).removeClass('ui-hover-state');}
-    );
-  });
-  </script>
 </head>
 <body id="body">
 
@@ -45,7 +37,7 @@
 <% end -%>
 
 <% if not @hide_chrome -%>
-  <div id="topbar" class="ui-active-state">
+  <div id="topbar" class="ui-widget ui-widget-header ui-corner-all">
     <table style="width: 100%">
       <tr>
         <td>
@@ -56,17 +48,17 @@
               </i></p>
           <% end -%>
           <ul class="nav_links">
-            <li class="ui-default-state"><%= link_to "Home", :controller => :main, :action => :index %></li>
-            <li class="ui-default-state"><%= link_to "My Events", :controller => :agenda, :action => :index %></li>
+            <li class="ui-state-default"><%= link_to "Home", :controller => :main, :action => :index %></li>
+            <li class="ui-state-default"><%= link_to "My Events", :controller => :agenda, :action => :index %></li>
             <% if @context and @context.schedules.count(:conditions => ["published = ?", true]) == 1 -%>
-              <li class="ui-default-state"><%= link_to "Event Schedule", schedule_path(@context.schedules[0]) %></li>
+              <li class="ui-state-default"><%= link_to "Event Schedule", schedule_path(@context.schedules[0]) %></li>
             <% elsif @context and @context.schedules.count(:conditions => ["published = ?", true]) > 1 -%>
-              <li class="ui-default-state"><%= link_to "Event Schedules", schedules_path %></li>
+              <li class="ui-state-default"><%= link_to "Event Schedules", schedules_path %></li>
             <% end -%>
             <% if can?(:update, @context) -%>
               <li class="ui-default-state"><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
                 <span id="admin_open" style="display: none;">
-		  <a href="#" onClick="$('#admin_open').hide(); $('#admin_closed').show();" id="admin_closed">&laquo;</a>
+		  <a href="#" onClick="jQuery('#admin_open').hide(); jQuery('#admin_closed').show();" id="admin_closed">&laquo;</a>
 		  <ul class="admin_links">
 		    <li class="first"><%= link_to "Events", events_path %></li>
   		    <% if @context -%>

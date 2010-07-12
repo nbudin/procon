@@ -39,32 +39,31 @@
       </div>
     <% end -%>
 
+  <% if @event.kind_of? ProposedEvent -%>
+    <p>What would you like the timing of this event to be?  Please include the length of the event, and any preferences
+    for when it should be held, if applicable.</p>
+    <%= text_area "event", "proposed_timing", :default=> @event.proposed_timing, :style => "width: 100%" %>
+  <% else -%>
     <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
       <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
-      
-      <% if @event.kind_of? ProposedEvent -%>
-        </p>
-	<p>What would you like the timing of this event to be?  Please include the length of the event, and any preferences you have
-	for when it should be held, if applicable.</p>
-	<%= text_area "event", "proposed_timing", :default=> @event.proposed_timing, :style => "width: 100%" %>
-      <% else -%>
-        <% parent_start = @event.parent && @event.parent.start
-           parent_end = @event.parent && @event.parent.end %>
+	
+    <% parent_start = @event.parent && @event.parent.start
+       parent_end = @event.parent && @event.parent.end %>
 	<b>Starts:</b> <%= constrained_datetime_select "event", "start", parent_start, parent_end, :default => @event.start %><br/>
-        <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
-      <% end -%>
+    <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
+  <% end -%>
   </div>
 
   <script type="text/javascript">
   function updateCapacityLimitsVisibility() {
-      if ($('#limited_capacity_true').attr("checked")) {
-	  $('#capacity_limits').show();
+      if (jQuery('#limited_capacity_true').attr("checked")) {
+	  jQuery('#capacity_limits').show();
       } else {
-	  $('#capacity_limits').hide();
+	  jQuery('#capacity_limits').hide();
       }
   }
 
-  $(document).ready(updateCapacityLimitsVisibility);
+  jQuery(document).ready(updateCapacityLimitsVisibility);
   </script>
 
   <div id="locations">
@@ -75,10 +74,9 @@
         <%= simple_format @proposed_event.proposed_location %>
       </div>
     <% end -%>
-    
     <% if @event.kind_of? ProposedEvent -%>
       <p id="location_summary">Please tell us what sort of location or space you'd like for this event.  Include as many details as possible.</p>
-      <%= text_area "event", "proposed_location", :default => @event.proposed_location, :style => "width: 100%" %>
+      <%= f.text_area "proposed_location", :style => "width: 100%" %>
     <% else -%>
       <p id="location_summary">Current locations:
       <% if @event.locations.size > 0 -%>
@@ -87,9 +85,7 @@
         none
       <% end -%></p>
 
-      <select id="event_locations" multiple="multiple" name="locations[]">
-        <%= location_options @event.locations %>
-      </select>
+      <%= f.select "exclusive_location_ids", location_options(@event.locations.exclusive), {}, {:multiple => "multiple"} %>
     <% end -%>
   </div>
 
@@ -105,11 +101,11 @@
       <tr>
         <td>
           <p>Blurb:<br/>
-            <%= text_area "event", "blurb" %></p>
+            <%= f.text_area "blurb", :style => "width: auto;" %></p>
         </td>
         <td>      
           <p>Description:<br/>
-            <%= text_area "event", "description" %></p>
+            <%= f.text_area "description", :style => "width: auto;" %></p>
         </td>
       </tr>
     </table>
@@ -126,62 +122,66 @@
 
     <table>
       <% unless @event.kind_of? ProposedEvent -%>
-        <tr>
-          <td>Event registration is:</td>
-          <td>open <%= radio_button_tag "event[registration_open]", "true", @registration_open %>
-  	  &nbsp;&nbsp;&nbsp;
-          closed <%= radio_button_tag "event[registration_open]", "false", !@registration_open %></td>
-        </tr>
-      <% end -%>
+    	  <tr>
+    		<td>Event registration is:</td>
+    		<td>open <%= f.radio_button "registration_open", "1", :checked => @event.registration_open %>
+    	&nbsp;&nbsp;&nbsp;
+    		closed <%= f.radio_button "registration_open", "", :checked => !@event.registration_open %></td>
+    	  </tr>
+    	<% end -%>
       <tr>
         <td>Can people attend this event at the same time as other events?</td>
-        <td>yes <%= radio_button_tag "event[non_exclusive]", "true", @non_exclusive %>
+        <td>yes <%= f.radio_button "non_exclusive", "1", :checked => @event.non_exclusive %>
 	&nbsp;&nbsp;&nbsp;
-        no <%= radio_button_tag "event[non_exclusive]", "false", !@non_exclusive %></td>
+        no <%= f.radio_button "event[non_exclusive]", "", :checked => !@event.non_exclusive %></td>
       </tr>
       <tr>
         <td>This event has a minimum age of:</td>
-	<td><%= text_field_tag "event[min_age]", @min_age %></td>
+		<td><%= f.text_field "min_age" %></td>
       </tr>
       <% if @event.kind_of? ProposedEvent -%>
         <tr>
-	  <td colspan="2">
-	    <h3>Capacity Limits</h3>
-	    
-	    <p>Does this event have a limited capacity for attendees?  If so, please let us know the following things:</p>
-	    <ul>
-	      <li>How many attendees, at minimum, does it need to run?</li>
-	      <li>How many attendees would you <i>prefer</i> to have?</li>
-	      <li>What's the maximum number of attendees the event can take?</li>
-	    </ul>
-	    <p>If there are specific gender limitations for attendee slots, please let us know those here as well.</p>
-
-	    <%= text_area "event", "proposed_capacity_limits", :default => @event.proposed_capacity_limits, :style => "width: 100%" %>
-	  </td>
-	</tr>
+        <td colspan="2">
+          <h3>Capacity Limits</h3>
+                 
+          <p>Does this event have a limited capacity for attendees?  If so, please let us know the following things:</p>
+          <ul>
+            <li>How many attendees, at minimum, does it need to run?</li>
+            <li>How many attendees would you <i>prefer</i> to have?</li>
+            <li>What's the maximum number of attendees the event can take?</li>
+          </ul>
+          <p>If there are specific gender limitations for attendee slots, please let us know those here as well.</p>
+      
+          <%= text_area "event", "proposed_capacity_limits", :default => @event.proposed_capacity_limits, :style => "width: 100%" %>
+          </td>
+        </tr>
       <% else -%>
         <tr>
           <td>Limit the number of people who can sign up for this event?</td>
-          <td>yes <%= radio_button_tag "limited_capacity", "true", @limited_capacity,
+          <td>yes <%= radio_button_tag "limited_capacity", "true", 
+				  @event.kind_of?(LimitedCapacityEvent),
                   :onChange => "updateCapacityLimitsVisibility();"%>
 	  &nbsp;&nbsp;&nbsp;
-          no <%= radio_button_tag "limited_capacity", "false", !@limited_capacity,
+          no <%= radio_button_tag "limited_capacity", "false", 
+				  !@event.kind_of?(LimitedCapacityEvent),
                   :onChange => "updateCapacityLimitsVisibility();"%></td>
         </tr>
         <tr id="capacity_limits">
           <td></td>
           <td>
             <table>
-              <% %w( male female neutral ).each do |gender| -%>
-                <tr>
-                  <td><b><%= gender %></b></td>
-                  <% %w( min preferred max ).each do |threshold| -%>
-                    <td><%= threshold.humanize %>:
-                      <%= text_field_tag "limits[#{gender}][#{threshold}]", @limits[gender][threshold],
-                                         :style => "width: 3em;" %>
-                    </td>
-                  <% end -%>
-                </tr>
+			  <% %w{male female neutral}.each do |gender| -%>
+                <% f.fields_for :attendee_slots, @event.attendee_slots.find_by_gender(gender) do |slot_fields| -%>
+                  <tr>
+                    <td><b><%= slot_fields.object.gender %></b></td>
+					<% %w{min preferred max}.each do |threshold| -%>
+                      <td style="width: 10em;">
+                        <%= threshold.humanize %>:
+						<%= slot_fields.text_field threshold.to_sym, :style => "width: 2em;" %>
+    					</td>
+    				  <% end -%>
+                  </tr>
+				<% end -%>
               <% end %>
             </table>
           </td>
@@ -189,17 +189,17 @@
       <% end -%>
     </table>
   </div>
-
+  
   <% unless @event.kind_of? ProposedEvent -%>
     <div id="publicinfo">
       <h2>Public Signup Information</h2>
-
+    
       <p><%= check_box "event", "attendees_visible" %> Make attendees' names publicly visible</p>
-
-      <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process.
+    
+      <p><i>If you make attendees' names publicly visible, you can also ask questions during the signup process. 
         The answers to these questions will be publicly shown next to the attendee's name.</i></p>
-
-      <%= render :partial => "events/public_info_form" %>
+    
+      <%= render :partial => "events/public_info_form", :locals => { :f => f } %>
     </div>
   <% end -%>
 
@@ -207,16 +207,15 @@
     <div id="virtualsites">
       <h2>Virtual Sites</h2>
 
-      <%= render :partial => "events/virtual_sites_form" %>
+      <%= render :partial => "events/virtual_sites_form", :locals => { :f => f } %>
     </div>
   <% end -%>
 
-  <% unless @event.kind_of? ProposedEvent -%>
-
+  <% unless Event.kind_of? ProposedEvent -%>
     <div id="staff">
       <h2>Event Staff</h2>
-
-      <% if @proposed_event -%>
+	
+	    <% if @proposed_event -%>
         <div class="proposal_hint">
           <% if @proposed_event.staff.length > 0 -%>
           The following people will be automatically added as staff:
@@ -224,19 +223,21 @@
           <% end -%>
         </div>
       <% end -%>
+	
+  	  <ul id="staff_list">
+  		<% f.fields_for :attendances do |att_fields| -%>
+  		  <% if att_fields.object.is_staff -%>
+  			<%= render :partial => 'staff', :locals => { :fields => att_fields } %>
+  		  <% end -%>
+  	    <% end -%>
+		
+  	  </ul>
+	  
+    	  <%= add_object_link "Add staff", f, :attendances,
+  						@event.attendances.build(:is_staff => true, :counts => false), 'staff', 'staff_list' %>
 
-      <% if @event.staff.length > 0 -%>
-        <ul>
-          <% @event.staff.each do |staff| -%>
-            <li><%= staff.name %> (Remove: <%= check_box_tag "remove_staff[#{staff.id}]" %>)</li>
-          <% end -%>
-        </ul>
-      <% else -%>
-        <p>There are currently no staff listed for this event.</p>
-      <% end -%>
-      <p>Add staff by name: <%= user_picker "add_staff" %></p>
     </div>
- <% end -%>
+  <% end -%>
 
   <% if @event.kind_of? ProposedEvent or @proposed_event -%>
     <div id="proposalcomments">
@@ -260,7 +261,7 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() {
-  $('#eventedit > ul').tabs();
+jQuery(function() { 
+  jQuery('#eventedit').tabs(); 
 });
 </script>

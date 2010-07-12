@@ -14,10 +14,15 @@ class Attendance < ActiveRecord::Base
     record.pull_from_waitlist if record.deleted?
   end
 
+  validates_presence_of :person
   validates_inclusion_of :gender, :in => ["male", "female"]
 
   before_validation :ensure_gender_set
   after_save :check_waitlist
+  
+  named_scope :staff, :conditions => { :is_staff => true }
+  named_scope :waitlist, :conditions => { :is_waitlist => true }
+  named_scope :counted, :conditions => { :counts => true }
   
   def deleted?
     deleted_at && deleted_at <= Time.now

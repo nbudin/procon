@@ -1,0 +1,11 @@
+<li>
+  <%= fields.hidden_field :is_staff -%>
+  <%= fields.hidden_field :counts -%>
+  
+  <% if fields.object.new_record? -%>
+    <%= fields.person_field :person_id %>
+  <% else -%>
+    <%= fields.object.person.name %>
+    (<%= fields.label :_delete, "Remove:" %> <%= fields.check_box :_delete %>)
+  <% end -%>
+</li>

@@ -1,23 +1,12 @@
-<table>
+<table id="virtual_sites">
   <tr>
-    <th></th>
     <th>Domain</th>
     <th>Site Template</th>
-    <th>Delete?</th>
   </tr>
-  <% @event.virtual_sites.each do |vs| -%>
-    <tr>
-      <td></td>
-      <td><i><%=h vs.domain %></i></td>
-      <td><%=h vs.site_template.name %></td>
-      <td><%= check_box_tag "delete_virtual_site[#{vs.id}]" %></td>
-    </tr>
+  <% f.fields_for :virtual_sites do |vs_fields| -%>
+    <%= render :partial => 'virtual_site', :locals => { :fields => vs_fields } %>
   <% end -%>
-  <tr>
-    <td>Add new virtual site:</td>
-    <td><%= text_field_tag "add_virtual_site[domain]" %></td>
-    <td><%= select_tag "add_virtual_site[site_template]",
-      options_for_select(SiteTemplate.find(:all).collect { |t| [t.name, t.id] }) %></td>
-    <td></td>
-  </tr>
 </table>
+
+<%= add_object_link "Add virtual site", f, :virtual_sites, @event.virtual_sites.build, 'virtual_site', 'virtual_sites' %>
+  
