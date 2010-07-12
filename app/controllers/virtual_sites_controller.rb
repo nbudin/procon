@@ -1,5 +1,5 @@
 class VirtualSitesController < ApplicationController
-  require_class_permission "edit", :class_name => "Event"
+  load_and_authorize_resource
   
   def index
     @virtual_sites = VirtualSite.all
