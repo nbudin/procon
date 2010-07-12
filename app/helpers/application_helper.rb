@@ -29,44 +29,7 @@ module ApplicationHelper
     return "'##{escid}'"
   end
 
-  def instance_id(object_name, method)
-    "#{object_name}_#{method}".gsub(/\W/, "_").gsub(/_+/, "_").sub(/_+$/, "")
-  end
-
-  def constrained_date_select(object_name, method, start_time, end_time, options = {}, html_options = {})
-    options = options.dup
-
-    html = ""
-    if start_time and end_time
-      options[:default] ||= start_time
-      cur = start_time.beginning_of_day
-      date_options = []
-      default = nil
-      while cur <= end_time do
-        date_options.push([ cur.strftime("%A, %b %d"), cur.to_i ])
-        if options[:default] >= cur and options[:default] < (cur + 1.day)
-          default = cur.to_i
-        end
-        cur += 1.day
-      end
-      shim_id = instance_id("date_shim_#{object_name}", method)
-      html << select_tag(shim_id, options_for_select(date_options, default), html_options)
-      html << <<-ENDOFHTML
-<script type="text/javascript">
-jQuery(function() {
-  jQuery('##{shim_id}').eventDateShim("#{instance_id(object_name, method)}");
-});
-</script>
-ENDOFHTML
-      html << hidden_field_tag("#{object_name}[#{method}(1i)]", options[:default].year, :id => instance_id(object_name, "#{method}(1i)"))
-      html << hidden_field_tag("#{object_name}[#{method}(2i)]", options[:default].month, :id => instance_id(object_name, "#{method}(2i)"))
-      html << hidden_field_tag("#{object_name}[#{method}(3i)]", options[:default].day, :id => instance_id(object_name, "#{method}(3i)"))
-    else
-      html << content_tag(:span, html_options) do 
-        date_select(object_name, method, options)
-      end
-    end
-  end
+  
 
   def event_date_select(event, method, options = {}, html_options = {})
     start_time = event.parent ? event.parent.start : nil

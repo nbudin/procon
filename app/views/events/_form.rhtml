@@ -49,8 +49,8 @@
 	
     <% parent_start = @event.parent && @event.parent.start
        parent_end = @event.parent && @event.parent.end %>
-	<b>Starts:</b> <%= constrained_datetime_select "event", "start", parent_start, parent_end, :default => @event.start %><br/>
-    <b>Ends:</b> <%= constrained_datetime_select "event", "end", parent_start, parent_end, :default => @event.end %></p>
+	<b>Starts:</b> <%= f.constrained_datetime_select "start", parent_start, parent_end %><br/>
+    <b>Ends:</b> <%= f.constrained_datetime_select "end", parent_start, parent_end %></p>
   <% end -%>
   </div>
 
