@@ -28,7 +28,7 @@
       </td>
       <td>
         <% if attendance.person.account -%>
-          <%= mail_to attendance.person.primary_email_address %>
+          <%= mail_to attendance.person.email %>
         <% end -%>
       </td>
       <td>
