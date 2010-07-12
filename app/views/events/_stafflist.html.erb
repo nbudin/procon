@@ -5,7 +5,7 @@
 	    <% event.staff_positions.each do |pos| -%>
 	      <% if pos.attendances.size > 0 -%>
 	        <li><b><%= pos.name %>:</b>
-	          <%= pos.attendances.collect {|att| render(:partial => "positioned_staffer", :locals => {:att => att}).strip }.join(', ') %>
+	          <%= positioned_staffers pos %>
   	        </li>
 	      <% end -%>
 	    <% end -%>

@@ -1,5 +1,0 @@
-<% if att.staff_position.publish_email -%>
-  <%= mail_to att.person.primary_email_address, att.person.name, :encode => "javascript" %>
-<% else -%>
-  <%= att.person.name %>
-<% end -%>

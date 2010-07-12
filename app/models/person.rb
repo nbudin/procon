@@ -5,7 +5,7 @@ class Person < ActiveRecord::Base
   has_many :events, :through => :attendances
   
   def name
-    if nickname
+    unless nickname.blank?
       "#{firstname} \"#{nickname}\" #{lastname}"
     else
       "#{firstname} #{lastname}"
