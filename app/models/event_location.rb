@@ -1,8 +1,8 @@
 class EventLocation < ActiveRecord::Base
   belongs_to :event
   belongs_to :location
-  named_scope :exclusive, :conditions => {:exclusive => true}
-  named_scope :shareable, :conditions => {:exclusive => false}
+  scope :exclusive, :conditions => {:exclusive => true}
+  scope :shareable, :conditions => {:exclusive => false}
   
   validates_uniqueness_of :location_id, :scope => :event_id, :message => "is already booked for that event."
   

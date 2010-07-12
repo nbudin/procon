@@ -6,6 +6,6 @@
     <%= fields.person_field :person_id %>
   <% else -%>
     <%= fields.object.person.name %>
-    (<%= fields.label :_delete, "Remove:" %> <%= fields.check_box :_delete %>)
+    (<%= fields.label :_destroy, "Remove:" %> <%= fields.check_box :_destroy %>)
   <% end -%>
 </li>

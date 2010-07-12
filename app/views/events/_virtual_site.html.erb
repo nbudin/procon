@@ -15,8 +15,8 @@
       </td>
       <td>
         <% unless fields.object.new_record? -%>
-          (<%= fields.label :_delete, "Remove:" %>
-          <%= fields.check_box :_delete %>)
+          (<%= fields.label :_destroy, "Remove:" %>
+          <%= fields.check_box :_destroy %>)
         <% end -%>
       </td>
     </tr>

@@ -3,10 +3,8 @@ class Location < ActiveRecord::Base
   has_many :event_locations, :dependent => :destroy
   has_many :events, :through => :event_locations, :dependent => :destroy
   
-  named_scope :exclusive, :include => :event_locations,
-    :conditions => [ "event_locations.exclusive = ?", true ]
-  named_scope :shareable, :include => :event_locations,
-    :conditions => [ "event_locations.exclusive = ?", false ]
+  scope :exclusive, :include => :event_locations, :conditions => [ "event_locations.exclusive = ?", true ]
+  scope :shareable, :include => :event_locations, :conditions => [ "event_locations.exclusive = ?", false ]
   
   def self.roots(locs)
     roots = locs.dup
