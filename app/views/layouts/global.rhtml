@@ -25,7 +25,7 @@
   <% end -%>
   <% if not @site_template.css.blank? -%>
   <style type="text/css">
-    <%= @site_template.css %>
+    <%= @site_template.css.html_safe %>
   </style>
   <% end -%>
   <title><%= page_title %></title>
