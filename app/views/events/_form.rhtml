@@ -42,15 +42,13 @@
   <% if @event.kind_of? ProposedEvent -%>
     <p>What would you like the timing of this event to be?  Please include the length of the event, and any preferences
     for when it should be held, if applicable.</p>
-    <%= text_area "event", "proposed_timing", :default=> @event.proposed_timing, :style => "width: 100%" %>
+    <%= f.text_area "proposed_timing", :style => "width: 100%" %>
   <% else -%>
-    <p><b>Event name:</b> <%= text_field "event", "fullname" %><br/>
-      <b>Short name:</b> <%= text_field "event", "shortname" %><br/>
-	
-    <% parent_start = @event.parent && @event.parent.start
-       parent_end = @event.parent && @event.parent.end %>
-	<b>Starts:</b> <%= f.constrained_datetime_select "start", parent_start, parent_end %><br/>
-    <b>Ends:</b> <%= f.constrained_datetime_select "end", parent_start, parent_end %></p>
+    <p><b>Event name:</b> <%= f.text_field "fullname" %><br/>
+      <b>Short name:</b> <%= f.text_field "shortname" %><br/>
+
+	<b>Starts:</b> <%= f.event_datetime_select "start" %><br/>
+    <b>Ends:</b> <%= f.event_datetime_select "end" %></p>
   <% end -%>
   </div>
 
@@ -133,7 +131,7 @@
         <td>Can people attend this event at the same time as other events?</td>
         <td>yes <%= f.radio_button "non_exclusive", "1", :checked => @event.non_exclusive %>
 	&nbsp;&nbsp;&nbsp;
-        no <%= f.radio_button "event[non_exclusive]", "", :checked => !@event.non_exclusive %></td>
+        no <%= f.radio_button "non_exclusive", "", :checked => !@event.non_exclusive %></td>
       </tr>
       <tr>
         <td>This event has a minimum age of:</td>
