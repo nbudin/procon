@@ -5,11 +5,23 @@ class Event < ActiveRecord::Base
   has_many :public_info_fields, :dependent => :destroy
   has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
   has_many :virtual_sites
+  has_and_belongs_to_many :tracks
+  belongs_to :registration_policy
+  has_many :schedules
   
   accepts_nested_attributes_for :attendances, :allow_destroy => true
   accepts_nested_attributes_for :attendee_slots, :allow_destroy => true
   accepts_nested_attributes_for :public_info_fields, :allow_destroy => true
   accepts_nested_attributes_for :virtual_sites, :allow_destroy => true
+    
+  scope :time_ordered, order("start, end")
+  scope :in_schedule, lambda { |schedule|
+    joins(:tracks).where(:tracks => { :id => schedule.track_ids }).select("DISTINCT `events`.*").includes(:tracks)
+  }
+  scope :for_registration, includes(:attendances => :person, 
+    :registration_policy => :rules, 
+    :attendee_slots => nil, 
+    :locations => nil)
     
   private
   # convenience method for getting the actual people associated with a group
@@ -51,14 +63,7 @@ class Event < ActiveRecord::Base
   has_many :staff_positions, :dependent => :destroy, :order => "position"
   get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
     
-  belongs_to :registration_policy
   
-    
-  has_many :schedules
-  has_and_belongs_to_many :tracks
-  has_and_belongs_to_many :schedule_blocks
-  has_many :scheduled_event_positions
-  after_save :invalidate_blocks
   
   # possibly replace this with a confirmation check later
   validate do |e|

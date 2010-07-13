@@ -20,21 +20,8 @@ class SchedulesController < ApplicationController
   # GET /schedules/1
   # GET /schedules/1.xml
   def show
-    @interval = params[:interval] ? params[:interval].to_i : 30.minutes
-    @schedule = Schedule.find(params[:id], 
-                              :include => [
-                                           { :schedule_blocks => [:events, 
-                                                                  :tracks, 
-                                                                  {:scheduled_event_positions => { 
-                                                                      :event => [{:attendances => :person}, 
-                                                                                 :locations,
-                                                                                 {:registration_policy => :rules},
-                                                                                 {:attendee_slots => { :event => :attendee_slots }}]
-                                                                    }}] 
-                                           }])
-    @events = @schedule.events
-    @blocks = @schedule.obtain_blocks
-    @blocks.sort! { |a, b| a.start <=> b.start }
+    @schedule = Schedule.find(params[:id])
+    @blocks = @schedule.blocks(:for_registration => true).sort_by { |b| b.start }
     
     respond_to do |format|
       format.html # show.html.erb
@@ -45,11 +32,8 @@ class SchedulesController < ApplicationController
   # GET /schedules/1/health
   # GET /schedules/1/health.xml
   def health
-    @interval = params[:interval] ? params[:interval].to_i : 30.minutes
     @schedule = Schedule.find(params[:id])
-    @events = @schedule.events
-    @blocks = @schedule.obtain_blocks
-    @blocks.sort! { |a, b| a.start <=> b.start }
+    @blocks = @schedule.blocks(:for_registration => true).sort_by { |b| b.start }
     
     respond_to do |format|
       format.html # show.html.erb

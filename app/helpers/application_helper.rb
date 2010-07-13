@@ -88,7 +88,7 @@ module ApplicationHelper
     att = current_person.attendance_for_event(event)
     with_output_buffer do
       output_buffer << "["
-      if not current_person.events.include? event
+      if att.nil?
         if event.registration_open
           caption = if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(current_person.gender))
             "Sign up"

@@ -2,7 +2,7 @@
 
 <h1 id="pagetitle"><%= @schedule.name %></h1>
 
-<% if current_person_can_edit? @context -%>
+<% if can?(:update, @schedule) -%>
   <h2>Administration</h2>
 
   <ul>
@@ -11,8 +11,8 @@
   </ul>
 <% end -%>
 
-<% if @events.size == 0 -%>
-  <p>There are no events on this schedule.</p>
+<% if @blocks.empty? -%>
+  <p>This schedule is currently empty.</p>
 <% else -%>
   <% @blocks.each do |block| -%>
     <%= schedule_block(@schedule, block) %>

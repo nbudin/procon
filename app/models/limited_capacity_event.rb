@@ -136,7 +136,8 @@ class LimitedCapacityEvent < Event
   end
   
   def full?
-    attendee_slots.each do |slot| 
+    attendee_slots.each do |slot|
+      slot.event = self 
       if not slot.full?
         return false
       end

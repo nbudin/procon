@@ -1,130 +1,134 @@
 module SchedulesHelper  
   def schedule_header(usetracks)
     colsize = 90.0 / usetracks.size
-    output = ""
     if usetracks.size > 1
-      output << "<table class=\"scheduleheader\">\n"
-      output << "  <tr>\n"
-      output << "    <th style=\"width: 10%;\"></th>\n"
-      usetracks.each do |track|
-        output << "    <th style=\"width: #{colsize}%;"
-        if track.color
-          output += " background-color: #{track.color};"
+      content_tag(:table, :class => "scheduleheader") do
+        content_tag(:tr) do
+          with_output_buffer do
+            output_buffer << content_tag(:th, "&nbsp".html_safe, :style => "width: 10%;")
+            usetracks.each do |track|
+              header_style = "width: #{colsize}%;"
+              header_style << " background-color: #{track.color};" if track.color
+              
+              output_buffer << content_tag(:th, track.name, :style => header_style)
+            end
+          end
         end
-        output << "\">\n"
-        output << h(track.name)
-        output << "    </th>\n"
       end
-      output << "  </tr>\n"
-      output << "</table>"
     end
-    return output
   end
   
   def schedule_body_table(block)
     now = block.start
     lastday = now.day
     interval = block.interval
-    output = "<table class=\"schedulebody\">\n"
-    rownum = 0
-    while now < block.end
-      output << "  <tr style=\"height: 20px;\">\n"
-      output << "    <td style=\"width: 10%; border-right: 1px dotted #aaa;"
-      if lastday != now.day
-        output << " border-top: 1px dashed #333;"
-      end
-      output << "\">\n"
-			if lastday == now.day   
-        if rownum % 2 == 0
-          output << "      #{now.strftime("%I:%M %p")}\n"
+    
+    content_tag(:table, :class => "schedulebody") do
+      with_output_buffer do
+        rownum = 0
+        while now < block.end
+          output_buffer << content_tag(:tr, :style => "height: 20px;") do
+            border_top_style = if lastday == now.day
+              ""
+            else
+              "border-top: 1px dashed #333;"
+            end
+            
+            content_tag(:td, :style => "width: 10%; border-right: 1px dotted #aaa; #{border_top_style}") do
+      			  if lastday == now.day   
+                if rownum % 2 == 0
+                  now.strftime("%I:%M %p")
+                end
+              else
+                content_tag(:b, now.strftime("%m/%d/%Y"))
+              end
+            end + content_tag(:td, "&nbsp;".html_safe, :style => "width: 90%; #{border_top_style}")
+        	end
+          lastday = now.day
+        	now += interval
+        	rownum += 1
         end
-      else
-        output << "      <b>#{now.strftime("%m/%d/%Y")}</b>\n"
-      end        
-			output << "    </td>\n"
-			output << "    <td style=\"width: 90%;"
-      if lastday != now.day
-        output << " border-top: 1px dashed #333;"
       end
-      output << "\">&nbsp;</td>\n"
-    	output << "  </tr>\n"
-      lastday = now.day
-    	now += interval
-    	rownum += 1
     end
-    output << "</table>"
-    return output
+  end
+  
+  def position_style(position, background_color = true)
+    position_style = ""
+    %w{left top width height}.each do |attr|
+      position_style << " #{attr}: #{position.send(attr)}%;"
+    end
+    position_style << "background-color: #{position.color}" if background_color
+    
+    return position_style
   end
 
   def health_event(position, healthclass)
     event = position.event
-    output = <<-ENDHTML
-      <div style="left: #{position.left}%;
-                  width: #{position.width}%;
-                  top: #{position.top}%;
-                  height: #{position.height}%;"
-           class="event #{healthclass}">
-        <b>#{h event.shortname}</b>
-    ENDHTML
-    if event.kind_of? LimitedCapacityEvent
-      output << "<br/>\n"
-      output << health_count(event)
+    
+    content_tag(:div, :style => position_style(position, false), :class => "event #{healthclass}") do
+      with_output_buffer do
+        output_buffer << content_tag(:b, event.shortname)
+        
+        if event.kind_of? LimitedCapacityEvent
+          output_buffer << "<br/>".html_safe
+          output_buffer << health_count(event)
+        end
+        
+        output_buffer << "<br/>".html_safe
+        output_buffer << link_to("Who's free\?", 
+                          url_for(:controller => 'events', :action => 'available_people', :id => event.id) + thickbox_params, 
+                          :class => 'thickbox', :style => 'font-weight: bold;')
+      end
     end
-
-    output << "<br/>\n"
-    output << link_to("Who's free\?", 
-                      url_for(:controller => 'events', :action => 'available_people', :id => event.id) + thickbox_params, 
-                      :class => 'thickbox', :style => 'font-weight: bold;')
-
-    output << "</div>\n"
-    return output
   end
   
   def schedule_event(position)
     event = position.event
     att = person_signed_in? ? current_person.attendance_for_event(event) : nil
-    output = <<-ENDHTML
-<div style="left: #{position.left}%;
-            width: #{position.width}%;
-            top: #{position.top}%;
-            height: #{position.height}%;
-            background-color: #{ position.color };"
-     class="event #{ att ? 'signedup' : '' } #{ att and att.is_waitlist ? 'waitlist' : '' }">
-  #{ link_to event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
-    :class => 'thickbox', :style => 'font-weight: bold;' }
-ENDHTML
-    if person_signed_in?
-      output << "<br/><br/>\n"
-      output << signup_link(event)
+    
+    position_style = position_style(position)
+    position_class = "event"
+    position_class << " signedup" if att
+    position_class << " waitlist" if att.try(:is_waitlist)
+    
+    content_tag(:div, :style => position_style, :class => position_class) do
+      with_output_buffer do
+        output_buffer << link_to(event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
+          :class => 'thickbox', :style => 'font-weight: bold;')
+
+        if person_signed_in?
+          output_buffer << "<br/><br/>".html_safe
+          output_buffer << signup_link(event)
+        end
+        
+        if event.kind_of? LimitedCapacityEvent
+          output_buffer << "<br/>".html_safe
+          output_buffer << registration_count(event)
+        end
+        
+        if event.locations.size > 0
+			    output_buffer << "<br/><br/>".html_safe
+			    output_buffer << content_tag(:i, event.locations.collect { |l| l.name }.join(", ") )
+        end
+      end
     end
-    if event.kind_of? LimitedCapacityEvent
-      output << "<br/>\n"
-      output << registration_count(event)
-    end
-    if event.locations.size > 0
-			output << "<br/><br/>\n"
-			output << "<i>"
-			output << event.locations.collect { |l| h(l.name) }.join(", ")
-			output << "</i>\n"
-    end
-    output << "</div>\n"
-    return output
   end
 
   def with_schedule_block(schedule, block, skip_header = false)
-    positions = block.obtain_event_positions
+    positions = block.event_positions
     
-    output = "<h2>#{ block.start.strftime("%A, %B %d, %Y") }</h2>\n\n"
-    unless skip_header
-      output << schedule_header(block.obtain_tracks)
+    with_output_buffer do
+      output_buffer << content_tag(:h2, block.start.strftime("%A, %B %d, %Y"))
+      output_buffer << schedule_header(block.tracks) unless skip_header
+      output_buffer << content_tag(:div, :class => "schedule") do 
+        with_output_buffer do
+          output_buffer << schedule_body_table(block)
+          positions.each do |position|
+            output_buffer << yield(position)
+          end
+        end
+      end
     end
-    output << "\n\n<div class=\"schedule\">\n"
-    output << schedule_body_table(block)
-    positions.each do |position|
-      output << yield(position)
-    end
-    output << "</div>"
-    return output
   end
   
   def schedule_block(schedule, block)

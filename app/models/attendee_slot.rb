@@ -1,5 +1,5 @@
 class AttendeeSlot < ActiveRecord::Base
-  belongs_to :event, :class_name => "LimitedCapacityEvent", :foreign_key => "event_id"
+  belongs_to :event
   validates_uniqueness_of :gender, :scope => :event_id
   
   def validate
@@ -26,11 +26,8 @@ class AttendeeSlot < ActiveRecord::Base
   def count
     if not gendered?
       # sum other slots and take what's left
-      total = 0
-      event.attendee_slots.each do |slot|
-        if slot.id != self.id
-          total += slot.count
-        end
+      total = event.attendee_slots.reject { |s| s == self }.inject(0) do |i, slot|
+        i + slot.count
       end
       event.attendee_count - total
     else

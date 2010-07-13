@@ -32,12 +32,12 @@ class Person < ActiveRecord::Base
     return count
   end
   
-  def attendance_for_event(event_id)
-    attendances.where(:event_id => event_id).first
+  def attendance_for_event(event)
+    event.attendances.select { |att| att.person_id == self.id }.first
   end
   
   def attending?(event)
-    attendance_for_event(event.id)
+    attendance_for_event(event)
   end
   
   def events_cond(events)
