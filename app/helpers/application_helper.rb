@@ -28,46 +28,6 @@ module ApplicationHelper
     escid = id.gsub(/(\W)/, "\\\\\\\\\\1")
     return "'##{escid}'"
   end
-
-  
-
-  def event_date_select(event, method, options = {}, html_options = {})
-    start_time = event.parent ? event.parent.start : nil
-    end_time = event.parent ? event.parent.end : nil
-    return constrained_date_select("event[#{event.id}]", method, start_time, end_time, 
-                                   options.update(:default => event.send(method)), html_options)
-  end
-
-  def time_options(options, default)
-    options_for_select(options.collect {|o| sprintf("%02d", o) }, sprintf("%02d", default))
-  end
-
-  def constrained_time_select(object_name, method, start_time, end_time, options = {}, html_options = {})
-    default = options[:default] || Time.new
-    html = select_tag("#{object_name}[#{method}(4i)]", time_options(0..23, default.hour), html_options)
-    html << " : "
-    html << select_tag("#{object_name}[#{method}(5i)]", time_options(%w{00 15 30 45}, default.min), html_options)
-    return html
-  end
-
-  def event_time_select(event, method, options = {}, html_options = {})
-    return constrained_time_select("event[#{event.id}]", method, event.start, event.end,
-                                   options.update(:default => event.send(method)), html_options)
-  end
-
-  def event_datetime_select(event, method, options = {}, html_options = {})
-    html = event_date_select(event, method, options, html_options)
-    html << " at "
-    html << event_time_select(event, method, options, html_options)
-    return html
-  end
-
-  def constrained_datetime_select(object_name, method, start_time, end_time, options = {}, html_options = {})
-    html = constrained_date_select(object_name, method, start_time, end_time, options, html_options)
-    html << " at "
-    html << constrained_time_select(object_name, method, start_time, end_time, options, html_options)
-    return html
-  end
   
   def signup_url(event)
     if person_signed_in?

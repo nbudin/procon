@@ -1,49 +1,44 @@
 module ActionView
   module Helpers
     module FormHelper
-      def constrained_date_select(object_name, method, start_time, end_time, options = {}, html_options = {})
-        InstanceTag.new(object_name, method, self, options.delete(:object)).to_constrained_date_select_tag(start_time, end_time, options, html_options)
-      end
-      
-      def constrained_datetime_select(object_name, method, start_time, end_time, options = {}, html_options = {})
-        InstanceTag.new(object_name, method, self, options.delete(:object)).to_constrained_datetime_select_tag(start_time, end_time, options, html_options)
+      %w{date time datetime}.each do |selector|
+        class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
+          def constrained_#{selector}_select(object_name, method, start_time, end_time, options = {}, html_options = {})
+            InstanceTag.new(object_name, method, self, options.delete(:object)).to_constrained_#{selector}_select_tag(start_time, end_time, options, html_options)
+          end
+        RUBY_EVAL
       end
     end
     
     class FormBuilder
-      %w{constrained_date_select constrained_datetime_select}.each do |selector|
+      %w{date time datetime}.each do |selector|
         class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
-          def #{selector}(method, start_time, end_time, options = {})
+          def constrained_#{selector}_select(method, start_time, end_time, options = {}, html_options={})
             @template.send(
-              #{selector.inspect},
+              "constrained_#{selector}_select",
               @object_name,
               method,
               start_time,
               end_time,
-              objectify_options(options))
+              objectify_options(options),
+              html_options)
           end
         RUBY_EVAL
       end
     end
     
     class InstanceTag
-      def to_constrained_date_select_tag(start_time, end_time, options = {}, html_options = {})
-        with_constrained_datetime_wrapper(start_time, end_time, to_date_select_tag(options, html_options))
-      end
-      
-      def to_constrained_datetime_select_tag(start_time, end_time, options = {}, html_options = {})
-        with_constrained_datetime_wrapper(start_time, end_time, to_datetime_select_tag(options, html_options))
+      %w{date time datetime}.each do |selector|
+        class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
+          def to_constrained_#{selector}_select_tag(start_time, end_time, options = {}, html_options = {})
+            with_constrained_datetime_wrapper(start_time, end_time, to_#{selector}_select_tag(options, html_options))
+          end
+        RUBY_EVAL
       end
       
       private
       def with_constrained_datetime_wrapper(start_time, end_time, content)
-        content_tag(:span, :id => tag_id) do
-          content + %{
-            <script type="text/javascript">
-            jQuery('##{tag_id}').constrainedDateTimeSelect(#{start_time.to_i}, #{end_time.to_i});
-            </script>
-          }.html_safe
-        end
+        content_tag(:span, content, :id => tag_id, :class => "constrained_datetime_select")
       end
     end
   end

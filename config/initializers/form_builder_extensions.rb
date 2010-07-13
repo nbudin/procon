@@ -1,2 +1,3 @@
 require 'form_builder_extensions/person_field'
 require 'form_builder_extensions/constrained_datetime_select'
+require 'form_builder_extensions/event_datetime_select'
