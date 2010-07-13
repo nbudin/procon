@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100707205943) do
+ActiveRecord::Schema.define(:version => 20100713204559) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -53,16 +53,6 @@ ActiveRecord::Schema.define(:version => 20100707205943) do
 
   add_index "attendee_slots", ["event_id"], :name => "index_attendee_slots_on_event_id"
 
-  create_table "auth_tickets", :force => true do |t|
-    t.string   "secret",     :limit => 40
-    t.integer  "person_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "expires_at"
-  end
-
-  add_index "auth_tickets", ["secret"], :name => "secret", :unique => true
-
   create_table "event_locations", :force => true do |t|
     t.integer "event_id"
     t.integer "location_id"
@@ -88,11 +78,6 @@ ActiveRecord::Schema.define(:version => 20100707205943) do
     t.text     "proposed_location"
     t.text     "proposed_capacity_limits"
     t.integer  "proposer_id"
-  end
-
-  create_table "events_schedule_blocks", :id => false, :force => true do |t|
-    t.integer "event_id"
-    t.integer "schedule_block_id"
   end
 
   create_table "events_tracks", :id => false, :force => true do |t|
@@ -177,32 +162,6 @@ ActiveRecord::Schema.define(:version => 20100707205943) do
     t.integer "age_min"
     t.integer "age_max"
     t.integer "min_age"
-  end
-
-  create_table "schedule_blocks", :force => true do |t|
-    t.integer  "schedule_id"
-    t.datetime "start"
-    t.datetime "end"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "interval"
-  end
-
-  create_table "schedule_blocks_tracks", :id => false, :force => true do |t|
-    t.integer "track_id"
-    t.integer "schedule_block_id"
-  end
-
-  create_table "scheduled_event_positions", :force => true do |t|
-    t.integer  "schedule_block_id"
-    t.integer  "event_id"
-    t.float    "left"
-    t.float    "top"
-    t.float    "width"
-    t.float    "height"
-    t.string   "color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "schedules", :force => true do |t|

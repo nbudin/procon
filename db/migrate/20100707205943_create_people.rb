@@ -115,6 +115,7 @@ class CreatePeople < ActiveRecord::Migration
       drop_table :open_id_authentication_nonces
       drop_table :permission_caches
       drop_table :procon_profiles
+      drop_table :auth_tickets
     end
   end
 
