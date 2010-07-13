@@ -4,13 +4,14 @@ class Ability
   def initialize(person)
     alias_action [:show_description], :to => :read
     
+    can :read, Event
     can :read, Schedule, :published => true
     
     if person
       if person.admin?
         can [:read, :create, :update, :destroy, :view_attendees], Event
         can [:read, :create, :update, :destroy], VirtualSite
-        can [:read, :create, :update, :destroy], Schedule
+        can [:read, :create, :update, :destroy, :health], Schedule
         can [:read, :create, :update, :destroy, :accept, :reject], ProposedEvent
       else
         can :manage, Event do |action, event|
@@ -22,6 +23,9 @@ class Ability
         
         can [:read, :create, :update, :destroy], Schedule do |schedule|
           can?(:admin_schedules, event)
+        end
+        can :health, Schedule do |schedule|
+          can?(:view_attendees, event)
         end
         
         can :create, ProposedEvent
