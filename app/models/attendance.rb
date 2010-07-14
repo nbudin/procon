@@ -6,6 +6,8 @@ class Attendance < ActiveRecord::Base
   scope :confirmed, lambda { where(["deleted_at is NULL or deleted_at > ?", Time.now]) }
   default_scope confirmed
   
+  scope :for_agenda, includes(:person => { :attendances => { :event => [:parent, :virtual_sites, :locations] } })
+  
   has_many :public_info_values
   
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."

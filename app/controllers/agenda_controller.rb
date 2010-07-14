@@ -6,7 +6,7 @@ class AgendaController < ApplicationController
   
   def attendees
     authorize! :view_attendees, context
-    @attendees = @context.all_attendees
+    @attendees = @context.attendances.for_agenda.confirmed.map(&:person)
     @attendees = sort_people(@attendees)
   end
 end

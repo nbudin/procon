@@ -1,8 +1,8 @@
 module AgendaHelper
   def context_events(person)
-    Attendance.find_all_by_person_id(person.id, :include => :event, :joins => :event, :order => "start").select do |a|
+    person.attendances.select do |a|
       e = a.event
       (not e.nil?) and (not e.kind_of?(ProposedEvent)) and (@context.nil? or e.parent == @context)
-    end
+    end.sort_by {|a| a.event.start}
   end
 end
