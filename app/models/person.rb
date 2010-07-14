@@ -4,6 +4,9 @@ class Person < ActiveRecord::Base
   has_many :attendances
   has_many :events, :through => :attendances
   
+  scope :attending, lambda { |event| joins(:attendances).
+    where(["attendances.event_id = ? AND (attendances.deleted_at IS NULL OR attendances.deleted_at > ?)", event.id, Time.now])}
+  
   def name
     unless nickname.blank?
       "#{firstname} \"#{nickname}\" #{lastname}"

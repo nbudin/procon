@@ -3,10 +3,13 @@ class Attendance < ActiveRecord::Base
   belongs_to :event
   belongs_to :staff_position
   
-  scope :confirmed, lambda { where(["deleted_at is NULL or deleted_at > ?", Time.now]) }
+  scope :confirmed, lambda { where(["attendances.deleted_at is NULL or attendances.deleted_at > ?", Time.now]) }
   default_scope confirmed
   
-  scope :for_agenda, includes(:person => { :attendances => { :event => [:parent, :virtual_sites, :locations] } })
+  scope :by_person_id, lambda { |person_id| where(:person_id => person_id) }
+  scope :in_context, lambda { |context| joins(:event).where("events.parent_id = ?", context.id) }
+  scope :for_agenda, includes( :person => [], :event => [:parent, :virtual_sites, :locations] )
+  scope :time_ordered, joins(:event).order("events.start, events.end")
   
   has_many :public_info_values
   

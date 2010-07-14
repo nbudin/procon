@@ -1,45 +1,30 @@
-<% current = []
-upcoming = []
-past = []
-
-now = Time.now
-context_events(current_person).each do |a|
-  e = a.event
-  if e.end and e.end < now
-    past.push a
-  elsif e.start and e.start < now
-    current.push a
-  elsif e.start
-    upcoming.push a
-  end
-end -%>
 <div class="agenda ui-widget ui-widget-content ui-corner-all" style="padding: 0.5em;">
   <h2>My events
     <% if @context -%>
       at <%= @context.fullname %>
     <% end -%></h2>
 
-  <% if current.length > 0 -%>
+  <% if @current.length > 0 -%>
     <% reset_cycle("agenda_rows") -%>
     <h3>Events In Progress</h3>
     <table>
-      <%= render :partial => 'attendance', :collection => current.sort { |a,b| a.event.length <=> b.event.length } %>
+      <%= render :partial => 'attendance', :collection => @current %>
     </table>
   <% end -%>
   
-  <% if upcoming.length > 0 -%>
+  <% if @upcoming.length > 0 -%>
     <% reset_cycle("agenda_rows") -%>
     <h3>Upcoming events</h3>
     <table>
-      <%= render :partial => 'attendance', :collection => upcoming.sort { |a,b| a.event.start <=> b.event.start } %>
+      <%= render :partial => 'attendance', :collection => @upcoming %>
     </table>
   <% end -%>
   
-  <% if past.length > 0 -%>
+  <% if @past.length > 0 -%>
     <% reset_cycle("agenda_rows") -%>
     <h3>Past events</h3>
     <table>
-      <%= render :partial => 'attendance', :collection => past.sort { |a,b| b.event.end <=> a.event.end } %>
+      <%= render :partial => 'attendance', :collection => @past %>
     </table>
   <% end -%>
 </div>

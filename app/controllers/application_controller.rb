@@ -36,6 +36,6 @@ class ApplicationController < ActionController::Base
   end
   
   def sort_people(people)
-    people.sort {|a, b| "#{a.lastname}#{a.firstname}".downcase <=> "#{b.lastname}#{b.firstname}".downcase}
+    people.sort_by {|p| "#{p.lastname}#{p.firstname}".downcase}
   end
 end
