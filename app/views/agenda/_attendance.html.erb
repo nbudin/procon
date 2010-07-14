@@ -1,0 +1,21 @@
+<tr class="<%=cycle("even", "odd", :name => "agenda_rows") %>">
+  <td>
+    <%= render :partial => "events/link", :locals => { :event => attendance.event } %>
+    <% if attendance.is_waitlist -%>
+      (#<%= attendance.event.waitlist_number(attendance.person) %> in waitlist)
+    <% end -%>
+  </td>
+  <td>
+    <% if attendance.event.start -%>
+      <%= attendance.event.start.strftime "%B %d, %Y at %I:%M %p" %>
+    <% else -%>
+      (Unscheduled)
+    <% end -%>
+  </td>
+  <td>
+    <%= event_length attendance.event %>
+  </td>
+  <td>
+    <%= attendance.event.locations.collect {|l| h(l.name)}.join(", ") %>
+  </td>
+</tr>

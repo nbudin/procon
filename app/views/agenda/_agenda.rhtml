@@ -23,7 +23,7 @@ end -%>
     <% reset_cycle("agenda_rows") -%>
     <h3>Events In Progress</h3>
     <table>
-      <%= render :partial => 'event', :collection => current.sort { |a,b| a.event.length <=> b.event.length } %>
+      <%= render :partial => 'attendance', :collection => current.sort { |a,b| a.event.length <=> b.event.length } %>
     </table>
   <% end -%>
   
@@ -31,7 +31,7 @@ end -%>
     <% reset_cycle("agenda_rows") -%>
     <h3>Upcoming events</h3>
     <table>
-      <%= render :partial => 'event', :collection => upcoming.sort { |a,b| a.event.start <=> b.event.start } %>
+      <%= render :partial => 'attendance', :collection => upcoming.sort { |a,b| a.event.start <=> b.event.start } %>
     </table>
   <% end -%>
   
@@ -39,7 +39,7 @@ end -%>
     <% reset_cycle("agenda_rows") -%>
     <h3>Past events</h3>
     <table>
-      <%= render :partial => 'event', :collection => past.sort { |a,b| b.event.end <=> a.event.end } %>
+      <%= render :partial => 'attendance', :collection => past.sort { |a,b| b.event.end <=> a.event.end } %>
     </table>
   <% end -%>
 </div>
