@@ -3,8 +3,10 @@ class Attendance < ActiveRecord::Base
   belongs_to :event
   belongs_to :staff_position
   
-  scope :confirmed, lambda { where(["attendances.deleted_at is NULL or attendances.deleted_at > ?", Time.now]) }
-  default_scope confirmed
+  scope :existent, lambda { where(["attendances.deleted_at is NULL or attendances.deleted_at > ?", Time.now]) }
+  scope :confirmed, where(:is_waitlist => false)
+  scope :waitlist, where(:is_waitlist => true)
+  default_scope existent
   
   scope :by_person_id, lambda { |person_id| where(:person_id => person_id) }
   scope :in_context, lambda { |context| joins(:event).where("events.parent_id = ?", context.id) }

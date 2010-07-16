@@ -8,6 +8,9 @@ class Event < ActiveRecord::Base
   has_and_belongs_to_many :tracks
   belongs_to :registration_policy
   has_many :schedules
+  has_many :event_locations, :dependent => :destroy
+  has_many :locations, :through => :event_locations, :dependent => :destroy
+  has_many :staff_positions, :dependent => :destroy, :order => "position"
   
   accepts_nested_attributes_for :attendances, :allow_destroy => true
   accepts_nested_attributes_for :attendee_slots, :allow_destroy => true
@@ -21,48 +24,7 @@ class Event < ActiveRecord::Base
   scope :for_registration, includes(:attendances => :person, 
     :registration_policy => :rules, 
     :attendee_slots => nil, 
-    :locations => nil)
-    
-  private
-  # convenience method for getting the actual people associated with a group
-  # of attendances
-  #
-  # has_many :through won't do it because they're in different databases
-  def self.get_people_method(method_name, conditions=nil, with_deleted=false)
-    finder_method = with_deleted ? "find_with_deleted" : "find"
-    args = ":all"
-    if conditions
-      args += ", :conditions => #{conditions.to_json}, :select => 'person_id'"
-    end
-    class_eval <<-ENDMETHOD
-      def #{method_name}
-        ids = attendances.#{finder_method}(#{args}).map(&:person_id)
-        Person.find(:all, :conditions => ["id in (?)", ids])
-      end
-    ENDMETHOD
-  end
-  
-  public
-  
-  get_people_method "all_attendees"
-  get_people_method "confirmed_attendees", ["is_waitlist = ?", false]
-  has_many :confirmed_attendances, :class_name => "Attendance", :order => "created_at", 
-    :conditions => ["is_waitlist = ?", false], :dependent => :destroy
-  get_people_method "staff", [ "is_staff = ?", true ]
-  get_people_method "waitlist_attendees", ["is_waitlist = ?", true]
-  has_many :waitlist_attendances, :class_name => "Attendance", :order => "created_at", 
-    :conditions => ["is_waitlist = ?", true], :dependent => :destroy
-  get_people_method "counted_attendees", ["counts = ?", true]
-  has_many :counted_attendances, :class_name => "Attendance", :order => "created_at", 
-    :conditions => ["counts = ?", true], :dependent => :destroy
-  
-    
-  has_many :event_locations, :dependent => :destroy
-  has_many :locations, :through => :event_locations, :dependent => :destroy
-
-  has_many :staff_positions, :dependent => :destroy, :order => "position"
-  get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
-    
+    :locations => nil)    
   
   
   # possibly replace this with a confirmation check later

@@ -1,15 +1,14 @@
 class AttendancesController < ApplicationController
-  layout "global"
-  
-  before_filter :check_view_permissions, :only => [ :index, :show, :children ]
-  before_filter :check_edit_permissions, :only => [ :new, :edit, :create, :update, :destroy ]
+  before_filter :load_event
   
   # GET /attendances
   # GET /attendances.xml
   def index
-    @event = Event.find(params[:event_id])
-    @attendances = @event.attendances
-    @deleted_attendances = @event.attendances.all(:only_deleted => true)
+    authorize! :view_attendees, @event
+    
+    @confirmed_attendances = @event.attendances.confirmed.all
+    @waitlist_attendances = @event.attendances.waitlist.all
+    @deleted_attendances = Attendance.unscoped.where(["deleted_at < ? and event_id = ?", Time.now, @event.id]).all
 
     respond_to do |format|
       format.html # index.rhtml
@@ -22,7 +21,6 @@ class AttendancesController < ApplicationController
   end
 
   def children
-    @event = params[:event_id]
     @children = @context.children.reject { |e| e.kind_of? ProposedEvent }
     @attendances = @children.collect { |e| e.attendances.all(:with_deleted => true) }.flatten
     @attendances.reject! { |a| a.person.nil? }
@@ -41,7 +39,6 @@ class AttendancesController < ApplicationController
   # GET /attendances/1
   # GET /attendances/1.xml
   def show
-    @event = Event.find(params[:event_id])
     @attendance = Attendance.find(params[:id])
 
     respond_to do |format|
@@ -52,13 +49,11 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/new
   def new
-    @event = Event.find(params[:event_id])
     @attendance = Attendance.new
   end
 
   # GET /attendances/1;edit
   def edit
-    @event = Event.find(params[:event_id])
     @attendance = Attendance.find(params[:id])
   end
 
@@ -67,7 +62,6 @@ class AttendancesController < ApplicationController
   def create
     person_id = params[:attendance][:person].sub(/^\D+/, "")
     params[:attendance][:person] = Person.find(person_id)
-    @event = Event.find(params[:event_id])
     @attendance = Attendance.new(params[:attendance])
     @attendance.event = @event
 
@@ -86,7 +80,6 @@ class AttendancesController < ApplicationController
   # PUT /attendances/1
   # PUT /attendances/1.xml
   def update
-    @event = Event.find(params[:event_id])
     @attendance = Attendance.find(params[:id])
   
     respond_to do |format|
@@ -104,7 +97,6 @@ class AttendancesController < ApplicationController
   # DELETE /attendances/1
   # DELETE /attendances/1.xml
   def destroy
-    @event = Event.find(params[:event_id])
     @attendance = Attendance.find(params[:id])
     @attendance.deleted_at ||= Time.now
     @attendance.save!
@@ -115,25 +107,8 @@ class AttendancesController < ApplicationController
     end
   end
   
-  def check_view_permissions
-    event = if params[:event_id]
-      Event.find params[:event_id]
-    else
-      @context
-    end
-    if event.attendees_visible_to?(current_person)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to events_url
-  end
-  
-  def check_edit_permissions
-    event = Event.find params[:event_id]
-    if can?(:update, event)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to events_url
+  private
+  def load_event
+    @event = Event.find(params[:event_id])
   end
 end

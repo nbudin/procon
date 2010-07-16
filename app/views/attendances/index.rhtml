@@ -8,7 +8,7 @@
 
 <%= render :partial => "legend" %>
 
-<% if @event.confirmed_attendances.count > 0 -%>
+<% if @confirmed_attendances.count > 0 -%>
   <h2>Confirmed attendees</h2>
 
   <% if can?(:view_attendees, :event) -%>
@@ -16,10 +16,10 @@
   <% end -%>
   
   <%= render :partial => 'attendee_table', 
-    :locals => { :attendances => @event.confirmed_attendances, :waitlist => false } %>
+    :locals => { :attendances => @confirmed_attendances, :waitlist => false } %>
 <% end -%>
 
-<% if @event.waitlist_attendances.count > 0 -%>
+<% if @waitlist_attendances.count > 0 -%>
   <h2>Waitlisted attendees</h2>
 
   <% if can?(:view_attendees, :event) -%>
@@ -27,7 +27,7 @@
   <% end -%>
 
   <%= render :partial => 'attendee_table', 
-    :locals => { :attendances => @event.waitlist_attendances, :waitlist => true } %>
+    :locals => { :attendances => @waitlist_attendances, :waitlist => true } %>
 <% end -%>
 
 <% if @deleted_attendances.count > 0 -%>

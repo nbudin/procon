@@ -15,6 +15,16 @@ class Person < ActiveRecord::Base
     end
   end
   
+  def current_age
+    age_as_of Date.today
+  end
+  
+  def age_as_of(base = Date.today)
+    if not birthdate.nil?
+      base.year - birthdate.year - ((base.month * 100 + base.day >= birthdate.month * 100 + birthdate.day) ? 0 : 1)
+    end
+  end
+  
   def merge_person_id!(merge_id)
     count = 0
     
