@@ -50,10 +50,10 @@ class Schedule < ActiveRecord::Base
       end
 
       if high_water_mark.nil?
-        high_water_mark = event.end
+        high_water_mark = event
       end
       
-      if high_water_mark < (event.start - 3.hours)
+      if high_water_mark.end < (event.start - 3.hours) && high_water_mark.start.beginning_of_day != event.start.beginning_of_day
         if current_block.size > 0
           block = self.schedule_blocks.create :events => current_block
           current_block = []
@@ -62,8 +62,8 @@ class Schedule < ActiveRecord::Base
       
       current_block.push(event)
       
-      if high_water_mark < event.end
-        high_water_mark = event.end
+      if high_water_mark.end < event.end
+        high_water_mark = event
       end
     end
     if current_block.size > 0
