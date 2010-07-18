@@ -15,7 +15,7 @@ dependencies:
   ae_users_migrator: 
     group: 
     - :default
-    version: ">= 0"
+    version: ">= 1.0.3"
   devise: 
     group: 
     - :default
@@ -60,7 +60,7 @@ specs:
 - rack: 
     version: 1.1.0
 - rack-mount: 
-    version: 0.6.6
+    version: 0.6.9
 - rack-test: 
     version: 0.5.4
 - tzinfo: 
@@ -84,12 +84,11 @@ specs:
 - activeresource: 
     version: 3.0.0.beta4
 - ae_users_migrator: 
-    version: 1.0.2
-    source: 0
+    version: 1.0.3
 - bundler: 
     version: 0.9.26
 - cancan: 
-    version: 1.1.1
+    version: 1.2.0
 - warden: 
     version: 0.10.7
 - devise: 
@@ -98,7 +97,7 @@ specs:
     version: 2.1.0
 - devise_cas_authenticatable: 
     version: 0.0.0
-    source: 1
+    source: 0
 - jrails: 
     version: 0.6.0
 - json_pure: 
@@ -108,20 +107,19 @@ specs:
 - paperclip: 
     version: 2.3.3
 - thor: 
-    version: 0.13.7
+    version: 0.13.8
 - railties: 
     version: 3.0.0.beta4
 - rails: 
     version: 3.0.0.beta4
 - rubyzip: 
     version: 0.9.4
-hash: 3c9b508ef28aaf9878aeee162e06856a970ec2f6
+hash: 0e21d7cc3850e27ca65160cf1d5f73c80de0a88b
 sources: 
-- Path: 
-    path: !ruby/object:Pathname 
-      path: /Users/nbudin/code/ae_users_migrator
-- Path: 
-    path: !ruby/object:Pathname 
-      path: /Users/nbudin/code/devise_cas_authenticatable
+- Git: 
+    uri: git://github.com/nbudin/devise_cas_authenticatable
+    branch: devise1.1
+    git: git://github.com/nbudin/devise_cas_authenticatable
+    ref: 3c39d878875032b863337609573997248fcc8117
 - Rubygems: 
     uri: http://rubygems.org
