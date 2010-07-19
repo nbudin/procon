@@ -21,9 +21,13 @@ class Schedule < ActiveRecord::Base
     events.each do |event|
       next unless event.start and event.end
       
-      high_water_mark ||= event.end
+      high_water_mark ||= event
 
-      if high_water_mark < (event.start - 3.hours)
+      # current heuristic is: in order to cause a block break, two conditions have to be met
+      # 1. there is at least a 3 hour gap between the previous event end and the next event start
+      # 2. the next event starts on a different calendar day than the previous event started on
+      
+      if high_water_mark.end < (event.start - 3.hours) && high_water_mark.start.beginning_of_day != event.start.beginning_of_day
         unless current_block_events.empty?
           blocks << ScheduleBlock.new(self, current_block_events)
           current_block_events = []
@@ -31,7 +35,7 @@ class Schedule < ActiveRecord::Base
       end
 
       current_block_events << event
-      high_water_mark = event.end if high_water_mark < event.end
+      high_water_mark = event if high_water_mark.end < event.end
     end
     
     blocks << ScheduleBlock.new(self, current_block_events) unless current_block_events.empty?
