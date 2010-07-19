@@ -16,3 +16,13 @@ gem 'ae_users_migrator', :path => '/Users/nbudin/code/ae_users_migrator'
 gem 'jrails', '~> 0.6.0'
 gem 'paperclip', '~> 2.3.3'
 gem 'rubyzip', :require => 'zip/zip'
+
+# Bundle gems for certain environments:
+# gem 'rspec', :group => :test
+group :test do
+  gem 'factory_girl_rails'
+  gem 'shoulda', '>= 2.10.3'
+  gem 'capybara'
+  gem 'cucumber-rails'
+  gem 'launchy'
+end

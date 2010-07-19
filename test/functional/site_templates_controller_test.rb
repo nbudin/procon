@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 require 'site_templates_controller'
 
 # Re-raise errors caught by the controller.

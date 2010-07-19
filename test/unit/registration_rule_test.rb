@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class RegistrationRuleTest < Test::Unit::TestCase
+class RegistrationRuleTest < ActiveSupport::TestCase
   fixtures :registration_rules
 
   # Replace this with your real tests.

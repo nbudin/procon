@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class VirtualSiteTest < Test::Unit::TestCase
+class VirtualSiteTest < ActiveSupport::TestCase
   fixtures :virtual_sites
 
   # Replace this with your real tests.
