@@ -105,16 +105,18 @@ function setAllEventsRegistrationOpen(scheduleId, value) {
       Delete track <%= check_box_tag "delete_track", track.id %></p>
     <table class="events">
       <% track.events.each do |event| -%>
-        <tr class="<%= cycle "odd", "even" %>">
-	  <td><%= button_to_function "Close", "setRegistrationOpen(#{event.id}, false);", 
-	          :id => "close_event_#{event.id}", :style => event.registration_open ? "" : "display: none;" %>
-  	    <%= button_to_function "Open", "setRegistrationOpen(#{event.id}, true);", 
-	          :id => "open_event_#{event.id}", :style => event.registration_open ? "display: none;" : "" %></td>
-          <td><%=link_to event.shortname, edit_event_path(event) %></td>
-          <td>Starts on <%= event_datetime_select event, "start" %></td>
-          <td>Ends on <%= event_datetime_select event, "end" %></td>
-          <td>Remove <%= check_box_tag "remove_event_from_track[#{track.id}]", event.id %></td>
-        </tr>
+        <%= f.fields_for :event, event do |event_fields| %>
+          <tr class="<%= cycle "odd", "even" %>">
+      <td><%= button_to_function "Close", "setRegistrationOpen(#{event.id}, false);", 
+              :id => "close_event_#{event.id}", :style => event.registration_open ? "" : "display: none;" %>
+    	    <%= button_to_function "Open", "setRegistrationOpen(#{event.id}, true);", 
+              :id => "open_event_#{event.id}", :style => event.registration_open ? "display: none;" : "" %></td>
+            <td><%=link_to event.shortname, edit_event_path(event) %></td>
+            <td>Starts on <%= event_fields.event_datetime_select "start" %></td>
+            <td>Ends on <%= event_fields.event_datetime_select "end" %></td>
+            <td>Remove <%= check_box_tag "remove_event_from_track[#{track.id}]", event.id %></td>
+          </tr>
+        <% end -%>
       <% end -%>
       <tr class="<%= cycle "odd", "even" %>">
         <td></td>
