@@ -1,6 +1,5 @@
 class SiteTemplatesController < ApplicationController
-  layout "global"
-  rest_edit_permissions
+  load_and_authorize_resource
   
   # GET /site_templates
   # GET /site_templates.xml
