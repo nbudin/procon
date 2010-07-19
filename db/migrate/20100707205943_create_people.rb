@@ -8,7 +8,7 @@ class CreatePeople < ActiveRecord::Migration
   end
   
   def self.up
-    create_table :people do |t|
+    create_table :people, :force => true do |t|
       t.string :email
       t.string :firstname
       t.string :lastname
