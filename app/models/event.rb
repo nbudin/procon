@@ -10,7 +10,7 @@ class Event < ActiveRecord::Base
   has_many :schedules
   has_many :event_locations, :dependent => :destroy
   has_many :locations, :through => :event_locations, :dependent => :destroy
-  has_many :staff_positions, :dependent => :destroy, :order => "position"
+  has_many :staffers, :dependent => :destroy, :order => "position"
   
   accepts_nested_attributes_for :attendances, :allow_destroy => true
   accepts_nested_attributes_for :attendee_slots, :allow_destroy => true

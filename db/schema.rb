@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100713204559) do
+ActiveRecord::Schema.define(:version => 20100719194555) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(:version => 20100713204559) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "counts",            :default => true
-    t.boolean  "is_staff"
     t.boolean  "is_waitlist",       :default => false
     t.datetime "deleted_at"
     t.string   "gender"
@@ -180,11 +179,17 @@ ActiveRecord::Schema.define(:version => 20100713204559) do
     t.text   "themeroller_css"
   end
 
-  create_table "staff_positions", :force => true do |t|
+  create_table "staffers", :force => true do |t|
     t.integer  "event_id"
-    t.string   "name"
-    t.boolean  "publish_email", :default => true
+    t.integer  "person_id"
+    t.string   "title"
+    t.boolean  "listed"
     t.integer  "position"
+    t.boolean  "publish_email"
+    t.boolean  "event_admin"
+    t.boolean  "proposal_admin"
+    t.boolean  "schedule_admin"
+    t.boolean  "attendee_viewer"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

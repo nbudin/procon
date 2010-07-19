@@ -6,7 +6,7 @@ class Ability
     
     can :read, Event
     can :read, Schedule, :published => true
-    
+        
     if person
       if person.admin?
         can [:read, :create, :update, :destroy, :view_attendees], Event
@@ -15,7 +15,7 @@ class Ability
         can [:read, :create, :update, :destroy, :accept, :reject], ProposedEvent
       else
         can :manage, Event do |action, event|
-          event.staff.include? person || (event.parent && can?(action, event.parent))
+          event.staffers.any? {|staffer| staffer.person == person } || (event.parent && can?(action, event.parent))
         end
         can :view_attendees, Event do |event|
           can?(:update, event) || (event.attendees_visible && event.all_attendees.include?(person))
