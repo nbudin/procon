@@ -9,23 +9,29 @@ class Ability
         
     if person
       if person.admin?
-        can [:read, :create, :update, :destroy, :view_attendees], Event
+        can [:read, :create, :update, :destroy, :view_attendees, :admin_schedules, :admin_proposals], Event
         can [:read, :create, :update, :destroy], VirtualSite
         can [:read, :create, :update, :destroy, :health], Schedule
         can [:read, :create, :update, :destroy, :accept, :reject], ProposedEvent
       else
-        can :manage, Event do |action, event|
-          event.staffers.any? {|staffer| staffer.person == person } || (event.parent && can?(action, event.parent))
+        can [:update, :destroy], Event do |event|
+          find_staffers(event, person).any?(&:event_admin?)
         end
         can :view_attendees, Event do |event|
-          can?(:update, event) || (event.attendees_visible && event.all_attendees.include?(person))
+          find_staffers(event, person).any?(&:attendee_viewer?) || (event.attendees_visible && event.all_attendees.include?(person))
+        end
+        can :admin_schedules, Event do |event|
+          find_staffers(event, person).any?(&:schedule_admin?)
+        end
+        can :admin_proposals, Event do |event|
+          find_staffers(event, person).any?(&:proposal_admin?)
         end
         
         can [:read, :create, :update, :destroy], Schedule do |schedule|
-          can?(:admin_schedules, event)
+          can?(:admin_schedules, schedule.event)
         end
         can :health, Schedule do |schedule|
-          can?(:view_attendees, event)
+          can?(:view_attendees, schedule.event)
         end
         
         can :create, ProposedEvent
@@ -36,5 +42,10 @@ class Ability
         
       end
     end
+  end
+  
+  private
+  def find_staffers(event, person)
+    Staffer.in_event_and_ancestors(event).where(:person_id => person.id)
   end
 end
