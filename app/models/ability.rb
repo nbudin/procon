@@ -27,7 +27,10 @@ class Ability
           find_staffers(event, person).any?(&:proposal_admin?)
         end
         
-        can [:read, :create, :update, :destroy], Schedule do |schedule|
+        can :read, Schedule do |schedule|
+          schedule.published? || can?(:admin_schedules, schedule.event)
+        end
+        can [:create, :update, :destroy], Schedule do |schedule|
           can?(:admin_schedules, schedule.event)
         end
         can :health, Schedule do |schedule|
@@ -35,9 +38,11 @@ class Ability
         end
         
         can :create, ProposedEvent
-        can [:read, :update, :destroy], ProposedEvent, :proposer_id => person.id
-        can [:read, :update, :destroy, :accept, :reject], ProposedEvent do |event|
-          event.parent && can?(:admin_proposals, event.parent)
+        can [:read, :update, :destroy], ProposedEvent do |proposal|
+          proposal.proposer == person || can?(:admin_proposals, proposal.try(:parent))
+        end
+        can [:accept, :reject], ProposedEvent do |proposal|
+          can?(:admin_proposals, proposal.try(:parent))
         end
         
       end
