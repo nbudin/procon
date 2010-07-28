@@ -36,12 +36,6 @@ class Event < ActiveRecord::Base
     
   acts_as_tree :order => "start"
   
-  def invalidate_blocks
-    schedules.each do |schedule|
-      schedule.schedule_blocks.destroy_all
-    end
-  end
-  
   def set_default_registration_policy
     if registration_policy.nil?
       create_registration_policy

@@ -1,6 +1,10 @@
 class AttendeeSlot < ActiveRecord::Base
   belongs_to :event
   validates_uniqueness_of :gender, :scope => :event_id
+
+  after_save do |record|
+    record.event.pull_from_waitlist
+  end
   
   def validate
     kickout = false
@@ -13,10 +17,6 @@ class AttendeeSlot < ActiveRecord::Base
     if kickout
       errors.add_to_base "That would kick one or more confirmed attendees out of this event."
     end
-  end
-  
-  def after_save
-    event.pull_from_waitlist
   end
   
   def gendered?
