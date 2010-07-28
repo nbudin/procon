@@ -231,13 +231,13 @@ module ApplicationHelper
   end
   
   def add_object_link(name, form, method, object, partial, where)
+    new_obj_html = form.fields_for(method.to_sym, object, :child_index => 'index_to_replace_with_js') do |fields|
+      render :partial => partial, :locals => { :fields => fields }
+    end
+    
     button_to_function name do |page|
       page << "var new_index = new Date().getTime();"
-      page << "var new_object_html = '#{escape_javascript(
-        form.fields_for method.to_sym, object, :child_index => 'index_to_replace_with_js' do |fields|
-          render :partial => partial, :locals => { :fields => fields }
-        end
-        )}'.replace(/index_to_replace_with_js/g, new_index);"
+      page << "var new_object_html = '#{escape_javascript(new_obj_html)}'.replace(/index_to_replace_with_js/g, new_index);"
       page << "jQuery('\##{where}').append(new_object_html);"
     end
   end
