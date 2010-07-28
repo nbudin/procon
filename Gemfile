@@ -2,10 +2,10 @@
 # This preamble is the current preamble for Rails 3 apps; edit as needed.
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.0.beta4'
+gem 'rails', '3.0.0.rc'
 gem 'mysql'
 
-gem "devise", "1.1.rc1"
+gem "devise", "~> 1.1.0"
 #gem 'devise_cas_authenticatable', :path => '/Users/nbudin/code/devise_cas_authenticatable'
 gem 'devise_cas_authenticatable', :git => "git://github.com/nbudin/devise_cas_authenticatable", :branch => "devise1.1"
 gem 'cancan', '>= 1.1'
