@@ -4,6 +4,8 @@ end
 
 Factory.define :person do |p|
   p.username { Factory.next :email }
+  p.firstname "Test"
+  p.lastname "User"
 end
 
 Factory.define :event do |e|
@@ -18,8 +20,8 @@ Factory.define :virtual_site do |vs|
   vs.domain { Factory.next :domain }
 end
 
-Factory.define :proposal, :parent => :event do |p|
-  p.type "ProposedEvent"
+Factory.define :proposal, :class => "ProposedEvent" do |p|
+  p.fullname "Saturday night dance party"
   p.after_build do |proposal|
     proposal.parent = Factory.build(:event)
   end
