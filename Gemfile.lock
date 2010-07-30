@@ -39,6 +39,8 @@ GEM
     activesupport (3.0.0.rc)
     ae_users_migrator (1.0.3)
       activerecord (>= 2.3)
+    ancestry (1.2.0)
+      activerecord (>= 2.1.0)
     arel (0.4.0)
       activesupport (>= 3.0.0.beta)
     bcrypt-ruby (2.1.2)
@@ -133,6 +135,7 @@ PLATFORMS
 
 DEPENDENCIES
   ae_users_migrator (>= 1.0.3)
+  ancestry (>= 1.2.0)
   cancan (>= 1.1)
   capybara
   cucumber-rails

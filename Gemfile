@@ -10,6 +10,8 @@ gem "devise", "~> 1.1.0"
 gem 'devise_cas_authenticatable', :git => "git://github.com/nbudin/devise_cas_authenticatable", :branch => "devise1.1"
 gem 'cancan', '>= 1.1'
 
+gem "ancestry", ">= 1.2.0"
+
 gem 'json_pure'
 gem 'ae_users_migrator', '>= 1.0.3'
 

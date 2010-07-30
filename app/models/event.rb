@@ -34,7 +34,7 @@ class Event < ActiveRecord::Base
     end
   end
     
-  acts_as_tree :order => "start"
+  has_ancestry
   
   def set_default_registration_policy
     if registration_policy.nil?
