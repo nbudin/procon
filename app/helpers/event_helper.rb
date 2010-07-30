@@ -1,17 +1,12 @@
 module EventHelper
-  def positioned_staffer(attendance)
-    if attendance.staff_position.publish_email
-      mail_to attendance.person.email, attendance.person.name, :encode => "javascript"
-    else
-      attendance.person.name
-    end
-  end
-  
-  def positioned_staffers(position)
+  def staffer_for_list(staffer)
     with_output_buffer do
-      position.attendances.each_with_index do |att, i| 
-        output_buffer << positioned_staffer(att)
-        output_buffer << ", " unless i == position.attendances.size - 1
+      output_buffer << content_tag(:b, "#{staffer.title}: ") unless staffer.title.blank?
+        
+      if staffer.publish_email?
+        output_buffer << mail_to(staffer.person.email, staffer.person.name, :encode => "javascript")
+      else
+        output_buffer << staffer.person.name
       end
     end
   end

@@ -13,6 +13,13 @@ class Attendance < ActiveRecord::Base
   scope :for_agenda, includes( :person => [], :event => [:parent, :virtual_sites, :locations] )
   scope :time_ordered, joins(:event).order("events.start, events.end")
   
+  scope :in_any_descendant, lambda { |event| 
+    where(["event_id IN (?)", event.descendants.map(&:id)])
+    }
+  scope :not_in_any_descendant, lambda { |event|
+    where("person_id NOT IN (#{in_any_descendant(event).select("attendances.person_id").to_sql})") 
+    }
+  
   has_many :public_info_values
   
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."

@@ -60,11 +60,7 @@ module ApplicationHelper
       else
         link_caption = "Drop out"
       
-        if att.is_staff
-          confirm_msg = "WARNING: You are a staff member for this event!  Dropping this event will "
-          confirm_msg += "cause you to lose your edit privileges for the event.  Are you sure you "
-          confirm_msg += "want to proceed?"
-        elsif att.is_waitlist
+        if att.is_waitlist
           confirm_msg = "Are you sure you want to drop off the waitlist for this event?  If you do so, "
           confirm_msg += "you will lose your place in line."
           link_caption = "Drop from waitlist"

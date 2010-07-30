@@ -1,16 +1,9 @@
-<% if event.staff.length > 0 -%>
+<% if event.staffers.length > 0 -%>
 	<div id="stafflist">
 	  <h2>Event Staff</h2>
 	  <ul>
-	    <% event.staff_positions.each do |pos| -%>
-	      <% if pos.attendances.size > 0 -%>
-	        <li><b><%= pos.name %>:</b>
-	          <%= positioned_staffers pos %>
-  	        </li>
-	      <% end -%>
-	    <% end -%>
-            <% event.general_staff.each do |staff| -%>
-	      <li><%= staff.name %></li>
+	    <% event.staffers.each do |staffer| -%>
+        <li><%= staffer_for_list staffer %></li>
 	    <% end -%>
 	  </ul>
 	</div>

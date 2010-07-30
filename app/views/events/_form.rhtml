@@ -215,9 +215,9 @@
 	
 	    <% if @proposed_event -%>
         <div class="proposal_hint">
-          <% if @proposed_event.staff.length > 0 -%>
+          <% if @proposed_event.staffers.length > 0 -%>
           The following people will be automatically added as staff:
-          <%= @proposed_event.staff.collect { |s| s.name }.join(", ") %>
+          <%= @proposed_event.staffers.collect { |s| s.person.name }.join(", ") %>
           <% end -%>
         </div>
       <% end -%>

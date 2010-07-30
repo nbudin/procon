@@ -279,10 +279,7 @@ class Event < ActiveRecord::Base
   end
 
   def attendees_with_blank_agenda
-    child_ids = children.collect { |c| c.id }
-    attendance_count = Attendance.count(:group => :person_id, :conditions => { :event_id => child_ids })
-
-    return confirmed_attendees.reject { |p| attendance_count.has_key?(p.id) || attendance_count[p.id] == 0 }
+    attendances.confirmed.not_in_any_descendant(self).group(:person_id).includes(:person).map(&:person)
   end
 
   private
