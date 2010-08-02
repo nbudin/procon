@@ -9,8 +9,8 @@ class Attendance < ActiveRecord::Base
   default_scope existent
   
   scope :by_person_id, lambda { |person_id| where(:person_id => person_id) }
-  scope :in_context, lambda { |context| joins(:event).where("events.parent_id = ?", context.id) }
-  scope :for_agenda, includes( :person => [], :event => [:parent, :virtual_sites, :locations] )
+  scope :in_context, lambda { |context| joins(:event).where("events.id IN (#{Event.descendants_of(context).select(:id).to_sql})") }
+  scope :for_agenda, includes( :person => [], :event => [:virtual_sites, :locations] )
   scope :time_ordered, joins(:event).order("events.start, events.end")
   
   scope :in_any_descendant, lambda { |event| 
