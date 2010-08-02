@@ -22,7 +22,8 @@ end
 
 Factory.define :proposal, :class => "ProposedEvent" do |p|
   p.fullname "Saturday night dance party"
-  p.after_build do |proposal|
-    proposal.parent ||= Factory.build(:event)
+  p.after_create do |proposal|
+    proposal.parent ||= Factory.create(:event)
+    proposal.save
   end
 end
