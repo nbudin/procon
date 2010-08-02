@@ -6,16 +6,9 @@ class AttendeeSlot < ActiveRecord::Base
     record.event.pull_from_waitlist
   end
   
-  def validate
-    kickout = false
-    event.attendances.each do |att|
-      if err = event.attendance_over_limit?(att)
-        kickout = true
-        break
-      end
-    end
-    if kickout
-      errors.add_to_base "That would kick one or more confirmed attendees out of this event."
+  validate do |slot|
+    if slot.event.attendances.any? { |att| slot.event.attendance_over_limit?(att) }
+      slot.errors.add_to_base "That would kick one or more confirmed attendees out of this event."
     end
   end
   

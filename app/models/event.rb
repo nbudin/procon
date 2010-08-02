@@ -89,9 +89,9 @@ class Event < ActiveRecord::Base
     return [] unless self.start and self.end
     
     searchpool = if parent.nil?
-      Event.find_all_by_parent_id nil
+      Event.roots
     else
-      parent.children
+      siblings
     end.reject { |e| e == self or e.start.nil? or e.end.nil? }
     
     searchpool.select do |e|

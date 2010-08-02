@@ -11,8 +11,8 @@
 <% if @confirmed_attendances.count > 0 -%>
   <h2>Confirmed attendees</h2>
 
-  <% if can?(:view_attendees, :event) -%>
-  	<%= link_to "Spam all confirmed attendees", :controller => "events", :id => @event.id, :action => "email_list" %>
+  <% if can?(:view_attendees, @event) -%>
+  	<p><%= link_to "Spam all confirmed attendees", email_list_event_attendances_path(@event) %></p>
   <% end -%>
   
   <%= render :partial => 'attendee_table', 

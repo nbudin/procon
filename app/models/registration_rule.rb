@@ -7,11 +7,11 @@ class RegistrationRule < ActiveRecord::Base
     %w( ClosedEventRule ExclusiveEventRule GenderRule ).sort
   end
   
-  def validate
-    if bucket.nil? and policy.nil?
-      errors.add_to_base "This registration rule doesn't belong to a bucket or a policy."
-    elsif !bucket.nil? and !policy.nil?
-      errors.add_to_base "A registration rule can't belong to both a bucket and a policy."
+  validate do |rule|
+    if rule.bucket.nil? and rule.policy.nil?
+      rule.errors.add_to_base "This registration rule doesn't belong to a bucket or a policy."
+    elsif !rule.bucket.nil? and !rule.policy.nil?
+      rule.errors.add_to_base "A registration rule can't belong to both a bucket and a policy."
     end
   end
   

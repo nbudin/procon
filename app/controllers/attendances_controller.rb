@@ -1,20 +1,43 @@
 class AttendancesController < ApplicationController
   before_filter :load_event
+  load_and_authorize_resource
+  
+  def email_list    
+    scope = if params[:waitlist]
+      @event.attendances.waitlist
+    else
+      @event.attendances.confirmed
+    end
+    @attendees = scope.includes(:person).all.map(&:person)
+  end
+  
+  def signup_sheet_form
+  end
+  
+  def signup_sheet
+    @options = {}
+    @options[:include_scheduling_details] = params[:include_scheduling_details]
+    @options[:include_blurb] = params[:include_blurb]
+    @options[:include_stafflist] = params[:include_stafflist]
+    @options[:empty_slot_min] = params[:empty_slot_min].to_i
+    @include_children = params[:include_children]
+    @exclude_event = params[:exclude_event]
+
+	  render :layout => "signup_sheet"
+  end
   
   # GET /attendances
   # GET /attendances.xml
-  def index
-    authorize! :view_attendees, @event
-    
-    @confirmed_attendances = @event.attendances.confirmed.all
-    @waitlist_attendances = @event.attendances.waitlist.all
-    @deleted_attendances = Attendance.unscoped.where(["deleted_at < ? and event_id = ?", Time.now, @event.id]).all
+  def index    
+    @confirmed_attendances = @event.attendances.confirmed.for_agenda.all
+    @waitlist_attendances = @event.attendances.waitlist.for_agenda.all
+    @deleted_attendances = Attendance.dropped_from(@event).includes(:person).all
 
     respond_to do |format|
       format.html # index.rhtml
-      format.xml  { render :xml => @attendances.to_xml }
+      format.xml  { render :xml => (@confirmed_attendances + @waitlist_attendances + @deleted_attendances).to_xml }
       format.rss do
-        @attendances = @event.attendances.find(:all, :order => "created_at DESC", :limit => 10)
+        @attendances = (@confirmed_attendances + @waitlist_attendances).sort_by { |att| att.created_at }.reverse.slice(0..9)
         render :layout => false
       end
     end
@@ -22,7 +45,7 @@ class AttendancesController < ApplicationController
 
   def children
     @children = @context.children.reject { |e| e.kind_of? ProposedEvent }
-    @attendances = @children.collect { |e| e.attendances.all(:with_deleted => true) }.flatten
+    @attendances = @children.collect { |e| e.attendances.for_agenda.all + Attendance.dropped_from(e).includes(:person).all }.flatten
     @attendances.reject! { |a| a.person.nil? }
     @attendances = @attendances.sort_by { |a| a.created_at }.reverse
 
@@ -30,8 +53,8 @@ class AttendancesController < ApplicationController
       format.html # index.rhtml
       format.xml  { render :xml => @attendances.to_xml }
       format.rss do
-        @attendances = @attendances.slice(0..10)
-        render :layout => false
+        @attendances = @attendances.slice(0..9)
+        render :action => :index, :layout => false
       end
     end
   end
@@ -109,6 +132,6 @@ class AttendancesController < ApplicationController
   
   private
   def load_event
-    @event = Event.find(params[:event_id])
+    @event = Event.includes(:staffers => :person).find(params[:event_id])
   end
 end

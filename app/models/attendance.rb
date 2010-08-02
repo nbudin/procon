@@ -19,6 +19,10 @@ class Attendance < ActiveRecord::Base
   scope :not_in_any_descendant, lambda { |event|
     where("person_id NOT IN (#{in_any_descendant(event).select("attendances.person_id").to_sql})") 
     }
+
+  def self.dropped_from(event)
+    unscoped.where(["deleted_at < ? and event_id = ?", Time.now, event.id])
+  end
   
   has_many :public_info_values
   
@@ -34,7 +38,6 @@ class Attendance < ActiveRecord::Base
   before_validation :ensure_gender_set
   after_save :check_waitlist
   
-  scope :staff, :conditions => { :is_staff => true }
   scope :waitlist, :conditions => { :is_waitlist => true }
   scope :counted, :conditions => { :counts => true }
   
@@ -42,25 +45,23 @@ class Attendance < ActiveRecord::Base
     deleted_at && deleted_at <= Time.now
   end
   
-  def validate
-    unless event.nil?
-      event.attendance_errors(self).each do |err|
-        errors.add_to_base err
+  validate do |att|
+    unless att.event.nil?
+      att.event.attendance_errors(att).each do |err|
+        att.errors.add_to_base err
       end
     end
   end
   
   def status
-    if is_staff
+    if person.staffer_for_event(event)
       "Staff"
     elsif is_waitlist
       "Waitlisted"
     elsif not counts
       "Not counted"
-    elsif event.kind_of? LimitedCapacityEvent
-      "Confirmed"
     else
-      nil
+      "Confirmed"
     end
   end
   

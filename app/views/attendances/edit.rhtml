@@ -1,20 +1,14 @@
-<h1 id="pagetitle">Editing attendee for <%=h @event.fullname %></h1>
+<h1 id="pagetitle"><%= @attendance.person.name %> at <%=h @event.fullname %></h1>
 
-<p><%= @attendance.person.name %></p>
-
-<%= error_messages_for :attendance %>
+<% if @attendance.errors.any? %>
+  <ul>
+    <% @attendance.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
 
 <%= form_for(:attendance, :url => event_attendance_path(@event, @attendance), :html => { :method => :put }) do |f| %>
-  <p>
-    <b>Is staff?</b>
-    <%= f.check_box :is_staff %>
-  </p>
-
-  <p>
-    <b>Staff position:</b>
-    <%= f.select :staff_position_id, @event.staff_positions.collect {|p| [p.name, p.id]}, :include_blank => true %>
-  </p>
-  
   <p>
     <b>Waitlisted:</b>
     <%=f.check_box :is_waitlist %>

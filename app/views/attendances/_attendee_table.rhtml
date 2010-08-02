@@ -44,8 +44,8 @@
       </td>
     <% end -%>
     <% if not waitlist -%>
-      <td><%=h attendance.is_staff %></td>
-      <td><%=h attendance.counts %></td>
+      <td><%= attendance.person.staffer_for_event(@event) && "yes" %></td>
+      <td><%= attendance.counts %></td>
     <% end -%>
 	<% if can?(:update, @event) -%>
 	    <td><%= link_to 'Edit', edit_event_attendance_path(@event, attendance) %></td>

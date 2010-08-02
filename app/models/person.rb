@@ -49,6 +49,10 @@ class Person < ActiveRecord::Base
     event.attendances.select { |att| att.person_id == self.id }.first
   end
   
+  def staffer_for_event(event)
+    event.staffers.select { |s| s.person.id == self.id }.first
+  end
+  
   def attending?(event)
     attendance_for_event(event)
   end
