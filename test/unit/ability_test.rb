@@ -64,6 +64,9 @@ class AbilityTest < ActiveSupport::TestCase
       
       pe = Factory.create(:proposal)
       assert_cannot(@person, %w{read update destroy accept reject}, pe)
+      
+      att = e.attendances.create
+      assert_cannot(@person, %w{read create update destroy}, att)
     end
   end
   
@@ -97,6 +100,9 @@ class AbilityTest < ActiveSupport::TestCase
       
       pe = Factory.create(:proposal)
       assert_can(@person, %w{read create update destroy accept reject}, pe)
+      
+      att = e.attendances.create
+      assert_can(@person, %w{read create update destroy}, att)
     end
   end
   
@@ -126,6 +132,24 @@ class AbilityTest < ActiveSupport::TestCase
     should "be able to view attendees only if they're an attendee viewer" do
       assert_can_only_if(@person, :view_attendees, @event, @child) do
         @staffer.attendee_viewer = true
+        @staffer.save
+      end
+    end
+    
+    should "be able to view event attendances only if they're an attendee viewer" do
+      att1 = @event.attendances.create
+      att2 = @child.attendances.create
+      assert_can_only_if(@person, :read, att1, att2) do
+        @staffer.attendee_viewer = true
+        @staffer.save
+      end
+    end
+    
+    should "be able to edit event attendances only if they're an event admin" do
+      att1 = @event.attendances.create
+      att2 = @child.attendances.create
+      assert_can_only_if(@person, %w{create update destroy}, att1, att2) do
+        @staffer.event_admin = true
         @staffer.save
       end
     end

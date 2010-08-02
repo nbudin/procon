@@ -22,8 +22,8 @@
 <% if @waitlist_attendances.count > 0 -%>
   <h2>Waitlisted attendees</h2>
 
-  <% if can?(:view_attendees, :event) -%>
-	  <%= link_to "Spam all waitlist attendees", :controller => "events", :id => @event.id, :action => "email_list", :waitlist => true %>
+  <% if can?(:view_attendees, @event) -%>
+	  <%= link_to "Spam all waitlist attendees", email_list_event_attendances_path(@event, :waitlist => true) %>
   <% end -%>
 
   <%= render :partial => 'attendee_table', 

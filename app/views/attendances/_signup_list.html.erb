@@ -1,7 +1,7 @@
 <h1><%= event.fullname %></h1>
 <% if include_scheduling_details -%>
   <p style="font-style: italic;">
-	  <%= render :partial => "schedulingdetails", :locals => { :event => event } %>
+	  <%= render :partial => "events/schedulingdetails", :locals => { :event => event } %>
   </p>
 <% end -%>
 
@@ -18,10 +18,10 @@
 <% end -%>
 
 <% if include_stafflist -%>
-  <%= render :partial => "stafflist", :locals => { :event => event } %>
+  <%= render :partial => "events/stafflist", :locals => { :event => event } %>
 <% end -%>
 
-<% attendees = event.counted_attendees -%>
+<% attendees = event.attendances.counted.for_agenda.all.map(&:person) -%>
 <% empty_slot_min ||= 6 -%>
 
 <% counter = 1 -%>
@@ -58,7 +58,7 @@
   <% end -%>
 <% end -%>
 
-<% attendees = event.waitlist_attendees -%>
+<% attendees = event.attendances.waitlist.for_agenda.map(&:person) -%>
 
 <% if attendees.length > 0 or empty_slots < empty_slot_min -%>
 	<h2>Waitlist</h2>

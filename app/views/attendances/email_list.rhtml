@@ -1,7 +1,7 @@
-<h1 id="pagetitle">Spam all <%= @method.humanize.downcase %></h1>
+<h1 id="pagetitle">Spam all <%= params[:waitlist] ? "waitlisted" : "confirmed" %> attendees</h1>
 
 <p>Some email programs like you to type a comma (,) between each email address and some like
-  a semicolon (;).  For example, Google's GMail prefers commas, and Microsoft Outlook prefers
+  a semicolon (;).  For example, Google's Gmail prefers commas, and Microsoft Outlook prefers
   semicolons.  For your convenience, here are both formats:</p>
 
 <h2>Commas</h2>

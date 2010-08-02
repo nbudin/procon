@@ -1,4 +1,4 @@
-<% form_tag({ :action => "signup_sheet", :id => @event.id }) do -%>
+<%= form_tag(signup_sheet_event_attendances_path(@event)) do -%>
   <h1>Printable signup sheet for <%=h @event.fullname %></h1>
 
   <p>This will generate a signup sheet you can print out and have at your event.  If you're 

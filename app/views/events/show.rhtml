@@ -62,7 +62,7 @@
                       <%= link_to "View/edit attendee list", event_attendances_url(@event) %>
                     <% end -%>
 		    <br/>
-		    <%= link_to "Printable signup sheet", :controller => "events", :action => "signup_sheet", :id => @event.id %>
+		    <%= link_to "Printable signup sheet", signup_sheet_event_attendances_path(@event) %>
 		    <% if @event.children.count > 0 -%>
 		      <br/><%= link_to "Pull attendees from children", :controller => "events", :action => "pull_from_children", :id => @event.id %>
 		    <% end -%>

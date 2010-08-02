@@ -3,6 +3,8 @@ class Ability
   
   def initialize(person)
     alias_action [:show_description], :to => :read
+    alias_action [:available_people], :to => :view_attendees
+    alias_action [:email_list, :signup_sheet, :signup_sheet_form], :to => :read
     
     can :read, Event
     can :read, Schedule, :published => true
@@ -13,6 +15,7 @@ class Ability
         can [:read, :create, :update, :destroy], VirtualSite
         can [:read, :create, :update, :destroy, :health], Schedule
         can [:read, :create, :update, :destroy, :accept, :reject], ProposedEvent
+        can [:read, :create, :update, :destroy], Attendance
       else
         can [:update, :destroy], Event do |event|
           find_staffers(event, person).any?(&:event_admin?)
@@ -35,6 +38,13 @@ class Ability
         end
         can :health, Schedule do |schedule|
           can?(:view_attendees, schedule.event)
+        end
+        
+        can :read, Attendance do |attendance|
+          can?(:view_attendees, attendance.try(:event))
+        end
+        can [:create, :update, :destroy], Attendance do |attendance|
+          can?(:update, attendance.try(:event))
         end
         
         can :create, ProposedEvent
