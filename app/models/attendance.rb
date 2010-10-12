@@ -15,16 +15,21 @@ class Attendance < ActiveRecord::Base
   
   scope :in_any_descendant, lambda { |event| 
     where(["event_id IN (?)", event.descendants.map(&:id)])
-    }
+  }
   scope :not_in_any_descendant, lambda { |event|
     where("person_id NOT IN (#{in_any_descendant(event).select("attendances.person_id").to_sql})") 
-    }
+  }
+
+  scope :event_between, lambda { |start_time, end_time| 
+    joins(:event).where(["events.start >= ? AND events.end < ?", start_time, end_time])
+  }
 
   def self.dropped_from(event)
     unscoped.where(["deleted_at < ? and event_id = ?", Time.now, event.id])
   end
   
   has_many :public_info_values
+  accepts_nested_attributes_for :public_info_values
   
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."
   after_destroy :pull_from_waitlist
@@ -50,6 +55,21 @@ class Attendance < ActiveRecord::Base
       att.event.attendance_errors(att).each do |err|
         att.errors.add_to_base err
       end
+    end
+  end
+  
+  def person_email
+    @person_email ||= person.try(:email)
+  end
+  
+  def person_email=(email)
+    @person_email = email
+    self.person = Person.find_by_email(email)
+  end
+  
+  validate do |att|
+    if att.person_email && att.person.nil?
+      att.errors.add_to_base("The user with email address #{att.person_email} doesn't exist.  Please create the account first.")
     end
   end
   
@@ -79,6 +99,12 @@ class Attendance < ActiveRecord::Base
 
   def value_for_public_info_field(field)
     public_info_values.find_by_public_info_field_id(field.id)
+  end
+  
+  def public_info_complete?
+    event.public_info_fields.all? do |field|
+      public_info_values.any? { |value| value.public_info_field_id == field.id }
+    end
   end
 
   private

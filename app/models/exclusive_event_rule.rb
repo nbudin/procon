@@ -2,6 +2,8 @@ class ExclusiveEventRule < RegistrationRule
   # you can only be signed up to one event that has this rule at a time
   
   def attendance_valid?(attendance)
+    return true if attendance.person.nil?
+    
     sametime = attendance.event.simultaneous_events
     
     Attendance.find_all_by_person_id(attendance.person.id).each do |a|

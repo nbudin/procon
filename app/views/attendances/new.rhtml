@@ -1,12 +1,18 @@
 <h1 id="pagetitle">New attendee for <%=h @event.fullname %></h1>
 
-<%= error_messages_for :attendance %>
+<% if @attendance.errors.any? %>
+  <ul>
+    <% @attendance.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
 
 <%= form_for(:attendance, :url => event_attendances_path(@event)) do |f| %>
 
   <p>
-    <b>Person</b>
-    <%= user_picker('attendance[person]') %>
+    <b>Email address of attendee:</b>
+    <%= f.text_field :person_email %>
   </p>
   
   <p>

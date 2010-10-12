@@ -9,11 +9,11 @@
  <% if not event.description.blank? -%>
     <h2>Description</h2>
 
-    <p><%= event.description %></p>
+    <p><%=raw event.description %></p>
   <% elsif not event.blurb.blank? -%>
     <h2>Blurb</h2>
 
-    <p><%= event.blurb %></p>
+    <p><%=raw event.blurb %></p>
   <% end -%>
 <% end -%>
 

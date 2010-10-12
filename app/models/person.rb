@@ -6,6 +6,13 @@ class Person < ActiveRecord::Base
   
   scope :attending, lambda { |event| joins(:attendances).
     where(["attendances.event_id = ? AND (attendances.deleted_at IS NULL OR attendances.deleted_at > ?)", event.id, Time.now])}
+
+  scope :busy_between, lambda { |start_time, end_time|
+    where("people.id IN (#{Attendance.event_between(start_time, end_time).select("attendances.person_id").to_sql})")
+  }
+  scope :free_between, lambda { |start_time, end_time|
+    where("people.id NOT IN (#{Attendance.event_between(start_time, end_time).select("attendances.person_id").to_sql})")
+  }
   
   def name
     unless nickname.blank?
