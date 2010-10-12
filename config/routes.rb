@@ -12,8 +12,9 @@ Procon::Application.routes.draw do
 
   resources :registration_rules
   resources :events do
-    collection do
+    member do
       get :available_people
+      post :signup, :to => "signup#signup"
     end
     
     resources :attendances do
