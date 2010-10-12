@@ -4,7 +4,7 @@ class Ability
   def initialize(person)
     alias_action [:show_description], :to => :read
     alias_action [:available_people], :to => :view_attendees
-    alias_action [:email_list, :signup_sheet, :signup_sheet_form], :to => :read
+    alias_action [:email_list, :signup_sheet, :signup_sheet_form, :children], :to => :read
     
     can :read, Event
     can :read, Schedule, :published => true

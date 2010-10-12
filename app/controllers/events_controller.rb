@@ -3,18 +3,11 @@ class EventsController < ApplicationController
 
   def available_people
     @event = Event.find(params[:id])
-    @check_events = @event.parent ? @event.parent.children : Event.find(:all)
-    @all_people = @event.parent ? @event.parent.all_attendees : People.find(:all)
-    @available_people = @all_people.select do |person|
-      if not person.procon_profile
-        logger.debug "Rejecting #{person.name} due to no profile"
-        false
-      else
-        logger.debug "Evaluating #{person.name} availability"
-        not person.procon_profile.busy_between?(@event.start, @event.end, @check_events)
-      end
-    end
-    @available_people = sort_people(@available_people)
+    
+    person_scope = Person.free_between(@event.start, @event.end)
+    person_scope = person_scope.attending(@event.parent) if @event.parent
+
+    @available_people = sort_people(person_scope.all)
   end
   
   def index

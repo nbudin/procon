@@ -29,16 +29,8 @@ module ApplicationHelper
     return "'##{escid}'"
   end
   
-  def signup_url(event)
-    if person_signed_in?
-      url_for :controller => :signup, :action => :signup, :event => event
-    else
-      url_for :controller => :signup, :action => :form, :event => event
-    end
-  end
-  
   def thickbox_params
-    '?site_template=none&TB_iframe=true&KeepThis=true&height=400&width=500'
+    { :site_template => "none", 'TB_iframe' => 'true', "KeepThis" => "true", :height => 400, :width => 500 }
   end
   
   def signup_link(event)
@@ -55,7 +47,7 @@ module ApplicationHelper
           else
             "Waitlist"
           end
-          output_buffer << link_to(caption, signup_url(event) + thickbox_params + '&modal=true', :class => 'thickbox')
+          output_buffer << link_to(caption, signup_event_url(event, thickbox_params.update(:modal => true)), :class => 'thickbox')
         end
       else
         link_caption = "Drop out"

@@ -83,8 +83,6 @@ class AttendancesController < ApplicationController
   # POST /attendances
   # POST /attendances.xml
   def create
-    person_id = params[:attendance][:person].sub(/^\D+/, "")
-    params[:attendance][:person] = Person.find(person_id)
     @attendance = Attendance.new(params[:attendance])
     @attendance.event = @event
 

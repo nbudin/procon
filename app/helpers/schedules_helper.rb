@@ -76,7 +76,7 @@ module SchedulesHelper
         
         output_buffer << "<br/>".html_safe
         output_buffer << link_to("Who's free\?", 
-                          url_for(:controller => 'events', :action => 'available_people', :id => event.id) + thickbox_params, 
+                          available_people_event_path(event, thickbox_params),
                           :class => 'thickbox', :style => 'font-weight: bold;')
       end
     end
@@ -93,7 +93,7 @@ module SchedulesHelper
     
     content_tag(:div, :style => position_style, :class => position_class) do
       with_output_buffer do
-        output_buffer << link_to(event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
+        output_buffer << link_to(event.shortname, url_for(thickbox_params.update(:controller => 'events', :action => 'show_description', :id => event.id)),
           :class => 'thickbox', :style => 'font-weight: bold;')
 
         if person_signed_in?

@@ -1,4 +1,6 @@
 class SignupController < ApplicationController
+  before_filter :load_event
+  
   def index
     @person = current_person
     @upcoming = Event.find(:all, :conditions => ["start > ?", Time.now], :order => "start, end")
@@ -6,31 +8,19 @@ class SignupController < ApplicationController
   
   def signup
     @hide_chrome = true
-    @person = current_person
-    @event = Event.find params[:event]
-    is_waitlist = (@event.kind_of?(LimitedCapacityEvent) and @event.full_for_gender?(@person.gender))
+
+    @att = @event.attendances.new(params[:attendance])
+    @att.is_waitlist = (@event.kind_of?(LimitedCapacityEvent) and @event.full_for_gender?(@att.gender))
+    @att.counts = !@att.is_waitlist
     
-    proceed = false
-    if (not @event.attendees_visible) or (not params[:acknowledge_attendees_visible].blank?)
-      proceed = true
-      @event.public_info_fields.each do |field|
-        if params[:public_info_field][field.id.to_s].blank?
-          proceed = false
-        end
-      end
+    if @event.attendees_visible && (params[:acknowledge_attendees_visible].blank? || !@att.public_info_complete?)
+      return redirect_to(form_signup_event_path(@event, :attendance => params[:attendance]))
     end
 
-    if proceed
-      @att = Attendance.new :person => @person, :event => @event, :is_waitlist => is_waitlist, :counts => !is_waitlist
-      begin
-        @att.save!
-        @event.public_info_fields.each do |field|
-          piv = @att.public_info_values.new :public_info_field => field, :value => params[:public_info_field][field.id.to_s]
-          piv.save!
-        end
-      rescue StandardError => err
-        flash[:error_messages] = "You can't sign up for that event.  Reason: \"#{err}\""
-      end
+    begin
+      @att.save!
+    rescue StandardError => err
+      flash[:error_messages] = "You can't sign up for that event.  Reason: \"#{err}\""
     end
   end
   
@@ -56,11 +46,11 @@ class SignupController < ApplicationController
   end
   
   def form
-    @event = Event.find params[:event]
-
-    if not @event.nil?
-      @event.attendances.create :person => @person
-      @event.save
-    end
+    @attendance = @event.attendances.new(params[:attendance])
+  end
+  
+  private
+  def load_event
+    @event = Event.find params[:event_id]
   end
 end
