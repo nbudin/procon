@@ -53,10 +53,12 @@ class Schedule < ActiveRecord::Base
         high_water_mark = event
       end
       
-      if high_water_mark.end < (event.start - 3.hours) && high_water_mark.start.beginning_of_day != event.start.beginning_of_day
-        if current_block.size > 0
-          block = self.schedule_blocks.create :events => current_block
-          current_block = []
+      if high_water_mark.end < (event.start - 3.hours) 
+        if high_water_mark.start.beginning_of_conference_day != event.start.beginning_of_conference_day
+          if current_block.size > 0
+            block = self.schedule_blocks.create :events => current_block
+            current_block = []
+          end
         end
       end
       
