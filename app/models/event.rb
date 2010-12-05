@@ -51,6 +51,7 @@ class Event < ActiveRecord::Base
     
   belongs_to :registration_policy
   has_many :virtual_sites
+  belongs_to :proposed_event
     
   has_many :schedules
   has_and_belongs_to_many :tracks

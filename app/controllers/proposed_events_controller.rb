@@ -15,7 +15,7 @@ class ProposedEventsController < ApplicationController
     unless proposal_admin?
       conds[:proposer_id] = logged_in_person.id
     end
-    @proposed_events = @context.children.all(:conditions => conds, :order => "created_at desc")
+    @proposed_events = @context.children.all(:conditions => conds, :order => "events.id, created_at desc", :include => :event)
 
     respond_to do |format|
       format.html # index.html.erb

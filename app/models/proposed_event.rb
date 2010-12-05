@@ -1,5 +1,6 @@
 class ProposedEvent < Event
   belongs_to :proposer, :class_name => "Person"
+  has_one :event
 
   alias_method :attendance_invalid_if_event_accepted?, :attendance_invalid?
   def attendance_invalid?(att)
