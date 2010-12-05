@@ -239,10 +239,10 @@ ENDOFHTML
   def signup_count(event, show_blank_agenda_count=false)
     if event.kind_of? LimitedCapacityEvent and event.gendered?
 		  html = pluralize(event.attendee_count, "attendee")
-      html << " total:"
-      html << event.attendee_count("male")
+      html << " total: "
+      html << event.attendee_count("male").to_s
       html << " male,"
-      html << event.attendee_count("female")
+      html << event.attendee_count("female").to_s
       html << " female"
 	  else
 	  	html = pluralize(event.attendee_count, "attendee")
