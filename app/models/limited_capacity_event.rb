@@ -62,7 +62,7 @@ class LimitedCapacityEvent < Event
     if gender.nil?
       total = 0
       attendee_slots.each do |slot|
-        total += slot.send(threshold)
+        total += (slot.send(threshold) || 0)
       end
       return total
     else
@@ -70,7 +70,7 @@ class LimitedCapacityEvent < Event
       if slot.nil?
         return 0
       else
-        return slot.send(threshold)
+        return slot.send(threshold) || 0
       end
     end
   end
