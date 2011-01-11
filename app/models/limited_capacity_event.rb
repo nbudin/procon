@@ -92,7 +92,7 @@ class LimitedCapacityEvent < Event
           gendered_slot_count[slot.gender] ||= 0
           gendered_slot_count[slot.gender] += slot.max
         else
-          neutral_slot_count += slot.max
+          neutral_slot_count += slot.max if slot.max
         end
       end
       total = neutral_slot_count
