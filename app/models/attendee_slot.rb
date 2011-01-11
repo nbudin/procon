@@ -2,6 +2,14 @@ class AttendeeSlot < ActiveRecord::Base
   belongs_to :event, :class_name => "LimitedCapacityEvent", :foreign_key => "event_id"
   validates_uniqueness_of :gender, :scope => :event_id
   
+  %w{min max preferred}.each do |field|
+    class_eval %{
+      def #{field}
+        read_attribute(:#{field}) || 0
+      end
+    }
+  end
+  
   def validate
     kickout = false
     event.attendances.each do |att|
