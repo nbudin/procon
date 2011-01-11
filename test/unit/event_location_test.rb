@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class EventLocationTest < Test::Unit::TestCase
+class EventLocationTest < ActiveSupport::TestCase
   fixtures :event_locations
 
   # Replace this with your real tests.
