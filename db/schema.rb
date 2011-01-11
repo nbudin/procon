@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090915171229) do
+ActiveRecord::Schema.define(:version => 20110111142848) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -42,10 +42,10 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
   add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
 
   create_table "attendee_slots", :force => true do |t|
-    t.integer  "event_id",   :null => false
-    t.integer  "max"
-    t.integer  "min"
-    t.integer  "preferred"
+    t.integer  "event_id",                  :null => false
+    t.integer  "max",        :default => 0, :null => false
+    t.integer  "min",        :default => 0, :null => false
+    t.integer  "preferred",  :default => 0, :null => false
     t.string   "gender"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -90,7 +90,10 @@ ActiveRecord::Schema.define(:version => 20090915171229) do
     t.text     "proposed_location"
     t.text     "proposed_capacity_limits"
     t.integer  "proposer_id"
+    t.integer  "proposed_event_id"
   end
+
+  add_index "events", ["proposed_event_id"], :name => "index_events_on_proposed_event_id"
 
   create_table "events_schedule_blocks", :id => false, :force => true do |t|
     t.integer "event_id"
