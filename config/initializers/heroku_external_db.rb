@@ -19,3 +19,5 @@ end
 if ENV['DATABASE_CA']
   ActiveRecord::Base.configurations[ENV['RAILS_ENV']][:ssl_ca] = File.join(ca_path, ENV['DATABASE_CA'])
 end
+
+raise ActiveRecord::Base.configurations.inspect
