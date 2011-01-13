@@ -17,10 +17,13 @@ if !ActiveRecord::Base.configurations['users'] && ENV['USERS_DATABASE_URL']
     raise "#{db_config[:sslca]} does not exist!" unless File.exists?(db_config[:sslca])
   end
   ActiveRecord::Base.configurations['users'] = db_config
+
+  ActiveRecord::Base.establish_connection('users')
 end
 
 if ENV['DATABASE_CA']
   ca_filepath = File.join(ca_path, ENV['DATABASE_CA'])
   raise "#{ca_filepath} does not exist!" unless File.exists?(ca_filepath)
   ActiveRecord::Base.configurations[ENV['RAILS_ENV']][:ssl_ca] = ca_filepath
+  ActiveRecord::Base.establish_connection(ENV['RAILS_ENV'])
 end
