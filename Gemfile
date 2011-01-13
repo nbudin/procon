@@ -12,7 +12,7 @@ gem 'aaronchi-jrails', '~> 0.5.1', :require => 'jrails'
 gem 'thoughtbot-paperclip', '~> 2.3.1', :require => 'paperclip'
 gem 'febeling-rubyzip', '~> 0.9.2', :require => 'zip/zip'
 gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
-gem 'ae_users_legacy', '0.6.2', :require => 'ae_users'
+gem 'ae_users_legacy', '0.6.3', :require => 'ae_users'
 
 group :development do
   # bundler requires these gems in development
