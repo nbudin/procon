@@ -20,6 +20,7 @@ if !ActiveRecord::Base.configurations['users'] && ENV['USERS_DATABASE_URL']
 end
 
 if ENV['DATABASE_CA']
-  raise "#{ENV['DATABASE_CA']} does not exist!" unless File.exists?(ENV['DATABASE_CA'])
-  ActiveRecord::Base.configurations[ENV['RAILS_ENV']][:ssl_ca] = File.join(ca_path, ENV['DATABASE_CA'])
+  ca_filepath = File.join(ca_path, ENV['DATABASE_CA'])
+  raise "#{ca_filepath} does not exist!" unless File.exists?(ca_filepath)
+  ActiveRecord::Base.configurations[ENV['RAILS_ENV']][:ssl_ca] = ca_filepath
 end
