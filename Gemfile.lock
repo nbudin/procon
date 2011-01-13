@@ -13,6 +13,8 @@ GEM
     activeresource (2.3.5)
       activesupport (= 2.3.5)
     activesupport (2.3.5)
+    ae_users_legacy (0.6.2)
+      ruby-openid (>= 2.0.4)
     febeling-rubyzip (0.9.2)
     mysql (2.8.1)
     rack (1.0.1)
@@ -32,6 +34,7 @@ PLATFORMS
 
 DEPENDENCIES
   aaronchi-jrails (~> 0.5.1)
+  ae_users_legacy (= 0.6.2)
   febeling-rubyzip (~> 0.9.2)
   mysql
   rails (= 2.3.5)
