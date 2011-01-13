@@ -26,4 +26,6 @@ if ENV['DATABASE_CA']
   raise "#{ca_filepath} does not exist!" unless File.exists?(ca_filepath)
   ActiveRecord::Base.configurations[ENV['RAILS_ENV']][:ssl_ca] = ca_filepath
   ActiveRecord::Base.establish_connection(ENV['RAILS_ENV'])
+
+  raise 'OH NOES I AM DED'
 end
