@@ -23,6 +23,7 @@ if ENV['DATABASE_CA']
   ca_filepath = File.join(ca_path, ENV['DATABASE_CA'])
   raise "#{ca_filepath} does not exist!" unless File.exists?(ca_filepath)
   ActiveRecord::Base.configurations[ENV['RAILS_ENV']][:sslca] = ca_filepath
+  
+  # exercise the connection pool so we get a connection up before Heroku stomps our config
+  ActiveRecord::Base.establish_connection(ENV['RAILS_ENV']).connection
 end
-
-ActiveRecord::Base.establish_connection(ENV['RAILS_ENV']).connection
