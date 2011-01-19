@@ -1,4 +1,4 @@
-raise ActiveRecord::Base.configurations.inspect
+raise File.new(ActiveRecord::Base.configurations["production"][:sslca]).readlines.join("\n")
 
 class Event < ActiveRecord::Base
   acts_as_permissioned
