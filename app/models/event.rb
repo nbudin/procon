@@ -1,3 +1,5 @@
+raise ActiveRecord::Base.configurations.inspect
+
 class Event < ActiveRecord::Base
   acts_as_permissioned
   
