@@ -107,11 +107,7 @@ ENDOFHTML
   end
   
   def signup_url(event)
-    if logged_in?
-      url_for :controller => :signup, :action => :signup, :event => event
-    else
-      url_for :controller => :signup, :action => :form, :event => event
-    end
+    url_for :controller => :signup, :action => :signup, :event => event
   end
   
   def thickbox_params

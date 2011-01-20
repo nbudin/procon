@@ -1,9 +1,4 @@
 class SignupController < ApplicationController
-  def index
-    @person = logged_in_person
-    @upcoming = Event.find(:all, :conditions => ["start > ?", Time.now], :order => "start, end")
-  end
-  
   def signup
     @hide_chrome = true
     @person = logged_in_person
@@ -53,14 +48,5 @@ class SignupController < ApplicationController
   end
   
   def success
-  end
-  
-  def form
-    @event = Event.find params[:event]
-
-    if not @event.nil?
-      @event.attendances.create :person => @person
-      @event.save
-    end
   end
 end
