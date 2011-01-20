@@ -11,7 +11,7 @@
   </ul>
 <% end -%>
 
-<% if @events.size == 0 -%>
+<% if @blocks.empty? -%>
   <p>There are no events on this schedule.</p>
 <% else -%>
   <% @blocks.each do |block| -%>

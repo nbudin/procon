@@ -55,14 +55,21 @@ module SchedulesHelper
     output << "</table>"
     return output
   end
+  
+  def position_style(position, background_color = true)
+    position_style = ""
+    %w{left top width height}.each do |attr|
+      position_style << " #{attr}: #{position.send(attr)}%;"
+    end
+    position_style << "background-color: #{position.color}" if background_color
+    
+    return position_style
+  end
 
   def health_event(position, healthclass)
     event = position.event
     output = <<-ENDHTML
-      <div style="left: #{position.left}%;
-                  width: #{position.width}%;
-                  top: #{position.top}%;
-                  height: #{position.height}%;"
+      <div style="#{position_style(position, false)}"
            class="event #{healthclass}">
         <b>#{h event.shortname}</b>
     ENDHTML
@@ -83,13 +90,13 @@ module SchedulesHelper
   def schedule_event(position)
     event = position.event
     att = logged_in? ? logged_in_person.app_profile.attendance_for_event(event) : nil
+    
+    position_class = "event"
+    position_class << " signedup" if att
+    position_class << " waitlist" if att.try(:is_waitlist)
+    
     output = <<-ENDHTML
-<div style="left: #{position.left}%;
-            width: #{position.width}%;
-            top: #{position.top}%;
-            height: #{position.height}%;
-            background-color: #{ position.color };"
-     class="event #{ att ? 'signedup' : '' } #{ att and att.is_waitlist ? 'waitlist' : '' }">
+<div style="#{position_style(position, true)}" class="#{position_class}">
   #{ link_to event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
     :class => 'thickbox', :style => 'font-weight: bold;' }
 ENDHTML
@@ -111,15 +118,16 @@ ENDHTML
 			output << "</i>\n"
     end
     output << "</div>\n"
+
     return output
   end
 
   def with_schedule_block(schedule, block, skip_header = false)
-    positions = block.obtain_event_positions
+    positions = block.event_positions
     
     output = "<h2>#{ block.start.strftime("%A, %B %d, %Y") }</h2>\n\n"
     unless skip_header
-      output << schedule_header(block.obtain_tracks)
+      output << schedule_header(block.tracks)
     end
     output << "\n\n<div class=\"schedule\">\n"
     output << schedule_body_table(block)

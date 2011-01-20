@@ -15,16 +15,12 @@ class ProconProfile < ActiveRecord::Base
     end
   end
   
-  def attendance_for_event(event_id)
-    if @attendances.nil?
-      reload_attendances
-    end
-    key = event_id.respond_to?('id') ? event_id.id : event_id
-    return @attendances[key]
+  def attendance_for_event(event)
+    event.attendances.select { |att| att.person_id == person.id }.first
   end
   
   def attending?(event)
-    attendance_for_event(event.id)
+    attendance_for_event(event)
   end
   
   def events

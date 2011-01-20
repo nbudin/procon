@@ -70,6 +70,13 @@ class Event < ActiveRecord::Base
   has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
     
   acts_as_tree :order => "start"
+  named_scope :time_ordered, :order => "start, end"
+  named_scope :for_registration, :include => { :attendances => :person, :registration_policy => :rules, 
+    :attendee_slots => [], :locations => [] }
+  named_scope :in_schedule, lambda { |schedule|
+        { :joins => :tracks, :conditions => { :tracks => { :id => schedule.track_ids } },
+          :select => "DISTINCT `events`.*", :include => :tracks }
+  }
   
   def invalidate_blocks
     schedules.each do |schedule|

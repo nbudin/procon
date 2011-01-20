@@ -124,7 +124,7 @@ ENDOFHTML
     end
     att = logged_in_person.app_profile.attendance_for_event(event)
     output = ""
-    if not logged_in_person.app_profile.events.include? event
+    if att.nil?
       if event.registration_open
         caption = if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender))
           "Sign up"
