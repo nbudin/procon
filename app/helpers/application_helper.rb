@@ -106,10 +106,6 @@ ENDOFHTML
     return html
   end
   
-  def signup_url(event)
-    url_for :controller => :signup, :action => :signup, :event => event
-  end
-  
   def thickbox_params
     '?site_template=none&TB_iframe=true&KeepThis=true&height=400&width=500'
   end
