@@ -55,9 +55,6 @@ class Event < ActiveRecord::Base
     
   has_many :schedules
   has_and_belongs_to_many :tracks
-  has_and_belongs_to_many :schedule_blocks
-  has_many :scheduled_event_positions
-  after_save :invalidate_blocks
   
   # possibly replace this with a confirmation check later
   validate do |e|
@@ -77,12 +74,6 @@ class Event < ActiveRecord::Base
         { :joins => :tracks, :conditions => { :tracks => { :id => schedule.track_ids } },
           :select => "DISTINCT `events`.*", :include => :tracks }
   }
-  
-  def invalidate_blocks
-    schedules.each do |schedule|
-      schedule.schedule_blocks.destroy_all
-    end
-  end
   
   def set_default_registration_policy
     if registration_policy.nil?

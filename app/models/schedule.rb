@@ -1,7 +1,6 @@
 class Schedule < ActiveRecord::Base
   has_many :tracks, :order => :position
   belongs_to :event
-  has_many :schedule_blocks, :order => :start
   
   def events
     Event.in_schedule(self)
