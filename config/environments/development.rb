@@ -26,3 +26,12 @@ ActionMailer::Base.smtp_settings = {
   :port  => 25, 
   :domain  => 'brandeislarp.com'
     }
+
+#config.after_initialize do
+#  Bullet.enable = true
+#  Bullet.alert = true
+#  Bullet.bullet_logger = true
+#  Bullet.console = true
+#  Bullet.rails_logger = true
+#  Bullet.disable_browser_cache = true
+#end
