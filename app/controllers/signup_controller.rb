@@ -9,7 +9,7 @@ class SignupController < ApplicationController
     if (not @event.attendees_visible) or (not params[:acknowledge_attendees_visible].blank?)
       proceed = true
       @event.public_info_fields.each do |field|
-        if params[:public_info_field][field.id.to_s].blank?
+        if params[:public_info_field].try(:[], field.id.to_s).blank?
           proceed = false
         end
       end
