@@ -1,3 +1,5 @@
+require 'bundler/capistrano'
+
 # This defines a deployment "recipe" that you can feed to capistrano
 # (http://manuals.rubyonrails.com/read/book/17). It allows you to automate
 # (among other things) the deployment of your application.
