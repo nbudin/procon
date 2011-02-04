@@ -17,7 +17,7 @@
       <% end -%>
     </td>
     <td><%= link_to proposed_event.fullname, proposed_event %></td>
-    <td><%= proposed_event.proposer.name %></td>
+    <td><%= proposed_event.proposer.try(:name) || "Unknown" %></td>
     <td><%= proposed_event.created_at %></td>
   </tr>
 <% end %>
