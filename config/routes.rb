@@ -6,6 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :schedules, :member => { :health => :get }
   map.resources :registration_rules
   
+  map.dropout "dropout/:event", :controller => "signup", :action => "dropout"
   map.signup "signup/:event", :controller => "signup", :action => "signup"
 
   # The priority is based upon order of creation: first created -> highest priority.
