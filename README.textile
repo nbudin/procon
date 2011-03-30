@@ -40,3 +40,4 @@ Once that's done, you can run the following command to set up your databases:
  rake db:migrate
 
 And you should then be all set to start running ProCon.
+
