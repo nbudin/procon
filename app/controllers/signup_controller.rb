@@ -1,11 +1,6 @@
 class SignupController < ApplicationController
   before_filter :load_event
-  
-  def index
-    @person = current_person
-    @upcoming = Event.find(:all, :conditions => ["start > ?", Time.now], :order => "start, end")
-  end
-  
+
   def signup
     @hide_chrome = true
 
@@ -43,14 +38,5 @@ class SignupController < ApplicationController
   end
   
   def success
-  end
-  
-  def form
-    @attendance = @event.attendances.new(params[:attendance])
-  end
-  
-  private
-  def load_event
-    @event = Event.find params[:event_id]
   end
 end

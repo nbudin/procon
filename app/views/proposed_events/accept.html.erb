@@ -1,5 +1,6 @@
 <h1 id="pagetitle">Accept <%= @proposed_event.fullname %></h1>
 
 <% form_for :event, :url => events_url, :html => { :method => :post } do |f| %>
+<%= f.hidden_field :proposed_event_id, :value => @proposed_event.id %>
 <%=render :partial => "events/form" %>
 <% end %>

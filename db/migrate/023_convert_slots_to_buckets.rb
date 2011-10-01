@@ -1,6 +1,6 @@
 class ConvertSlotsToBuckets < ActiveRecord::Migration
   def self.up
-    AttendeeSlot.find_all.each do |s|
+    AttendeeSlot.all.each do |s|
       b = RegistrationBucket.new
       b.event = s.event
       b.min = s.min
@@ -15,7 +15,7 @@ class ConvertSlotsToBuckets < ActiveRecord::Migration
   end
 
   def self.down
-    RegistrationBucket.find_all.each do |b|
+    RegistrationBucket.all.each do |b|
       if b.rule.kind_of? GenderRule
         s = AttendeeSlot.new
         s.event = b.event

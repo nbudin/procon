@@ -94,7 +94,7 @@ class Attendance < ActiveRecord::Base
   end
   
   def age
-    person.age_as_of event.start
+    person.try(:age_as_of, event.start)
   end
 
   def value_for_public_info_field(field)

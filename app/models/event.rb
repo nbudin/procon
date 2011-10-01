@@ -11,20 +11,19 @@ class Event < ActiveRecord::Base
   has_many :event_locations, :dependent => :destroy
   has_many :locations, :through => :event_locations, :dependent => :destroy
   has_many :staffers, :dependent => :destroy, :order => "position"
+  belongs_to :proposed_event
   
   accepts_nested_attributes_for :attendances, :allow_destroy => true
   accepts_nested_attributes_for :attendee_slots, :allow_destroy => true
   accepts_nested_attributes_for :public_info_fields, :allow_destroy => true
   accepts_nested_attributes_for :virtual_sites, :allow_destroy => true
     
-  scope :time_ordered, order("start, end")
-  scope :in_schedule, lambda { |schedule|
-    joins(:tracks).where(:tracks => { :id => schedule.track_ids }).select("DISTINCT `events`.*").includes(:tracks)
-  }
-  scope :for_registration, includes(:attendances => :person, 
-    :registration_policy => :rules, 
-    :attendee_slots => nil, 
-    :locations => nil)    
+  belongs_to :registration_policy
+  has_many :virtual_sites
+  belongs_to :proposed_event
+    
+  has_many :schedules
+  has_and_belongs_to_many :tracks
   
   
   # possibly replace this with a confirmation check later

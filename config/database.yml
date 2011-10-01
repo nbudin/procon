@@ -1,11 +1,7 @@
 development:
-  adapter: mysql
-  host: localhost
-  username: root
-  database: procon_development
+  adapter: sqlite3
+  database: db/development.sqlite3
 
 test:
-  adapter: mysql
-  host: localhost
-  username: root
-  database: procon_test
+  adapter: sqlite3
+  database: db/test.sqlite3

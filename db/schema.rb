@@ -1,8 +1,9 @@
-# This file is auto-generated from the current state of the database. Instead 
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your 
+# Note that this schema.rb definition is the authoritative source for your
 # database schema. If you need to create the application database on another
 # system, you should be using db:schema:load, not running all the migrations
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100728210943) do
+ActiveRecord::Schema.define(:version => 20110111142848) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -42,10 +43,10 @@ ActiveRecord::Schema.define(:version => 20100728210943) do
   add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
 
   create_table "attendee_slots", :force => true do |t|
-    t.integer  "event_id",   :null => false
-    t.integer  "max"
-    t.integer  "min"
-    t.integer  "preferred"
+    t.integer  "event_id",                  :null => false
+    t.integer  "max",        :default => 0, :null => false
+    t.integer  "min",        :default => 0, :null => false
+    t.integer  "preferred",  :default => 0, :null => false
     t.string   "gender"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -58,6 +59,8 @@ ActiveRecord::Schema.define(:version => 20100728210943) do
     t.integer "location_id"
     t.boolean "exclusive",   :default => true
   end
+
+  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
 
   create_table "events", :force => true do |t|
     t.string   "fullname",                                                    :null => false
@@ -78,9 +81,11 @@ ActiveRecord::Schema.define(:version => 20100728210943) do
     t.text     "proposed_capacity_limits"
     t.integer  "proposer_id"
     t.string   "ancestry"
+    t.integer  "proposed_event_id"
   end
 
   add_index "events", ["ancestry"], :name => "index_events_on_ancestry"
+  add_index "events", ["proposed_event_id"], :name => "index_events_on_proposed_event_id"
 
   create_table "events_tracks", :id => false, :force => true do |t|
     t.integer "event_id"
@@ -115,11 +120,6 @@ ActiveRecord::Schema.define(:version => 20100728210943) do
   end
 
   add_index "people", ["username"], :name => "index_people_on_username", :unique => true
-
-  create_table "plugin_schema_info", :id => false, :force => true do |t|
-    t.string  "plugin_name"
-    t.integer "version"
-  end
 
   create_table "public_info_fields", :force => true do |t|
     t.string   "name"
