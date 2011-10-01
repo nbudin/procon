@@ -2,28 +2,33 @@
 # This preamble is the current preamble for Rails 3 apps; edit as needed.
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.0'
-gem 'mysql'
+gem 'rails', '~> 3.1.0'
+gem 'mysql', :groups => :production
+gem 'sqlite3', :groups => [:development, :test]
 
-gem "devise", "~> 1.1.0"
+gem "devise"
 gem 'devise_cas_authenticatable', :path => '/Users/nbudin/code/devise_cas_authenticatable'
 #gem 'devise_cas_authenticatable', :git => "git://github.com/nbudin/devise_cas_authenticatable", :branch => "devise1.1"
 gem 'cancan', '>= 1.1'
+gem 'ae_users_migrator'
 
-gem "ancestry", ">= 1.2.0"
+gem 'ancestry'
+gem 'jquery-rails'
+gem 'paperclip'
+gem 'aws-s3'
+gem 'right_aws'
+gem 'rubyzip'
+gem 'heroku_external_db', '>= 1.0.0'
+gem 'airbrake'
+gem 'heroku', :groups => :development
 
-gem 'ae_users_migrator', '>= 1.0.3'
+group :development do
+  # bundler requires these gems in development
+  # gem 'bullet'
+end
 
-gem 'jrails', '~> 0.6.0'
-gem 'paperclip', '~> 2.3.3'
-gem 'rubyzip', :require => 'zip/zip'
-
-# Bundle gems for certain environments:
-# gem 'rspec', :group => :test
 group :test do
-  gem 'factory_girl_rails'
-  gem 'shoulda', '>= 2.10.3'
-  gem 'capybara'
-  gem 'cucumber-rails'
-  gem 'launchy'
+  # bundler requires these gems while running tests
+  # gem "rspec"
+  # gem "faker"
 end

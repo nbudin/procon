@@ -62,7 +62,7 @@ class LimitedCapacityEvent < Event
     if gender.nil?
       total = 0
       attendee_slots.each do |slot|
-        total += slot.send(threshold)
+        total += (slot.send(threshold) || 0)
       end
       return total
     else
@@ -70,7 +70,7 @@ class LimitedCapacityEvent < Event
       if slot.nil?
         return 0
       else
-        return slot.send(threshold)
+        return slot.send(threshold) || 0
       end
     end
   end
@@ -108,7 +108,7 @@ class LimitedCapacityEvent < Event
           gendered_slot_count[slot.gender] ||= 0
           gendered_slot_count[slot.gender] += slot.max
         else
-          neutral_slot_count += slot.max
+          neutral_slot_count += slot.max if slot.max
         end
       end
       total = neutral_slot_count
@@ -132,7 +132,9 @@ class LimitedCapacityEvent < Event
   end
   
   def gendered?
-    attendee_slots.any? {|s| s.gender and s.gender != 'neutral' and s.min and s.min > 0 }
+    attendee_slots.any? do |s| 
+      s.gendered? && s.max.try(:>, 0)
+    end
   end
   
   def full?

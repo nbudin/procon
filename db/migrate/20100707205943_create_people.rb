@@ -28,12 +28,21 @@ class CreatePeople < ActiveRecord::Migration
     add_index :people, :username, :unique => true
     
     person_ids = Attendance.group(:person_id).map(&:person_id)
-    person_ids += ProconProfile.group(:person_id).map(&:person_id)
+    begin
+      person_ids += ProconProfile.group(:person_id).map(&:person_id)
+      person_ids += Permission.group(:person_id).map(&:person_id)
+    rescue
+      # Ignore this; procon_rofiles and permissions might not exist for clean installs
+    end
     person_ids += Event.group(:proposer_id).map(&:proposer_id)
-    person_ids += Permission.group(:person_id).map(&:person_id)
     person_ids = person_ids.uniq.compact
     
-    role_ids = Permission.group(:role_id).map(&:role_id)
+    role_ids = []
+    begin
+      role_ids += Permission.group(:role_id).map(&:role_id)
+    rescue
+      # Ignore for clean installs
+    end
     role_ids = role_ids.uniq.compact
     
     if person_ids.count > 0 or role_ids.count > 0

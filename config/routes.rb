@@ -14,7 +14,8 @@ Procon::Application.routes.draw do
   resources :events do
     member do
       get :available_people
-      post :signup, :to => "signup#signup"
+      post :signup, :to => "signup#signup", :as => 'signup'
+      post :dropout, :to => "signup#dropout", :as => 'dropout'
     end
     
     resources :attendances do

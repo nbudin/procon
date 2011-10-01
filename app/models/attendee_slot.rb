@@ -6,6 +6,14 @@ class AttendeeSlot < ActiveRecord::Base
     record.event.pull_from_waitlist
   end
   
+  %w{min max preferred}.each do |field|
+    class_eval %{
+      def #{field}
+        read_attribute(:#{field}) || 0
+      end
+    }
+  end
+
   validate do |slot|
     if slot.event.attendances.any? { |att| slot.event.attendance_over_limit?(att) }
       slot.errors.add_to_base "That would kick one or more confirmed attendees out of this event."

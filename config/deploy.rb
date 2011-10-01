@@ -1,3 +1,5 @@
+require 'bundler/capistrano'
+
 # This defines a deployment "recipe" that you can feed to capistrano
 # (http://manuals.rubyonrails.com/read/book/17). It allows you to automate
 # (among other things) the deployment of your application.
@@ -70,4 +72,7 @@ namespace :deploy do
     run "ln -nfs #{deploy_to}/#{shared_dir}/attached_images #{release_path}/public/attached_images"
   end
 end
-  
+
+
+        require './config/boot'
+        require 'airbrake/capistrano'
