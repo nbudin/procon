@@ -69,8 +69,6 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.boolean "exclusive",   :default => true
   end
 
-  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
-
   create_table "events", :force => true do |t|
     t.string   "fullname",                                                    :null => false
     t.string   "shortname"
@@ -124,6 +122,28 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.string  "server_url"
     t.string  "salt",       :null => false
   end
+
+  create_table "people", :force => true do |t|
+    t.string   "email"
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "gender"
+    t.datetime "birthdate"
+    t.string   "nickname"
+    t.string   "phone"
+    t.string   "best_call_time"
+    t.boolean  "admin"
+    t.string   "username"
+    t.integer  "sign_in_count",      :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "people", ["username"], :name => "index_people_on_username", :unique => true
 
   create_table "permission_caches", :force => true do |t|
     t.integer "person_id"
@@ -254,6 +274,23 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "staffers", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "person_id"
+    t.string   "title"
+    t.boolean  "listed"
+    t.integer  "position"
+    t.boolean  "publish_email"
+    t.boolean  "event_admin"
+    t.boolean  "proposal_admin"
+    t.boolean  "schedule_admin"
+    t.boolean  "attendee_viewer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "staffers", ["event_id"], :name => "index_staffers_on_event_id"
 
   create_table "tracks", :force => true do |t|
     t.string   "name"

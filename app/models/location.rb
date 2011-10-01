@@ -4,9 +4,6 @@ class Location < ActiveRecord::Base
   has_many :events, :through => :event_locations, :dependent => :destroy
   
   def self.roots(locs)
-    roots = locs.dup
-    redundant = roots.select { |l| roots.include? l.parent }
-    roots -= redundant
-    return roots
+    locs.reject { |l| locs.include? l.parent }
   end
 end

@@ -19,7 +19,11 @@ class Event < ActiveRecord::Base
     class_eval <<-ENDMETHOD
       def #{method_name}
         ids = attendances.#{finder_method}(#{args}).map(&:person_id)
-        Person.find(:all, :conditions => ["id in (?)", ids])
+        if ids.empty?
+          []
+        else
+          Person.find(:all, :conditions => ["id in (?)", ids])
+        end
       end
     ENDMETHOD
   end
