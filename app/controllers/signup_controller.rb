@@ -44,7 +44,7 @@ class SignupController < ApplicationController
     @person = logged_in_person
     @event = Event.find params[:event]
     recursive_drop @person, @event
-    redirect_to request.env['HTTP_REFERER']
+    redirect_to (request.env['HTTP_REFERER'] || event_url(@event))
   end
   
   def success
