@@ -3,7 +3,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '~> 3.1.0'
-gem 'mysql', :groups => :production
+gem 'mysql2', :groups => :production
 gem 'sqlite3', :groups => [:development, :test]
 
 gem "devise"
