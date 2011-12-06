@@ -1,10 +1,6 @@
 require 'test_helper'
-require 'attendances_controller'
 
-# Re-raise errors caught by the controller.
-class AttendancesController; def rescue_action(e) raise e end; end
-
-class AttendancesControllerTest < Test::Unit::TestCase
+class AttendancesControllerTest < ActionController::TestCase
   fixtures :attendances
 
   def setup

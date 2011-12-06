@@ -1,10 +1,6 @@
 require 'test_helper'
-require 'site_templates_controller'
 
-# Re-raise errors caught by the controller.
-class SiteTemplatesController; def rescue_action(e) raise e end; end
-
-class SiteTemplatesControllerTest < Test::Unit::TestCase
+class SiteTemplatesControllerTest < ActionController::TestCase
   fixtures :site_templates
 
   def setup
