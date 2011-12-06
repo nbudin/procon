@@ -11,12 +11,8 @@ class Ability
         
     if person
       if person.admin?
-        can [:read, :create, :update, :destroy, :view_attendees, :admin_schedules, :admin_proposals], Event
-        can [:read, :create, :update, :destroy], VirtualSite
-        can [:read, :create, :update, :destroy, :health], Schedule
-        can [:read, :create, :update, :destroy, :accept, :reject], ProposedEvent
-        can [:read, :create, :update, :destroy], Attendance
-      else
+        can :manage, :all
+      else        
         can [:update, :destroy], Event do |event|
           find_staffers(event, person).any?(&:event_admin?)
         end
@@ -49,7 +45,7 @@ class Ability
         
         can :create, ProposedEvent
         can [:read, :update, :destroy], ProposedEvent do |proposal|
-          proposal.proposer == person || can?(:admin_proposals, proposal.try(:parent))
+          proposal.proposer == person || can?(:accept, proposal)
         end
         can [:accept, :reject], ProposedEvent do |proposal|
           can?(:admin_proposals, proposal.try(:parent))
