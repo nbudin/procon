@@ -1,10 +1,3 @@
-PATH
-  remote: /Users/nbudin/code/devise_cas_authenticatable
-  specs:
-    devise_cas_authenticatable (1.0.0.alpha12)
-      devise (>= 1.0.6)
-      rubycas-client (>= 2.2.1)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -44,6 +37,7 @@ GEM
       builder
     ancestry (1.2.4)
       activerecord (>= 2.2.2)
+    ansi (1.4.1)
     arel (2.2.1)
     aws-s3 (0.6.2)
       builder
@@ -53,11 +47,20 @@ GEM
     builder (3.0.0)
     cancan (1.6.7)
     cocaine (0.2.0)
-    devise (1.4.7)
+    coderay (0.9.8)
+    devise (1.5.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
-      warden (~> 1.0.3)
+      warden (~> 1.1)
+    devise_cas_authenticatable (1.0.0.alpha13)
+      devise (>= 1.0.6)
+      rubycas-client (>= 2.2.1)
     erubis (2.7.0)
+    factory_girl (2.3.2)
+      activesupport
+    factory_girl_rails (1.4.0)
+      factory_girl (~> 2.3.0)
+      railties (>= 3.0.0)
     heroku (2.8.4)
       launchy (>= 0.3.2)
       rest-client (~> 1.6.1)
@@ -76,6 +79,8 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.6.7)
+      ruby_parser (>= 2.3.1)
     mime-types (1.17.2)
     multi_json (1.0.4)
     mysql2 (0.3.11)
@@ -86,6 +91,11 @@ GEM
       cocaine (>= 0.0.2)
       mime-types
     polyglot (0.3.3)
+    pry (0.9.7.3)
+      coderay (~> 0.9.8)
+      method_source (~> 0.6.7)
+      ruby_parser (>= 2.3.1)
+      slop (~> 2.1.0)
     rack (1.3.5)
     rack-cache (1.1)
       rack (>= 0.4)
@@ -118,9 +128,14 @@ GEM
     right_aws (2.1.0)
       right_http_connection (>= 1.2.5)
     right_http_connection (1.3.0)
+    ruby_parser (2.3.1)
+      sexp_processor (~> 3.0)
     rubycas-client (2.3.7)
       activesupport
     rubyzip (0.9.4)
+    sexp_processor (3.0.7)
+    shoulda (2.11.3)
+    slop (2.1.0)
     sprockets (2.0.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -132,8 +147,10 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
+    turn (0.8.3)
+      ansi
     tzinfo (0.3.31)
-    warden (1.0.5)
+    warden (1.1.0)
       rack (>= 1.0)
     xml-simple (1.1.0)
 
@@ -147,13 +164,17 @@ DEPENDENCIES
   aws-s3
   cancan (>= 1.1)
   devise
-  devise_cas_authenticatable!
+  devise_cas_authenticatable
+  factory_girl_rails
   heroku
   heroku_external_db (>= 1.0.0)
   jquery-rails
   mysql2
   paperclip
+  pry
   rails (~> 3.1.0)
   right_aws
   rubyzip
+  shoulda
   sqlite3
+  turn
