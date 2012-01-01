@@ -1,12 +1,3 @@
-PATH
-  remote: /Users/nbudin/code/devise_cas_authenticatable
-  specs:
-    devise_cas_authenticatable (1.0.0.alpha8)
-      devise
-      devise (>= 1.0.6)
-      devise_cas_authenticatable
-      rubycas-client (>= 2.2.1)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -60,6 +51,10 @@ GEM
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
       warden (~> 1.0.3)
+    devise_cas_authenticatable (1.0.0.alpha11)
+      devise (>= 1.0.6)
+      rubycas-client (>= 2.2.1)
+    diff-lcs (1.1.3)
     erubis (2.7.0)
     heroku (2.8.4)
       launchy (>= 0.3.2)
@@ -119,6 +114,19 @@ GEM
     right_aws (2.1.0)
       right_http_connection (>= 1.2.5)
     right_http_connection (1.3.0)
+    rspec (2.6.0)
+      rspec-core (~> 2.6.0)
+      rspec-expectations (~> 2.6.0)
+      rspec-mocks (~> 2.6.0)
+    rspec-core (2.6.4)
+    rspec-expectations (2.6.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.6.0)
+    rspec-rails (2.6.1)
+      actionpack (~> 3.0)
+      activesupport (~> 3.0)
+      railties (~> 3.0)
+      rspec (~> 2.6.0)
     rubycas-client (2.2.1)
       activesupport
     rubyzip (0.9.4)
@@ -148,7 +156,7 @@ DEPENDENCIES
   aws-s3
   cancan (>= 1.1)
   devise
-  devise_cas_authenticatable!
+  devise_cas_authenticatable (= 1.0.0.alpha11)
   heroku
   heroku_external_db (>= 1.0.0)
   jquery-rails
@@ -156,5 +164,6 @@ DEPENDENCIES
   paperclip
   rails (~> 3.1.0)
   right_aws
+  rspec-rails
   rubyzip
   sqlite3
