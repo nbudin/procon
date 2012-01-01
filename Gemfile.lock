@@ -48,6 +48,13 @@ GEM
     cancan (1.6.7)
     cocaine (0.2.0)
     coderay (0.9.8)
+    coffee-rails (3.1.1)
+      coffee-script (>= 2.2.0)
+      railties (~> 3.1.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.1.2)
     devise (1.5.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
@@ -56,6 +63,8 @@ GEM
       devise (>= 1.0.6)
       rubycas-client (>= 2.2.1)
     erubis (2.7.0)
+    execjs (1.2.9)
+      multi_json (~> 1.0)
     factory_girl (2.3.2)
       activesupport
     factory_girl_rails (1.4.0)
@@ -134,6 +143,12 @@ GEM
     rubycas-client (2.3.7)
       activesupport
     rubyzip (0.9.4)
+    sass (3.1.10)
+    sass-rails (3.1.5)
+      actionpack (~> 3.1.0)
+      railties (~> 3.1.0)
+      sass (~> 3.1.10)
+      tilt (~> 1.3.2)
     sexp_processor (3.0.7)
     shoulda (2.11.3)
     slop (2.1.0)
@@ -151,6 +166,9 @@ GEM
     turn (0.8.3)
       ansi
     tzinfo (0.3.31)
+    uglifier (1.0.4)
+      execjs (>= 0.3.0)
+      multi_json (>= 1.0.2)
     warden (1.1.0)
       rack (>= 1.0)
     xml-simple (1.1.0)
@@ -164,6 +182,7 @@ DEPENDENCIES
   ancestry
   aws-s3
   cancan (>= 1.1)
+  coffee-rails (~> 3.1.0)
   devise
   devise_cas_authenticatable
   factory_girl_rails
@@ -177,6 +196,8 @@ DEPENDENCIES
   rails (~> 3.1.0)
   right_aws
   rubyzip
+  sass-rails (~> 3.1.0)
   shoulda
   sqlite3
   turn
+  uglifier

@@ -11,6 +11,8 @@ module Procon
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here
     
+    config.assets.enabled = true
+    
     # Skip frameworks you're not going to use (only works if using vendor/rails)
     # config.frameworks -= [ :action_web_service, :action_mailer ]
   

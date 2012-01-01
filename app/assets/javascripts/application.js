@@ -1,5 +1,9 @@
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
+//= require jquery
+//= require jquery-ui
+//= require jquery_ujs
+//= require thickbox
+//= require_self
+//= require_tree .
 
 jQuery.fn.extend({
     eventDateShim: function(dateFieldId) {

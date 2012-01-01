@@ -6,6 +6,14 @@ gem 'rails', '~> 3.1.0'
 gem 'mysql2', :groups => :production
 gem 'sqlite3', :groups => [:development, :test]
 
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails', "  ~> 3.1.0"
+  gem 'coffee-rails', "~> 3.1.0"
+  gem 'uglifier'
+end
+
 gem "devise"
 gem 'devise_cas_authenticatable'
 gem 'cancan', '>= 1.1'
