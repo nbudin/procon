@@ -1,10 +1,6 @@
 require 'test_helper'
-require 'registration_rules_controller'
 
-# Re-raise errors caught by the controller.
-class RegistrationRulesController; def rescue_action(e) raise e end; end
-
-class RegistrationRulesControllerTest < Test::Unit::TestCase
+class RegistrationRulesControllerTest < ActionController::TestCase
   fixtures :registration_rules
 
   def setup

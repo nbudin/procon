@@ -32,9 +32,11 @@ class CreatePeople < ActiveRecord::Migration
       person_ids += ProconProfile.group(:person_id).map(&:person_id)
       person_ids += Permission.group(:person_id).map(&:person_id)
     rescue
-      # Ignore this; procon_rofiles and permissions might not exist for clean installs
+      # Ignore this; procon_profiles and permissions might not exist for clean installs
     end
-    person_ids += Event.group(:proposer_id).map(&:proposer_id)
+    
+    # Event schema has changed to the point of unusability here, we have to use SQL
+    person_ids += execute("select distinct proposer_id from #{Event.table_name}").map { |r| r["proposer_id"] }
     person_ids = person_ids.uniq.compact
     
     role_ids = []
@@ -74,23 +76,27 @@ class CreatePeople < ActiveRecord::Migration
         
         merge_into = Person.find_by_username(person.primary_email_address.address)
         if merge_into.nil?
-          pr = Person.new(:firstname => person.firstname, :lastname => person.lastname, 
+          merge_into = Person.new(:firstname => person.firstname, :lastname => person.lastname, 
             :email => person.primary_email_address.address, :gender => person.gender, :birthdate => person.birthdate,
             :username => person.primary_email_address.address)
-          pr.id = person.id
-          pr.save!
+          merge_into.id = person.id
         else
           say "Person ID #{person.id} (#{person.firstname} #{person.lastname}) has an existing email address.  Merging into ID #{merge_into.id} (#{person.firstname} #{person.lastname})."
           merged_person_ids[person.id] = merge_into.id
         end
+        
+        begin
+          profile = ProconProfile.where(:person_id => person.id).first
+          if profile
+            merge_into.nickname = profile.nickname
+            merge_into.best_call_time = profile.best_call_time
+            merge_into.phone = profile.phone
+          end
+        rescue ActiveRecord::StatementInvalid
+          # procon_profiles doesn't exist, forget it
+        end
+        merge_into.save!
       end
-            
-      execute %{ update people, procon_profiles 
-        set people.nickname = procon_profiles.nickname, 
-            people.best_call_time = procon_profiles.best_call_time,
-            people.phone = procon_profiles.phone
-        where procon_profiles.person_id = people.id
-      }
       
       merged_person_ids.each do |from_id, to_id|
         merge_into = Person.find(to_id)

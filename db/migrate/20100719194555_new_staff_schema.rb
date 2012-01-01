@@ -29,8 +29,8 @@ class NewStaffSchema < ActiveRecord::Migration
       end
 
       Attendance.where(:is_staff => true).all.each do |att|
-        say "Migrating #{att.person.name} at #{att.event.shortname} to staffer"
-        staffer = Staffer.new(:event => att.event, :person => att.person, :event_admin => true, 
+        say "Migrating #{att.person.name} at event #{att.event_id} to staffer"
+        staffer = Staffer.new(:event_id => att.event_id, :person => att.person, :event_admin => true, 
           :proposal_admin => true, :schedule_admin => true, :attendee_viewer => true)
         
         if att.try(:staff_position_id)

@@ -121,6 +121,23 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
 
   add_index "people", ["username"], :name => "index_people_on_username", :unique => true
 
+  create_table "proposed_events", :force => true do |t|
+    t.string   "fullname",                                                    :null => false
+    t.string   "shortname"
+    t.string   "blurb",                    :limit => 4000
+    t.string   "description",              :limit => 4000
+    t.integer  "registration_policy_id"
+    t.integer  "proposer_id"
+    t.integer  "parent_id"
+    t.boolean  "attendees_visible",                        :default => false
+    t.text     "proposed_timing"
+    t.text     "proposal_comments"
+    t.text     "proposed_location"
+    t.text     "proposed_capacity_limits"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "public_info_fields", :force => true do |t|
     t.string   "name"
     t.integer  "event_id"
