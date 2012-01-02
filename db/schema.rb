@@ -14,14 +14,14 @@
 ActiveRecord::Schema.define(:version => 20110111142848) do
 
   create_table "attached_images", :force => true do |t|
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_created_at"
-    t.datetime "image_updated_at"
-    t.integer  "site_template_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "image_file_name"
+    t.string    "image_content_type"
+    t.integer   "image_file_size"
+    t.timestamp "image_created_at"
+    t.timestamp "image_updated_at"
+    t.integer   "site_template_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "attendances", :force => true do |t|
@@ -43,13 +43,13 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
   add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
 
   create_table "attendee_slots", :force => true do |t|
-    t.integer  "event_id",                  :null => false
-    t.integer  "max",        :default => 0, :null => false
-    t.integer  "min",        :default => 0, :null => false
-    t.integer  "preferred",  :default => 0, :null => false
-    t.string   "gender"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "event_id",                  :null => false
+    t.integer   "max",        :default => 0, :null => false
+    t.integer   "min",        :default => 0, :null => false
+    t.integer   "preferred",  :default => 0, :null => false
+    t.string    "gender"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "attendee_slots", ["event_id"], :name => "index_attendee_slots_on_event_id"
@@ -59,8 +59,6 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.integer "location_id"
     t.boolean "exclusive",   :default => true
   end
-
-  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
 
   create_table "events", :force => true do |t|
     t.string   "fullname",                                                    :null => false
@@ -80,8 +78,8 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.text     "proposed_location"
     t.text     "proposed_capacity_limits"
     t.integer  "proposer_id"
-    t.string   "ancestry"
     t.integer  "proposed_event_id"
+    t.string   "ancestry"
   end
 
   add_index "events", ["ancestry"], :name => "index_events_on_ancestry"
@@ -121,6 +119,11 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
 
   add_index "people", ["username"], :name => "index_people_on_username", :unique => true
 
+  create_table "plugin_schema_info", :id => false, :force => true do |t|
+    t.string  "plugin_name"
+    t.integer "version"
+  end
+
   create_table "proposed_events", :force => true do |t|
     t.string   "fullname",                                                    :null => false
     t.string   "shortname"
@@ -139,20 +142,20 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
   end
 
   create_table "public_info_fields", :force => true do |t|
-    t.string   "name"
-    t.integer  "event_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "name"
+    t.integer   "event_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "public_info_fields", ["event_id"], :name => "index_public_info_fields_on_event_id"
 
   create_table "public_info_values", :force => true do |t|
-    t.integer  "public_info_field_id"
-    t.integer  "attendance_id"
-    t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "public_info_field_id"
+    t.integer   "attendance_id"
+    t.string    "value"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "public_info_values", ["attendance_id"], :name => "index_public_info_values_on_attendance_id"
@@ -186,11 +189,11 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
   end
 
   create_table "schedules", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "event_id"
-    t.boolean  "published"
+    t.string    "name"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.integer   "event_id"
+    t.boolean   "published"
   end
 
   create_table "site_templates", :force => true do |t|
@@ -219,12 +222,12 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
   add_index "staffers", ["event_id"], :name => "index_staffers_on_event_id"
 
   create_table "tracks", :force => true do |t|
-    t.string   "name"
-    t.integer  "position"
-    t.integer  "schedule_id", :null => false
-    t.string   "color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "name"
+    t.integer   "position"
+    t.integer   "schedule_id", :null => false
+    t.string    "color"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "virtual_sites", :force => true do |t|
