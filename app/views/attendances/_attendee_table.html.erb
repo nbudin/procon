@@ -6,7 +6,6 @@
     <th>Age (as of event)</th>
     <th>Gender</th>
     <% if not waitlist -%>
-      <th>Is staff?</th>
       <th>Counts towards total?</th>
     <% end -%>
   </tr>
@@ -44,7 +43,6 @@
       </td>
     <% end -%>
     <% if not waitlist -%>
-      <td><%= attendance.person.staffer_for_event(@event) && "yes" %></td>
       <td><%= attendance.counts %></td>
     <% end -%>
 	<% if can?(:update, @event) -%>
