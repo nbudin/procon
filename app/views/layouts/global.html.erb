@@ -55,7 +55,7 @@
               <li class="ui-state-default"><%= link_to "Event Schedules", schedules_path %></li>
             <% end -%>
             <% if can?(:update, @context) -%>
-              <li class="ui-default-state"><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
+              <li class="ui-state-default"><a href="#" onClick="$('#admin_closed').hide(); $('#admin_open').show();" id="admin_closed">Administration &raquo;</a>
                 <span id="admin_open" style="display: none;">
 		  <a href="#" onClick="jQuery('#admin_open').hide(); jQuery('#admin_closed').show();" id="admin_closed">&laquo;</a>
 		  <ul class="admin_links">

@@ -1,4 +1,7 @@
 /*
 *= require_self
-*= require_tree .
+*= require global
+*= require jquery.autocomplete.css
+*= require schedules
+*= require thickbox
 */
