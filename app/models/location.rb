@@ -6,7 +6,7 @@ class Location < ActiveRecord::Base
   scope :exclusive, :include => :event_locations, :conditions => [ "event_locations.exclusive = ?", true ]
   scope :shareable, :include => :event_locations, :conditions => [ "event_locations.exclusive = ?", false ]
   
-  def self.roots(locs)
+  def self.roots_from_set(locs)
     locs.reject { |l| locs.include? l.parent }
   end
 end

@@ -3,9 +3,9 @@
   roots.length
 rescue
   if @context
-    roots = Location.roots(@context.locations)
+    roots = Location.roots_from_set(@context.locations)
   else
-    roots = Location.find_all_by_parent_id(nil)
+    roots = Location.roots
   end
 end -%>
 <% parent ||= nil -%>
@@ -14,7 +14,7 @@ end -%>
 <% end -%>
 
 <li class="addnew" id="add_location_<%= parent ? parent.id : "root" %>">
-  <% remote_form_for(:location, @location, :url => locations_url + ".js", :html => { :method => :post }) do |f| -%>
+  <% form_for(:location, :url => locations_url + ".js", :html => { :method => :post }, :remote => true) do |f| -%>
     <% if parent -%>
       <%= f.hidden_field :parent_id, :value => parent.id %>
     <% end -%>
