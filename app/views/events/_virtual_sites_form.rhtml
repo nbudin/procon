@@ -9,7 +9,13 @@
     <tr>
       <td></td>
       <td><i><%=h vs.domain %></i></td>
-      <td><%=h vs.site_template.name %></td>
+      <td> 
+        <% if vs.site_template -%>
+          <%=h vs.site_template.name %>
+        <% else -%>
+          ProCon default template
+        <% end -%>
+      </td>
       <td><%= check_box_tag "delete_virtual_site[#{vs.id}]" %></td>
     </tr>
   <% end -%>
