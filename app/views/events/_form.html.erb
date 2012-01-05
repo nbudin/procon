@@ -223,16 +223,14 @@
       <% end -%>
 	
   	  <ul id="staff_list">
-  		<% f.fields_for :attendances do |att_fields| -%>
-  		  <% if att_fields.object.is_staff -%>
-  			<%= render :partial => 'staff', :locals => { :fields => att_fields } %>
-  		  <% end -%>
-  	    <% end -%>
+  		<% f.fields_for :staffers do |staffer_fields| -%>
+  			<%= render :partial => 'staff', :locals => { :fields => staffer_fields } %>
+ 	    <% end -%>
 		
   	  </ul>
 	  
-    	  <%= add_object_link "Add staff", f, :attendances,
-  						@event.attendances.build(:is_staff => true, :counts => false), 'staff', 'staff_list' %>
+    	  <%= add_object_link "Add staff", f, :staffers,
+  						@event.staffers.new, 'staff', 'staff_list' %>
 
     </div>
   <% end -%>

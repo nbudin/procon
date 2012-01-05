@@ -77,8 +77,8 @@ module ApplicationHelper
   end
   
   def location_options(selected, parent=nil, indent_level = 0)
-    parent_id = parent ? parent.id : nil
-    Location.find_all_by_parent_id(parent_id, :order => "name").collect do |loc|
+    scope = parent ? parent.children : Location.roots
+    scope.all(:order => "name").collect do |loc|
       html = "<option value=\"#{loc.id}\""
       if selected.include?(loc)
         html += " selected=\"selected\""

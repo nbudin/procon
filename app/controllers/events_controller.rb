@@ -11,7 +11,11 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = visible_events.reject { |e| e.kind_of? ProposedEvent }
+    @events = if @context
+      @context.subtree
+    else
+      Event
+    end.arrange(:include => :virtual_sites, :order => :start)
     
     respond_to do |format|
       format.html # index.rhtml
@@ -119,9 +123,9 @@ class EventsController < ApplicationController
   
   def visible_events
     if @context
-      return @context.children
+      @context.descendants
     else
-      return Event.find(:all)
+      Event.scoped
     end
   end
 end
