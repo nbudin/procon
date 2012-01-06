@@ -1,5 +1,5 @@
 development:
-  adapter: mysql
+  adapter: mysql2
   host: 127.0.0.1
   username: root
   password: 
@@ -7,7 +7,7 @@ development:
   port: 3306
 
 test:
-  adapter: mysql
+  adapter: mysql2
   host: 127.0.0.1
   username: root
   password: 
@@ -15,7 +15,7 @@ test:
   port: 3306
     
 production:
-  adapter: mysql
+  adapter: mysql2
   host: 127.0.0.1
   username: procon
   password: procon
@@ -23,7 +23,7 @@ production:
   port: 3306
   
 users:
-  adapter: mysql
+  adapter: mysql2
   host: 127.0.0.1
   username: root
   password: 

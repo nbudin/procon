@@ -1,8 +1,8 @@
 source :gemcutter
 source "http://gems.github.com"
 
-gem "rails", "2.3.5"
-gem "mysql"
+gem "rails", "2.3.14"
+gem "mysql2", "~> 0.2.0"
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"
