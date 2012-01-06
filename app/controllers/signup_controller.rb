@@ -18,13 +18,16 @@ class SignupController < ApplicationController
     if proceed
       @att = Attendance.new :person => @person, :event => @event, :is_waitlist => is_waitlist, :counts => !is_waitlist
       begin
+        @att.validate
         @att.save!
         @event.public_info_fields.each do |field|
           piv = @att.public_info_values.new :public_info_field => field, :value => params[:public_info_field][field.id.to_s]
           piv.save!
         end
+        
+        @event.reload if @att.is_waitlist?
       rescue StandardError => err
-        flash[:error_messages] = "You can't sign up for that event.  Reason: \"#{err}\""
+        flash[:error_messages] = ["You can't sign up for that event.  Reason: \"#{err}\""]
       end
     end
   end

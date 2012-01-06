@@ -1,5 +1,5 @@
 <% if @att -%>
-  <% if @att.errors.empty? -%>
+  <% if !(@att.new_record? || @att.changed?) -%>
     <% if @att.is_waitlist -%>
       <p>You are now #<%= @event.waitlist_number(@person) %> in the waitlist for <%= @event.fullname %>.</p>
     <% else -%>
