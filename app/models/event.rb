@@ -164,6 +164,16 @@ class Event < ActiveRecord::Base
   
   def attendance_errors(attendance)
     errs = []
+    if counts_for_max_attendances? && parent.try(:limits_child_event_attendances?)
+      other_atts = Attendance.count(:joins => :event, 
+        :conditions => [
+          "attendances.person_id = ? AND events.parent_id = ? AND events.counts_for_max_attendances = ? AND events.id != ?",
+          attendance.person_id, parent.id, true, id])
+      max_atts = parent.max_child_event_attendances
+      if other_atts >= max_atts
+        errs << "You can only sign up for #{max_atts} #{max_atts == 1 ? 'event' : 'events'} at this time."
+      end
+    end
     if not registration_policy.nil?
       registration_policy.rules.each do |rule|
         if not rule.attendance_valid?(attendance)
@@ -326,6 +336,10 @@ class Event < ActiveRecord::Base
     attendance_count = Attendance.count(:group => :person_id, :conditions => { :event_id => child_ids })
 
     return confirmed_attendees.reject { |p| attendance_count.has_key?(p.id) || attendance_count[p.id] == 0 }
+  end
+  
+  def limits_child_event_attendances?
+    max_child_event_attendances.present?
   end
 
   private

@@ -139,6 +139,20 @@
 	&nbsp;&nbsp;&nbsp;
         no <%= radio_button_tag "event[non_exclusive]", "false", !@non_exclusive %></td>
       </tr>
+  	  <tr>
+    		<td>Attendees can sign up for up to this many of this event's child events:</td>
+    		<td><%= text_field_tag "event[max_child_event_attendances]", @event.max_child_event_attendances, :size => 2 %></td>
+  	  </tr>
+  	  <% if @event.parent -%>
+  		  <tr>
+    			<td>Does this event count towards the maximum number of events attendees can sign up for?</td>
+          <td>
+            <%= hidden_field_tag "event[counts_for_max_attendances]", "0" %>
+            yes <%= radio_button_tag "event[counts_for_max_attendances]", "1", @event.counts_for_max_attendances %>
+	&nbsp;&nbsp;&nbsp;
+            no <%= radio_button_tag "event[counts_for_max_attendances]", "0", !@event.counts_for_max_attendances %></td>
+        </tr>
+      <% end -%>
       <tr>
         <td>This event has a minimum age of:</td>
 	<td><%= text_field_tag "event[min_age]", @min_age %></td>

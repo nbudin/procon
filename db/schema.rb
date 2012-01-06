@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110111142848) do
+ActiveRecord::Schema.define(:version => 20120106154754) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
   end
 
   create_table "events", :force => true do |t|
-    t.string   "fullname",                                                    :null => false
+    t.string   "fullname",                                                       :null => false
     t.string   "shortname"
     t.string   "number"
     t.datetime "start"
@@ -78,17 +78,19 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type"
-    t.string   "blurb",                    :limit => 4000
-    t.string   "description",              :limit => 4000
+    t.string   "blurb",                       :limit => 4000
+    t.string   "description",                 :limit => 4000
     t.integer  "parent_id"
     t.integer  "registration_policy_id"
-    t.boolean  "attendees_visible",                        :default => false
+    t.boolean  "attendees_visible",                           :default => false
     t.text     "proposed_timing"
     t.text     "proposal_comments"
     t.text     "proposed_location"
     t.text     "proposed_capacity_limits"
     t.integer  "proposer_id"
     t.integer  "proposed_event_id"
+    t.integer  "max_child_event_attendances"
+    t.boolean  "counts_for_max_attendances",                  :default => true,  :null => false
   end
 
   add_index "events", ["proposed_event_id"], :name => "index_events_on_proposed_event_id"
@@ -122,28 +124,6 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.string  "server_url"
     t.string  "salt",       :null => false
   end
-
-  create_table "people", :force => true do |t|
-    t.string   "email"
-    t.string   "firstname"
-    t.string   "lastname"
-    t.string   "gender"
-    t.datetime "birthdate"
-    t.string   "nickname"
-    t.string   "phone"
-    t.string   "best_call_time"
-    t.boolean  "admin"
-    t.string   "username"
-    t.integer  "sign_in_count",      :default => 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "people", ["username"], :name => "index_people_on_username", :unique => true
 
   create_table "permission_caches", :force => true do |t|
     t.integer "person_id"
@@ -274,23 +254,6 @@ ActiveRecord::Schema.define(:version => 20110111142848) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "staffers", :force => true do |t|
-    t.integer  "event_id"
-    t.integer  "person_id"
-    t.string   "title"
-    t.boolean  "listed"
-    t.integer  "position"
-    t.boolean  "publish_email"
-    t.boolean  "event_admin"
-    t.boolean  "proposal_admin"
-    t.boolean  "schedule_admin"
-    t.boolean  "attendee_viewer"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "staffers", ["event_id"], :name => "index_staffers_on_event_id"
 
   create_table "tracks", :force => true do |t|
     t.string   "name"
