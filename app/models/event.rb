@@ -128,6 +128,10 @@ class Event < ActiveRecord::Base
     return parent.nil?
   end
   
+  def simultaneous_with?(other)
+    other.end > self.start && other.start < self.end
+  end
+  
   def simultaneous_events
     return [] unless self.start and self.end
     
@@ -137,9 +141,7 @@ class Event < ActiveRecord::Base
       parent.children
     end.reject { |e| e == self }.select { |e| e.start && e.end}
     
-    searchpool.select do |e|
-      (e.end > self.start and e.start < self.end) 
-    end
+    searchpool.select { |e| simultaneous_with?(e) }
   end
   
   def shared_locations
@@ -162,21 +164,29 @@ class Event < ActiveRecord::Base
     return false
   end
   
-  def attendance_errors(attendance)
+  def attendance_errors(attendance, other_atts=nil)
     errs = []
     if counts_for_max_attendances? && parent.try(:limits_child_event_attendances?)
-      other_atts = Attendance.count(:joins => :event, 
+      other_att_count = if other_atts
+        other_atts.count do |att|
+          evt = att.event
+          (att.person_id == attendance.person_id && evt.parent_id == parent.id &&
+          evt.counts_for_max_attendances? && evt.id != id)
+        end
+      else 
+        Attendance.count(:joins => :event, 
         :conditions => [
           "attendances.person_id = ? AND events.parent_id = ? AND events.counts_for_max_attendances = ? AND events.id != ?",
           attendance.person_id, parent.id, true, id])
+      end
       max_atts = parent.max_child_event_attendances
-      if other_atts >= max_atts
+      if other_att_count >= max_atts
         errs << "You can only sign up for #{max_atts} #{max_atts == 1 ? 'event' : 'events'} at this time."
       end
     end
     if not registration_policy.nil?
       registration_policy.rules.each do |rule|
-        if not rule.attendance_valid?(attendance)
+        if not rule.attendance_valid?(attendance, other_atts)
           errs << rule.error_message(attendance)
         end
       end

@@ -15,7 +15,7 @@ class RegistrationRule < ActiveRecord::Base
     end
   end
   
-  def attendance_valid?(attendance)
+  def attendance_valid?(attendance, other_atts=nil)
     return true
   end
   

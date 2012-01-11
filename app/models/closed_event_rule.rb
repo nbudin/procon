@@ -1,7 +1,7 @@
 class ClosedEventRule < RegistrationRule
   # this event is closed; no registrations allowed
   
-  def attendance_valid?(attendance)
+  def attendance_valid?(attendance, other_atts=nil)
     if attendance.is_staff
       return true
     else

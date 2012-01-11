@@ -16,8 +16,8 @@ class LimitedCapacityEvent < Event
     return attendance_over_limit_if_new?(attendance)
   end
   
-  def attendance_errors(attendance)
-    errs = super(attendance)
+  def attendance_errors(attendance, other_atts=nil)
+    errs = super(attendance, other_atts)
     
     overlimit = attendance_over_limit?(attendance)
     if overlimit

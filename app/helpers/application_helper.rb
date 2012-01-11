@@ -110,7 +110,7 @@ ENDOFHTML
     '?site_template=none&TB_iframe=true&KeepThis=true&height=400&width=500'
   end
   
-  def signup_link(event)
+  def signup_link(event, hide_if_invalid = false)
     if not logged_in?
       return ''
     end
@@ -118,12 +118,27 @@ ENDOFHTML
     output = ""
     if att.nil?
       if event.registration_open
-        caption = if not (event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender))
-          "Sign up"
-        else
-          "Waitlist"
+        hypothetical_att = Attendance.new(:event => event, :person => logged_in_person, :counts => true)
+        if event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender)
+          hypothetical_att.attributes = { :is_waitlist => true, :counts => false }
         end
-        output += "[#{ link_to caption, signup_url(event) + thickbox_params + '&modal=true', :class => 'thickbox' }]"
+        
+        show_caption = if !hide_if_invalid
+          true
+        elsif @attendances
+          event.attendance_errors(hypothetical_att, @attendances).empty?
+        else
+          hypothetical_att.valid?
+        end
+        
+        if show_caption
+          caption = if not (hypothetical_att.is_waitlist?)
+            "Sign up"
+          else
+            "Waitlist"
+          end
+          output += "[#{ link_to caption, signup_url(event) + thickbox_params + '&modal=true', :class => 'thickbox' }]"
+        end
       end
     else
       link_caption = "Drop out"

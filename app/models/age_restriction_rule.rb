@@ -1,5 +1,5 @@
 class AgeRestrictionRule < RegistrationRule
-  def attendance_valid?(attendance)
+  def attendance_valid?(attendance, other_atts=nil)
     if attendance.is_staff
       return true
     end

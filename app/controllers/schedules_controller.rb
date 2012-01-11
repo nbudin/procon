@@ -33,6 +33,11 @@ class SchedulesController < ApplicationController
   def show
     @schedule = Schedule.find(params[:id])
     @blocks = @schedule.blocks(:for_registration => true).sort_by { |b| b.start }
+    @attendances = if logged_in_person
+      logged_in_person.procon_profile.attendances
+    else
+      []
+    end
     
     respond_to do |format|
       format.html # show.html.erb
