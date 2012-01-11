@@ -17,6 +17,7 @@ gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
 gem 'ae_users_legacy', '0.6.3', :require => 'ae_users'
 gem 'heroku_external_db', '>= 1.0.0'
 gem 'hoptoad_notifier'
+gem 'pry', :groups => [:development, :test]
 
 group :development do
   # bundler requires these gems in development
