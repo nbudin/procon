@@ -167,8 +167,9 @@ class Event < ActiveRecord::Base
     if counts_for_max_attendances? && parent.try(:limits_child_event_attendances?)
       other_atts = Attendance.count(:joins => :event, 
         :conditions => [
-          "attendances.person_id = ? AND events.parent_id = ? AND events.counts_for_max_attendances = ? AND events.id != ?",
-          attendance.person_id, parent.id, true, id])
+          "attendances.person_id = ? AND events.parent_id = ? AND events.counts_for_max_attendances = ? AND events.id != ?
+           AND attendances.is_staff != ?",
+          attendance.person_id, parent.id, true, id, true])
       max_atts = parent.max_child_event_attendances
       if other_atts >= max_atts
         errs << "You can only sign up for #{max_atts} #{max_atts == 1 ? 'event' : 'events'} at this time."
