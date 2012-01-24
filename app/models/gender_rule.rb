@@ -1,5 +1,5 @@
 class GenderRule < RegistrationRule
-  def attendance_valid?(attendance)
+  def attendance_valid?(attendance, other_atts=nil)
     return attendance.gender == self.gender
   end
   

@@ -102,7 +102,7 @@ module SchedulesHelper
 ENDHTML
     if logged_in?
       output << "<br/><br/>\n"
-      output << signup_link(event)
+      output << signup_link(event, true)
     elsif event.registration_open
       output << "<br/><br/>\n"
       output << "To sign up, please #{ link_to "log in", :controller => "auth", :action => "login" }."

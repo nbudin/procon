@@ -1,9 +1,17 @@
 class ExclusiveEventRule < RegistrationRule
   # you can only be signed up to one event that has this rule at a time
   
-  def attendance_valid?(attendance)
+  def attendance_valid?(attendance, other_atts=nil)
     if attendance.is_staff
       return true
+    end
+    
+    if other_atts
+      return other_atts.none? do |other_att| 
+        (!other_att.is_staff &&
+        other_att.event.simultaneous_with?(attendance.event) &&
+        other_att.event.registration_policy.rules.any? { |r| r.kind_of? ExclusiveEventRule })
+      end
     end
     
     sametime = attendance.event.simultaneous_events
