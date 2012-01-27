@@ -171,13 +171,14 @@ class Event < ActiveRecord::Base
         other_atts.count do |att|
           evt = att.event
           (att.person_id == attendance.person_id && evt.parent_id == parent.id &&
-          evt.counts_for_max_attendances? && evt.id != id)
+          evt.counts_for_max_attendances? && !att.is_staff && evt.id != id)
         end
       else 
         Attendance.count(:joins => :event, 
         :conditions => [
-          "attendances.person_id = ? AND events.parent_id = ? AND events.counts_for_max_attendances = ? AND events.id != ?",
-          attendance.person_id, parent.id, true, id])
+          "attendances.person_id = ? AND events.parent_id = ? AND events.counts_for_max_attendances = ? AND events.id != ?
+           AND attendances.is_staff != ?",
+          attendance.person_id, parent.id, true, id, true])
       end
       max_atts = parent.max_child_event_attendances
       if other_att_count >= max_atts

@@ -63,6 +63,7 @@ class ProposedEventsController < ApplicationController
       unless @event.staff.include?(@event.proposer)
         a = Attendance.new :person => @event.proposer, :event => @event, :is_staff => true, :counts => false
         if not a.save
+          flash[:error_messages] ||= []
           flash[:error_messages].push("Could not add the event proposer as a staff member: #{a.errors.full_messages.join(", ")}")
           return render :action => "new"
         end
