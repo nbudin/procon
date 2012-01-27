@@ -9,6 +9,7 @@ class ExclusiveEventRule < RegistrationRule
     if other_atts
       return other_atts.none? do |other_att| 
         (!other_att.is_staff &&
+        other_att.event.parent == attendance.event.parent &&
         other_att.event.simultaneous_with?(attendance.event) &&
         other_att.event.registration_policy.rules.any? { |r| r.kind_of? ExclusiveEventRule })
       end
