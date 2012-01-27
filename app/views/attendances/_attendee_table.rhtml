@@ -49,9 +49,12 @@
       <td><%=h attendance.is_staff %></td>
       <td><%=h attendance.counts %></td>
     <% end -%>
-	<% if @event.has_edit_permissions?(logged_in_person) -%>
+	<% if @event.has_edit_permissions?(logged_in_person) && !attendance.deleted? -%>
 	    <td><%= link_to 'Edit', edit_event_attendance_path(@event, attendance) %></td>
 	    <td><%= link_to 'Drop', event_attendance_path(@event, attendance), :confirm => 'Are you sure?', :method => :delete %></td>
+	<% end -%>
+	<% if attendance.deleted? -%>
+		<td colspan="2">Dropped <%= attendance.deleted_at %></td>
 	<% end -%>
   </tr>
 <% end %>
