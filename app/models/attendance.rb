@@ -10,17 +10,10 @@ class Attendance < ActiveRecord::Base
   after_destroy :pull_from_waitlist
 
   validates_inclusion_of :gender, :in => ["male", "female"]
+  validate :check_attendance_errors
 
   before_validation :ensure_gender_set
   after_save :check_waitlist
-  
-  def validate
-    unless event.nil?
-      event.attendance_errors(self).each do |err|
-        errors.add_to_base err
-      end
-    end
-  end
   
   def status
     if is_staff
@@ -56,6 +49,14 @@ class Attendance < ActiveRecord::Base
   def ensure_gender_set
     if self.gender.nil? and self.person
       self.gender = self.person.gender
+    end
+  end
+  
+  def check_attendance_errors
+    return unless event
+    
+    event.attendance_errors(self).each do |err|
+      errors.add_to_base err
     end
   end
 

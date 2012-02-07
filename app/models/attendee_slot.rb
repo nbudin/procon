@@ -1,6 +1,7 @@
 class AttendeeSlot < ActiveRecord::Base
   belongs_to :event, :class_name => "LimitedCapacityEvent", :foreign_key => "event_id"
   validates_uniqueness_of :gender, :scope => :event_id
+  validate :cannot_kick_attendees_out
   
   %w{min max preferred}.each do |field|
     class_eval %{
@@ -8,19 +9,6 @@ class AttendeeSlot < ActiveRecord::Base
         read_attribute(:#{field}) || 0
       end
     }
-  end
-  
-  def validate
-    kickout = false
-    event.attendances.each do |att|
-      if err = event.attendance_over_limit?(att)
-        kickout = true
-        break
-      end
-    end
-    if kickout
-      errors.add_to_base "That would kick one or more confirmed attendees out of this event."
-    end
   end
   
   def after_save
@@ -63,5 +51,12 @@ class AttendeeSlot < ActiveRecord::Base
   
   def at_preferred?
     count >= preferred
+  end
+  
+  private
+  def cannot_kick_attendees_out
+    if event.attendances.any? { |att| event.attendance_over_limit?(att) }
+      errors.add_to_base "That would kick one or more confirmed attendees out of this event."
+    end
   end
 end

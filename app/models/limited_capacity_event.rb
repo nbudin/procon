@@ -28,13 +28,13 @@ class LimitedCapacityEvent < Event
   end
   
   def attendance_over_limit?(attendance)
-    if not attendance.counts or attendances.include? attendance
-      # don't invalidate attendances that are already signed up
-      return false
-    else
-      # this attendance is new to this event
-      return attendance_over_limit_if_new?(attendance)
-    end
+    return false unless attendance.counts
+
+    # don't invalidate attendances that are already signed up
+    return false if attendances.include? attendance
+
+    # this attendance is new to this event
+    attendance_over_limit_if_new?(attendance)
   end
 
   def attendance_over_limit_if_new?(attendance)
