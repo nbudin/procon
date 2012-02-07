@@ -118,15 +118,16 @@ ENDOFHTML
     output = ""
     if att.nil?
       if event.registration_open
-        hypothetical_att = Attendance.new(:event => event, :person => logged_in_person, :counts => true)
+        hypothetical_att = Attendance.new(:event => event, :person => logged_in_person, :counts => true, 
+          :gender => logged_in_person.gender)
         if event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender)
           hypothetical_att.attributes = { :is_waitlist => true, :counts => false }
         end
         
         show_caption = if !hide_if_invalid
           true
-#        elsif @attendances
-#          event.attendance_errors(hypothetical_att, @attendances).empty?
+        elsif @attendances
+          event.attendance_errors(hypothetical_att, @attendances).empty?
         else
           hypothetical_att.valid?
         end
