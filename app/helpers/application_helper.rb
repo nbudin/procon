@@ -125,8 +125,8 @@ ENDOFHTML
         
         show_caption = if !hide_if_invalid
           true
-        elsif @attendances
-          event.attendance_errors(hypothetical_att, @attendances).empty?
+#        elsif @attendances
+#          event.attendance_errors(hypothetical_att, @attendances).empty?
         else
           hypothetical_att.valid?
         end
