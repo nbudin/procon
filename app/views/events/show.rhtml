@@ -11,7 +11,7 @@
 		    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
 		    [<%= link_to "Edit", edit_event_url(@event) %>]
 		  <% end -%>
-		  <%= signup_link @event %>
+		  <%= signup_link @event, true %>
 		<% else -%>
 		  You must be <%= link_to "logged in", :controller => 'auth', :action => 'login' %> to register for this event.
 		<% end -%>
