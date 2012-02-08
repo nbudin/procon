@@ -1,13 +1,10 @@
 class VirtualSitesController < ApplicationController
-  require_class_permission "edit", :class_name => "Event"
+  load_and_authorize_resource
   
   def index
-    @virtual_sites = VirtualSite.all
   end
   
   def show
-    @virtual_site = VirtualSite.find(params[:id])
-    
     respond_to do |format|
       format.html # show.rhtml
       format.xml  { render :xml => @virtual_site.to_xml }
@@ -15,8 +12,6 @@ class VirtualSitesController < ApplicationController
   end
   
   def update
-    @virtual_site = VirtualSite.find(params[:id])
-    
     respond_to do |format|
       if @virtual_site.update_attributes(params[:virtual_site])
         format.html { redirect_to virtual_sites_url }
@@ -29,8 +24,6 @@ class VirtualSitesController < ApplicationController
   end
   
   def create
-    @virtual_site = VirtualSite.new(params[:virtual_site])
-    
     respond_to do |format|
       if @virtual_site.save
         format.html { redirect_to virtual_sites_url }
@@ -43,7 +36,6 @@ class VirtualSitesController < ApplicationController
   end
   
   def destroy
-    @virtual_site = VirtualSite.find(params[:id])
     @virtual_site.destroy
     
     redirect_to virtual_sites_url

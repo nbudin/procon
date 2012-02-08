@@ -13,7 +13,7 @@
   <%=h @attendance.counts %>
 </p>
 
-<% if @event.has_edit_permissions?(logged_in_person) -%>
+<% if can?(:edit, @event) -%>
 	<%= link_to 'Edit', edit_event_attendance_path(@event, @attendance) %> |
 <% end -%>
 <%= link_to 'Back', event_attendances_path(@event) %>

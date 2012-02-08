@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.devise_for :people
+  
   map.resources :proposed_events
 
   map.resources :locations

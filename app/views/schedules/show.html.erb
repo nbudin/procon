@@ -2,7 +2,7 @@
 
 <h1 id="pagetitle"><%= @schedule.name %></h1>
 
-<% if logged_in_person_can_edit? @context -%>
+<% if can?(:edit, @context) -%>
   <h2>Administration</h2>
 
   <ul>

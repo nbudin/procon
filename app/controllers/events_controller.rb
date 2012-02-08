@@ -1,7 +1,5 @@
 class EventsController < ApplicationController
-  before_filter :check_edit_permissions, :except => [:show, :show_description, :propose, :submit_proposal]
-  before_filter :check_event_visibility, :only => [:show, :show_description]
-  require_login :only => [:propose, :submit_proposal]
+  load_and_authorize_resource
   
   def email_list
     @method = if params[:waitlist]
@@ -127,7 +125,7 @@ class EventsController < ApplicationController
     if @context
       @event.parent = @context
     end
-    @event.proposer ||= logged_in_person
+    @event.proposer ||= current_person
     save_from_form
   end
 
@@ -297,34 +295,6 @@ class EventsController < ApplicationController
     @non_exclusive = @event.non_exclusive
     @age_restricted = @event.age_restricted
     @min_age = @event.min_age
-  end
-  
-  def check_edit_permissions
-    if params[:id] or @context
-      event = Event.find params[:id] || @context
-      if logged_in?
-        person = logged_in_person
-        if event.has_edit_permissions? person
-          return
-        end
-      end
-    else
-      if logged_in?
-        person = logged_in_person
-        if person.permitted? nil, "edit_events"
-          return
-        end
-      end
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to events_url
-  end
-  
-  def check_event_visibility
-    @event = Event.find(params[:id])
-    if @event.kind_of? ProposedEvent
-      check_edit_permissions
-    end
   end
   
   def visible_events

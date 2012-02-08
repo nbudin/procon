@@ -1,5 +1,5 @@
 <h1 id="pagetitle">Attendees for <%= @event.fullname %></h1>
-<% if @event.has_edit_permissions?(logged_in_person) -%>
+<% if can?(:edit, @event) -%>
 	[<%= link_to 'Add attendee', new_event_attendance_path(@event) %>]
 <% end -%>
 [<%= link_to "Back to event", event_url(@event) %>]
@@ -11,7 +11,7 @@
 <% if @event.confirmed_attendances.count > 0 -%>
   <h2>Confirmed attendees</h2>
 
-  <% if @event.has_edit_permissions?(logged_in_person) -%>
+  <% if can?(:edit, @event) -%>
   	<%= link_to "Spam all confirmed attendees", :controller => "events", :id => @event.id, :action => "email_list" %>
   <% end -%>
   
@@ -22,7 +22,7 @@
 <% if @event.waitlist_attendances.count > 0 -%>
   <h2>Waitlisted attendees</h2>
 
-  <% if @event.has_edit_permissions?(logged_in_person) -%>
+  <% if can?(:edit, @event) -%>
 	  <%= link_to "Spam all waitlist attendees", :controller => "events", :id => @event.id, :action => "email_list", :waitlist => true %>
   <% end -%>
 

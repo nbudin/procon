@@ -1,5 +1,46 @@
-class ProconProfile < ActiveRecord::Base
-  belongs_to :person
+class Person < ActiveRecord::Base
+  devise :cas_authenticatable, :trackable
+  
+  has_many :attendances
+  has_many :events, :through => :attendances
+  
+  def name
+    unless nickname.blank?
+      "#{firstname} \"#{nickname}\" #{lastname}"
+    else
+      "#{firstname} #{lastname}"
+    end
+  end
+  
+  def current_age
+    age_as_of Date.today
+  end
+  
+  def age_as_of(base = Date.today)
+    if not birthdate.nil?
+      base.year - birthdate.year - ((base.month * 100 + base.day >= birthdate.month * 100 + birthdate.day) ? 0 : 1)
+    end
+  end
+  
+  def merge_person_id!(merge_id)
+    count = 0
+    
+    transaction do
+      Attendance.all(:conditions => {:person_id => merge_id}).each do |att|
+        att.person = self
+        att.save(false)
+        count += 1
+      end
+    
+      Event.all(:conditions => {:proposer_id => merge_id}).each do |event|
+        event.proposer = self
+        event.save(false)
+        count += 1
+      end
+    end
+    
+    return count
+  end
   
   def attendances
     if @attendances.nil?
@@ -10,13 +51,13 @@ class ProconProfile < ActiveRecord::Base
 
   def reload_attendances
     @attendances = {}
-    Attendance.find_all_by_person_id(person.id, :include => [:event]).each do |att|
+    Attendance.find_all_by_person_id(id, :include => [:event]).each do |att|
       @attendances[att.event.id] = att
     end
   end
   
   def attendance_for_event(event)
-    event.attendances.select { |att| att.person_id == person.id }.first
+    event.attendances.select { |att| att.person_id == id }.first
   end
   
   def attending?(event)
@@ -46,13 +87,5 @@ class ProconProfile < ActiveRecord::Base
             Attendance.count(:conditions => ["(end > ? AND start <= ?) and person_id = ? #{events_cond events}", 
                                              start_time, end_time, person.id],
                              :joins => :event) > 0)
-  end
-  
-  def has_edit_permissions?(event=nil)
-    if event
-      return event.has_edit_permissions?(person)
-    else
-      return person.permitted?(nil, "edit_events")
-    end
   end
 end

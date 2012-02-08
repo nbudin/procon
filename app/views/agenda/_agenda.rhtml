@@ -3,7 +3,7 @@ upcoming = []
 past = []
 
 now = Time.now
-context_events(logged_in_person).each do |a|
+context_events(current_person).each do |a|
   e = a.event
   if e.end and e.end < now
     past.push a

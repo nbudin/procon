@@ -1,11 +1,10 @@
 class SchedulesController < ApplicationController
-  before_filter :check_edit_permissions, :except => [:index, :show]
-  before_filter :check_published, :only => [:show]
+  load_and_authorize_resource
   
   # GET /schedules
   # GET /schedules.xml
   def index
-    show_unpublished = (logged_in? and logged_in_person.procon_profile.has_edit_permissions?(@context))
+    show_unpublished = (person_signed_in? and can?(:edit, @context))
     if @context
       if show_unpublished
         @schedules = @context.schedules
@@ -31,10 +30,9 @@ class SchedulesController < ApplicationController
   # GET /schedules/1
   # GET /schedules/1.xml
   def show
-    @schedule = Schedule.find(params[:id])
     @blocks = @schedule.blocks(:for_registration => true).sort_by { |b| b.start }
-    @attendances = if logged_in_person
-      logged_in_person.procon_profile.attendances
+    @attendances = if current_person
+      current_person.attendances
     else
       []
     end
@@ -48,7 +46,6 @@ class SchedulesController < ApplicationController
   # GET /schedules/1/health
   # GET /schedules/1/health.xml
   def health
-    @schedule = Schedule.find(params[:id])
     @blocks = @schedule.blocks(:for_registration => true).sort_by { |b| b.start }
     
     respond_to do |format|
@@ -60,8 +57,6 @@ class SchedulesController < ApplicationController
   # GET /schedules/new
   # GET /schedules/new.xml
   def new
-    @schedule = Schedule.new
-
     respond_to do |format|
       format.xml  { render :xml => @schedule }
     end
@@ -69,14 +64,11 @@ class SchedulesController < ApplicationController
 
   # GET /schedules/1/edit
   def edit
-    @schedule = Schedule.find(params[:id])
   end
 
   # POST /schedules
   # POST /schedules.xml
   def create
-    @schedule = Schedule.new(params[:schedule])
-
     respond_to do |format|
       if @schedule.save
         flash[:notice] = 'Schedule was successfully created.'
@@ -92,8 +84,6 @@ class SchedulesController < ApplicationController
   # PUT /schedules/1
   # PUT /schedules/1.xml
   def update
-    @schedule = Schedule.find(params[:id])
-    
     if params[:event]
       params[:event].each_pair do |event_id, args|
         event = Event.find(event_id)
@@ -166,33 +156,11 @@ class SchedulesController < ApplicationController
   # DELETE /schedules/1
   # DELETE /schedules/1.xml
   def destroy
-    @schedule = Schedule.find(params[:id])
     @schedule.destroy
 
     respond_to do |format|
       format.html { redirect_to(schedules_url) }
       format.xml  { head :ok }
     end
-  end
-  
-  private
-  def check_edit_permissions
-    if logged_in? and logged_in_person.procon_profile.has_edit_permissions?(@context)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to schedules_url
-  end
-  
-  def check_published
-    if logged_in? and logged_in_person.procon_profile.has_edit_permissions?(@context)
-      return
-    end
-    @schedule = Schedule.find(params[:id])
-    if @schedule and @schedule.published
-      return
-    end
-    flash[:error_messages] = ["That schedule has not yet been published."]
-    redirect_to schedules_url
   end
 end

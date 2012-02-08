@@ -14,10 +14,16 @@ gem 'aws-s3'
 gem 'right_aws'
 gem 'febeling-rubyzip', '~> 0.9.2', :require => 'zip/zip'
 gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
-gem 'ae_users_legacy', '0.6.3', :require => 'ae_users'
+gem 'ae_users_migrator'
 gem 'heroku_external_db', '>= 1.0.0'
 gem 'hoptoad_notifier'
 gem 'pry', :groups => [:development, :test]
+
+gem 'devise', '~> 1.0.0'
+gem 'rubycas-client', '~> 2.2.0' # 2.3.x breaks in Rails 2 for some reason
+gem 'devise_cas_authenticatable'
+gem 'cancan'
+gem 'illyan_client'
 
 group :development do
   # bundler requires these gems in development

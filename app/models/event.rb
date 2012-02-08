@@ -1,6 +1,4 @@
 class Event < ActiveRecord::Base
-  acts_as_permissioned
-  
   has_many :attendances, :order => "created_at", :dependent => :destroy
   has_many :attendee_slots, :foreign_key => "event_id"
   has_many :registration_buckets, :foreign_key => "event_id"
@@ -42,7 +40,7 @@ class Event < ActiveRecord::Base
   has_many :counted_attendances, :class_name => "Attendance", :order => "created_at", 
     :conditions => ["counts = ?", true], :dependent => :destroy
   
-    
+  has_many :proposed_events, :foreign_key => "parent_id"
   has_many :event_locations, :dependent => :destroy
   has_many :locations, :through => :event_locations, :dependent => :destroy
   has_many :exclusive_locations, :through => :event_locations, :dependent => :destroy,
@@ -154,14 +152,7 @@ class Event < ActiveRecord::Base
   end
    
   def attendees_visible_to?(person)
-    if has_edit_permissions?(person)
-      return true
-    else
-      if attendees_visible and all_attendees.include?(person)
-        return true
-      end
-    end
-    return false
+    Ability.new(person).can?(:view_attendances, self)
   end
   
   def attendance_errors(attendance, other_atts=nil)
@@ -216,19 +207,6 @@ class Event < ActiveRecord::Base
       attendances.select { |att| att.is_waitlist }.size
     else
       attendances.select { |att| att.is_waitlist and att.gender == gender }.size
-    end
-  end
-  
-  def has_edit_permissions?(person)
-    if person.nil?
-      return false
-    end
-    if person.permitted?(self, "edit_events")
-      return true
-    elsif staff.include? person
-      return true
-    elsif parent
-      return parent.has_edit_permissions?(person)
     end
   end
   

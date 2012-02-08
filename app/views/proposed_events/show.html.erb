@@ -2,7 +2,7 @@
 
 <div id="signupcontrols">
   <%= link_to "Edit", edit_proposed_event_path(@proposed_event) %>
-  <% if proposal_admin? -%>
+  <% if can?(:accept, @proposed_event) -%>
     | <%= link_to "Accept", :action => "accept", :id => @proposed_event.id %>
   <% end -%>
 </div>

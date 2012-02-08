@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120106154754) do
+ActiveRecord::Schema.define(:version => 20120208192105) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -52,16 +52,6 @@ ActiveRecord::Schema.define(:version => 20120106154754) do
   end
 
   add_index "attendee_slots", ["event_id"], :name => "index_attendee_slots_on_event_id"
-
-  create_table "auth_tickets", :force => true do |t|
-    t.string   "secret",     :limit => 40
-    t.integer  "person_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "expires_at"
-  end
-
-  add_index "auth_tickets", ["secret"], :name => "secret", :unique => true
 
   create_table "event_locations", :force => true do |t|
     t.integer "event_id"
@@ -110,51 +100,31 @@ ActiveRecord::Schema.define(:version => 20120106154754) do
     t.integer "parent_id"
   end
 
-  create_table "open_id_authentication_associations", :force => true do |t|
-    t.integer "issued"
-    t.integer "lifetime"
-    t.string  "handle"
-    t.string  "assoc_type"
-    t.binary  "server_url"
-    t.binary  "secret"
+  create_table "people", :force => true do |t|
+    t.string   "email"
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "gender"
+    t.datetime "birthdate"
+    t.string   "nickname"
+    t.string   "phone"
+    t.string   "best_call_time"
+    t.boolean  "admin"
+    t.string   "username"
+    t.integer  "sign_in_count",      :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "open_id_authentication_nonces", :force => true do |t|
-    t.integer "timestamp",  :null => false
-    t.string  "server_url"
-    t.string  "salt",       :null => false
-  end
-
-  create_table "permission_caches", :force => true do |t|
-    t.integer "person_id"
-    t.integer "permissioned_id"
-    t.string  "permissioned_type"
-    t.string  "permission_name"
-    t.boolean "result"
-  end
-
-  add_index "permission_caches", ["permission_name"], :name => "index_permission_caches_on_permission_name"
-  add_index "permission_caches", ["permissioned_id", "permissioned_type"], :name => "index_permission_caches_on_permissioned"
-  add_index "permission_caches", ["person_id"], :name => "index_permission_caches_on_person_id"
-
-  create_table "permissions", :force => true do |t|
-    t.integer "role_id"
-    t.string  "permission"
-    t.integer "permissioned_id"
-    t.string  "permissioned_type"
-    t.integer "person_id"
-  end
+  add_index "people", ["username"], :name => "index_people_on_username", :unique => true
 
   create_table "plugin_schema_info", :id => false, :force => true do |t|
     t.string  "plugin_name"
     t.integer "version"
-  end
-
-  create_table "procon_profiles", :force => true do |t|
-    t.integer "person_id"
-    t.string  "nickname"
-    t.string  "phone"
-    t.string  "best_call_time"
   end
 
   create_table "public_info_fields", :force => true do |t|

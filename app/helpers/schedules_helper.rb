@@ -89,7 +89,7 @@ module SchedulesHelper
   
   def schedule_event(position)
     event = position.event
-    att = logged_in? ? logged_in_person.app_profile.attendance_for_event(event) : nil
+    att = person_signed_in? ? current_person.attendance_for_event(event) : nil
     
     position_class = "event"
     position_class << " signedup" if att
@@ -100,12 +100,12 @@ module SchedulesHelper
   #{ link_to event.shortname, url_for(:controller => 'events', :action => 'show_description', :id => event.id) + thickbox_params, 
     :class => 'thickbox', :style => 'font-weight: bold;' }
 ENDHTML
-    if logged_in?
+    if person_signed_in?
       output << "<br/><br/>\n"
       output << signup_link(event, true)
     elsif event.registration_open
       output << "<br/><br/>\n"
-      output << "To sign up, please #{ link_to "log in", :controller => "auth", :action => "login" }."
+      output << "To sign up, please #{ link_to "log in", new_person_session_path }."
     end
     if event.kind_of? LimitedCapacityEvent
       output << "<br/>\n"

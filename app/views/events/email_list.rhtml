@@ -8,7 +8,7 @@
 
 <p>
 <%=h(@attendees.collect do |p|
-  "#{p.firstname} #{p.lastname} <#{p.primary_email_address}>"
+  "#{p.firstname} #{p.lastname} <#{p.email}>"
 end.join(", "))%>
 </p>
 
@@ -16,6 +16,6 @@ end.join(", "))%>
 
 <p>
 <%=h(@attendees.collect do |p|
-  "#{p.firstname} #{p.lastname} <#{p.primary_email_address}>"
+  "#{p.firstname} #{p.lastname} <#{p.email}>"
 end.join("; "))%>
 </p>

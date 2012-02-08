@@ -1,7 +1,7 @@
 class SignupController < ApplicationController
   def signup
     @hide_chrome = true
-    @person = logged_in_person
+    @person = current_person
     @event = Event.find params[:event]
     is_waitlist = (@event.kind_of?(LimitedCapacityEvent) and @event.full_for_gender?(@person.gender))
     
@@ -43,7 +43,7 @@ class SignupController < ApplicationController
       end
     end
     
-    @person = logged_in_person
+    @person = current_person
     @event = Event.find params[:event]
     recursive_drop @person, @event
     redirect_to (request.env['HTTP_REFERER'] || event_url(@event))

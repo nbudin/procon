@@ -111,16 +111,16 @@ ENDOFHTML
   end
   
   def signup_link(event, hide_if_invalid = false)
-    if not logged_in?
+    if not person_signed_in?
       return ''
     end
-    att = logged_in_person.app_profile.attendance_for_event(event)
+    att = current_person.attendance_for_event(event)
     output = ""
     if att.nil?
       if event.registration_open
-        hypothetical_att = Attendance.new(:event => event, :person => logged_in_person, :counts => true, 
-          :gender => logged_in_person.gender)
-        if event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(logged_in_person.gender)
+        hypothetical_att = Attendance.new(:event => event, :person => current_person, :counts => true, 
+          :gender => current_person.gender)
+        if event.kind_of?(LimitedCapacityEvent) and event.full_for_gender?(current_person.gender)
           hypothetical_att.attributes = { :is_waitlist => true, :counts => false }
         end
         
@@ -225,8 +225,8 @@ ENDOFHTML
       return "Full, no waitlist"
     else
       wlnumber = nil
-      if logged_in?
-        wlnumber = event.waitlist_number(logged_in_person)
+      if person_signed_in?
+        wlnumber = event.waitlist_number(current_person)
       end
       if wlnumber
         return "You are \##{wlnumber} in the waitlist"
@@ -311,22 +311,5 @@ ENDOFHTML
 
       threshold_count(event, next_threshold)
     end
-  end
-  
-  def logged_in_person_can_edit?(event=nil)
-    p = logged_in_person
-    if p.nil?
-      return false
-    else
-      if event
-        return event.has_edit_permissions?(p)
-      else
-        return p.permitted?(nil, "edit_events")
-      end
-    end
-  end
-  
-  def global_admin?
-    logged_in_person_can_edit?(nil)
   end
 end

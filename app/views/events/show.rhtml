@@ -2,18 +2,18 @@
 
 <div id="signupcontrols">
 	<% if @noninteractive -%>
-		<% if logged_in? and logged_in_person.app_profile.events.include? @event -%>
+		<% if person_signed_in? and current_person.events.include? @event -%>
 			View this event from the "My Events" page to drop out of the event.
 		<% end -%>
 	<% else -%>
-		<% if logged_in? -%>
-		  <% if @event.has_edit_permissions? logged_in_person -%>
+		<% if person_signed_in? -%>
+		  <% if can?(:edit, @event) -%>
 		    [<%= link_to "Delete", event_url(@event), :method => "delete" %>]
 		    [<%= link_to "Edit", edit_event_url(@event) %>]
 		  <% end -%>
 		  <%= signup_link @event, true %>
 		<% else -%>
-		  You must be <%= link_to "logged in", :controller => 'auth', :action => 'login' %> to register for this event.
+		  You must be <%= link_to "logged in", new_person_session_path %> to register for this event.
 		<% end -%>
 	<% end -%>
 </div>
@@ -44,12 +44,12 @@
   <div id="attendeeinfo">
 	<h2>Attendees</h2>
 	<p>
-	  <%= signup_count(@event, @event.has_edit_permissions?(logged_in_person)) %>
+	  <%= signup_count(@event, can?(:edit, @event)) %>
 	  <% if @event.kind_of? LimitedCapacityEvent -%>
 	    <br/><%= pluralize(@event.open_slots, "open slot")%>:
 	    <%= open_slot_count(@event) %>
 	  <% end -%>
-	  <% if @event.has_edit_permissions? logged_in_person -%>
+	  <% if can?(:edit, @event) -%>
 	  	<% if not @noninteractive -%>
 		    <br/>
                     <% if @event.children.count > 0 -%>

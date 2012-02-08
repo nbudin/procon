@@ -33,7 +33,7 @@
 
   <div id="basiceventinfo">
     <h2>Basic Information</h2>
-    <% if @proposed_event -%>
+    <% if @proposed_event && !@proposed_event.new_record? -%>
       <div class="proposal_hint">
         <%= simple_format @proposed_event.proposed_timing %>
       </div>
@@ -70,7 +70,7 @@
   <div id="locations">
     <h2>Locations</h2>
 
-    <% if @proposed_event -%>
+    <% if @proposed_event && !@proposed_event.new_record? -%>
       <div class="proposal_hint">
         <%= simple_format @proposed_event.proposed_location %>
       </div>
@@ -118,7 +118,7 @@
   <div id="regoptions">
     <h2>Registration Options</h2>
 
-    <% if @proposed_event -%>
+    <% if @proposed_event && !@proposed_event.new_record? -%>
       <div class="proposal_hint">
         <%= simple_format @proposed_event.proposed_capacity_limits %>
       </div>
@@ -230,7 +230,7 @@
     <div id="staff">
       <h2>Event Staff</h2>
 
-      <% if @proposed_event -%>
+      <% if @proposed_event && !@proposed_event.new_record? -%>
         <div class="proposal_hint">
           <% if @proposed_event.staff.length > 0 -%>
           The following people will be automatically added as staff:
@@ -254,7 +254,7 @@
 
   <% if @event.kind_of? ProposedEvent or @proposed_event -%>
     <div id="proposalcomments">
-      <% if @proposed_event -%>
+      <% if @proposed_event && !@proposed_event.new_record? -%>
         <h2>Additional Comments from Proposer</h2>
 
         <div style="background-color: black; color: white; padding: 0.5em;">
