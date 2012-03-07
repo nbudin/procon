@@ -165,18 +165,15 @@ class EventsController < ApplicationController
       end
     end
     
-    if not params[:add_staff].blank?
-      person_id = params[:add_staff].sub(/^(\D+)/, "")
-      staffer = Person.find(person_id)
-      if staffer
-        a = @event.attendances.find_by_person_id(staffer.id)
-        a ||= @event.attendances.new :person => staffer, :counts => false
-        a.is_staff = true
-        if not a.save
-          flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
-        end
-      else
-        flash[:error_messages].push("Could not add the staff member specified: person ID \"#{person_id}\" could not be found")
+    if not params[:add_staff_by_email].blank?
+      person_email = params[:add_staff_by_email].strip
+      staffer = Person.find_by_email(person_email)
+      
+      a = (staffer && @event.attendances.find_by_person_id(staffer.id))
+      a ||= @event.attendances.new :person_email => person_email, :counts => false
+      a.is_staff = true
+      if not a.save
+        flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
       end
     end
 

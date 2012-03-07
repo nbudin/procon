@@ -1,14 +1,12 @@
 class AttendancesController < ApplicationController
   layout "global"
   
-  before_filter :check_view_permissions, :only => [ :index, :show, :children ]
-  before_filter :check_edit_permissions, :only => [ :new, :edit, :create, :update, :destroy ]
+  load_resource :event
+  load_and_authorize_resource :through => :event
   
   # GET /attendances
   # GET /attendances.xml
   def index
-    @event = Event.find(params[:event_id])
-    @attendances = @event.attendances
     @deleted_attendances = @event.attendances.all(:only_deleted => true)
 
     respond_to do |format|
@@ -22,7 +20,6 @@ class AttendancesController < ApplicationController
   end
 
   def children
-    @event = params[:event_id]
     @children = @context.children.reject { |e| e.kind_of? ProposedEvent }
     @attendances = @children.collect { |e| e.attendances.all(:with_deleted => true) }.flatten
     @attendances.reject! { |a| a.person.nil? }
@@ -41,9 +38,6 @@ class AttendancesController < ApplicationController
   # GET /attendances/1
   # GET /attendances/1.xml
   def show
-    @event = Event.find(params[:event_id])
-    @attendance = Attendance.find(params[:id])
-
     respond_to do |format|
       format.html # show.rhtml
       format.xml  { render :xml => @attendance.to_xml }
@@ -52,25 +46,15 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/new
   def new
-    @event = Event.find(params[:event_id])
-    @attendance = Attendance.new
   end
 
   # GET /attendances/1;edit
   def edit
-    @event = Event.find(params[:event_id])
-    @attendance = Attendance.find(params[:id])
   end
 
   # POST /attendances
   # POST /attendances.xml
   def create
-    person_id = params[:attendance][:person].sub(/^\D+/, "")
-    params[:attendance][:person] = Person.find(person_id)
-    @event = Event.find(params[:event_id])
-    @attendance = Attendance.new(params[:attendance])
-    @attendance.event = @event
-
     respond_to do |format|
       if @attendance.save
         flash[:notice] = 'Attendance was successfully created.'
@@ -86,9 +70,6 @@ class AttendancesController < ApplicationController
   # PUT /attendances/1
   # PUT /attendances/1.xml
   def update
-    @event = Event.find(params[:event_id])
-    @attendance = Attendance.find(params[:id])
-  
     respond_to do |format|
       if @attendance.update_attributes(params[:attendance])
         flash[:notice] = 'Attendance was successfully updated.'
@@ -104,35 +85,11 @@ class AttendancesController < ApplicationController
   # DELETE /attendances/1
   # DELETE /attendances/1.xml
   def destroy
-    @event = Event.find(params[:event_id])
-    @attendance = Attendance.find(params[:id])
     @attendance.destroy
 
     respond_to do |format|
       format.html { redirect_to event_attendances_url(@event) }
       format.xml  { head :ok }
     end
-  end
-  
-  def check_view_permissions
-    event = if params[:event_id]
-      Event.find params[:event_id]
-    else
-      @context
-    end
-    if can?(:view_attendees, @context)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to events_url
-  end
-  
-  def check_edit_permissions
-    event = Event.find params[:event_id]
-    if can?(:edit, event)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to events_url
   end
 end

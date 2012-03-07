@@ -27,9 +27,7 @@
         <%=h attendance.person.name %>
       </td>
       <td>
-        <% if attendance.person.account -%>
-          <%= mail_to attendance.person.email %>
-        <% end -%>
+        <%= mail_to attendance.person.email %>
       </td>
       <td>
         <%= attendance.age %>

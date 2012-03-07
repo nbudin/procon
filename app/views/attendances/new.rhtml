@@ -5,8 +5,8 @@
 <% form_for(:attendance, :url => event_attendances_path(@event)) do |f| %>
 
   <p>
-    <b>Person</b>
-    <%= user_picker('attendance[person]') %>
+    <b>Person (enter email address)</b>
+    <%=f.text_field :person_email %>
   </p>
   
   <p>

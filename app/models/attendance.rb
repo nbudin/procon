@@ -15,6 +15,35 @@ class Attendance < ActiveRecord::Base
   before_validation :ensure_gender_set
   after_save :check_waitlist
   
+  def person_email
+    person.try(:email)
+  end
+  
+  def person_email=(email)
+    if email.blank?
+      self.person = nil
+      return
+    end
+    
+    logger.debug "Trying to find person with email #{email}"
+    self.person = Person.find_by_email(email)
+    if email and self.person.nil?
+      logger.debug "Not found, trying Illyan invite"
+      begin
+        invitee = IllyanClient::Person.new(:person => { :email => email })
+        invitee.save
+        logger.debug "Invite successful!  Got back #{invitee.inspect}"
+        
+        invitee = invitee.person
+        self.person = Person.create(:email => email, :username => email, :firstname => invitee.firstname, 
+          :lastname => invitee.lastname, :gender => invitee.gender, :birthdate => invitee.birthdate)
+      rescue
+        logger.error "Error during invite: #{$!}"
+        errors.add(:base, "Error inviting new user #{email}: $!")
+      end
+    end
+  end
+  
   def status
     if is_staff
       "Staff"

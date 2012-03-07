@@ -1,5 +1,5 @@
 class LocationsController < ApplicationController
-  before_filter :check_edit_permissions
+  load_and_authorize_resource
   
   # GET /locations
   # GET /locations.xml
