@@ -39,7 +39,7 @@ class Attendance < ActiveRecord::Base
           :lastname => invitee.lastname, :gender => invitee.gender, :birthdate => invitee.birthdate)
       rescue
         logger.error "Error during invite: #{$!}"
-        errors.add(:base, "Error inviting new user #{email}: $!")
+        errors.add(:base, "Error inviting new user #{email}: #{$!}")
       end
     end
   end
