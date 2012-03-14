@@ -25,7 +25,7 @@ class Ability
       
         can :manage, Attendance, :event => event_staff_conds
         can :manage, Attendance, :event => { :parent => event_staff_conds }
-        can :read, Attendance { |att| can? :view_attendances, att.try(:event) }
+        can :read, Attendance, { |att| can? :view_attendances, att.try(:event) }
         
         can :create, ProposedEvent
         can :manage, ProposedEvent, :parent => event_staff_conds
