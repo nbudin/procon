@@ -35,3 +35,7 @@ group :test do
   # gem "rspec"
   # gem "faker"
 end
+
+group :production do
+  gem "thin"
+end
