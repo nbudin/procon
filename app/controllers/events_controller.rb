@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  load_and_authorize_resource :through => :context, :through_association => :children
+  load_and_authorize_resource :through => :context, :through_association => :children, :shallow => true
   
   def email_list
     @method = if params[:waitlist]
