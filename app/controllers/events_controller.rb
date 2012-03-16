@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_filter :set_event_from_context
-  load_resource :through => :context, :through_association => :children, :shallow => true
+  load_and_authorize_resource :through => :context, :through_association => :children, :shallow => true
   
   def email_list
     @method = if params[:waitlist]
