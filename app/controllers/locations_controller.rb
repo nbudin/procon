@@ -103,12 +103,4 @@ class LocationsController < ApplicationController
       return Location.find(:all)
     end
   end
-  
-  def check_edit_permissions
-    if person_signed_in? and can?(:edit, @context)
-      return
-    end
-    flash[:error_messages] = ["You aren't permitted to perform that action.  Please log into an account that has permissions to do that."]
-    redirect_to "/"
-  end
 end

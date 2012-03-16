@@ -129,16 +129,4 @@ class ProposedEventsController < ApplicationController
     @age_restricted = @event.age_restricted
     @min_age = @event.min_age
   end
-  
-  def check_edit_permissions
-    if params[:id]
-      proposed_event = ProposedEvent.find(params[:id])
-
-      if proposed_event && proposed_event.proposer == current_person
-        return
-      end
-    end
-
-    check_proposal_admin
-  end
 end

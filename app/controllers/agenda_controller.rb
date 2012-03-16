@@ -1,6 +1,5 @@
 class AgendaController < ApplicationController
   before_filter :authenticate_person!
-  before_filter :check_view_permissions, :only => [:attendees]
   skip_authorization_check :only => :index
   
   def index
