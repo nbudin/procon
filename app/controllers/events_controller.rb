@@ -303,7 +303,7 @@ class EventsController < ApplicationController
       if @context.id == params[:id]
         @context
       else
-        @context.events.find(params[:id])
+        @context.children.find(params[:id])
       end
     else
       Event.find params[:id]
