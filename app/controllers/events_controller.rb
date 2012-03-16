@@ -1,7 +1,6 @@
 class EventsController < ApplicationController
-  load_resource :through => :context, :through_association => :children, :shallow => true, :except => [:show, :show_description]
-  before_filter :load_event_with_context, :only => [:show, :show_description]
-  authorize_resource
+  before_filter :set_event_from_context
+  load_resource :through => :context, :through_association => :children, :shallow => true
   
   def email_list
     @method = if params[:waitlist]
@@ -298,15 +297,9 @@ class EventsController < ApplicationController
     end
   end
 
-  def load_event_with_context
-    @event = if @context
-      if @context.id == params[:id]
-        @context
-      else
-        @context.children.find(params[:id])
-      end
-    else
-      Event.find params[:id]
+  def set_event_from_context
+    if @context && @context.id == params[:id].to_i
+      @event = @context
     end
   end
 end
