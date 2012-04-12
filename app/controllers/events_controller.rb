@@ -8,12 +8,10 @@ class EventsController < ApplicationController
     else
       "confirmed_attendees"
     end
-    @event = Event.find(params[:id])
     @attendees = @event.send(@method)
   end
   
   def signup_sheet
-    @event = Event.find(params[:id])
     if request.post?
       @options = {}
       @options[:include_scheduling_details] = params[:include_scheduling_details]
@@ -30,7 +28,6 @@ class EventsController < ApplicationController
   end
 
   def available_people
-    @event = Event.find(params[:id])
     @check_events = @event.parent ? @event.parent.children : Event.find(:all)
     @all_people = @event.parent ? @event.parent.all_attendees : People.find(:all)
     @available_people = @all_people.select do |person|
@@ -41,7 +38,7 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = visible_events.reject { |e| e.kind_of? ProposedEvent }
+    @events.reject! { |e| e.kind_of? ProposedEvent }
     
     respond_to do |format|
       format.html # index.rhtml
@@ -50,24 +47,14 @@ class EventsController < ApplicationController
   end
   
   def new
-    @event = Event.new
-    if @context
-      @event.parent = @context
-    end
     calculate_edit_vars
   end
   
   def create
-    @event = Event.new(params[:event])
-    if @context
-      @event.parent = @context
-    end
-
     save_from_form
   end
   
   def destroy
-    @event = Event.find params[:id]
     if params[:sure]
       @event.destroy
       redirect_to events_url
@@ -85,42 +72,21 @@ class EventsController < ApplicationController
   end
   
   def show_description
-    @event = Event.find params[:id]
     @public_info_fields = @event.public_info_fields
     @noninteractive = true
     render :action => "show"
   end
   
   def pull_from_children
-    @event = Event.find params[:id]
     @event.pull_from_children
     redirect_to @event
   end
   
   def edit
-    @event = Event.find params[:id]
     calculate_edit_vars
   end
   
   def update
-    @event = Event.find params[:id]
-    save_from_form
-  end
-
-  def propose
-    @event = ProposedEvent.new
-    if @context
-      @event.parent = @context
-    end
-    calculate_edit_vars
-  end
-  
-  def submit_proposal
-    @event = ProposedEvent.new(params[:event])
-    if @context
-      @event.parent = @context
-    end
-    @event.proposer ||= current_person
     save_from_form
   end
 
