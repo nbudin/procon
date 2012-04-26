@@ -3,6 +3,7 @@ source "http://gems.github.com"
 
 gem "rails", "2.3.14"
 gem "mysql2", "~> 0.2.0"
+gem "sqlite3", :groups => [:development, :test]
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"

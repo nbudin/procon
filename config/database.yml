@@ -1,10 +1,6 @@
 development:
-  adapter: mysql2
-  host: 127.0.0.1
-  username: root
-  password: 
-  database: procon_development
-  port: 3306
+  adapter: sqlite3
+  database: db/development.sqlite3
 
 test:
   adapter: mysql2
