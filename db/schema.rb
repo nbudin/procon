@@ -9,30 +9,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120208192105) do
+ActiveRecord::Schema.define(:version => 20120426134704) do
 
   create_table "attached_images", :force => true do |t|
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_created_at"
-    t.datetime "image_updated_at"
-    t.integer  "site_template_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "image_file_name"
+    t.string    "image_content_type"
+    t.integer   "image_file_size"
+    t.timestamp "image_created_at"
+    t.timestamp "image_updated_at"
+    t.integer   "site_template_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "attendances", :force => true do |t|
-    t.integer  "event_id"
-    t.integer  "person_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "counts",            :default => true
-    t.boolean  "is_staff"
-    t.boolean  "is_waitlist",       :default => false
-    t.datetime "deleted_at"
-    t.string   "gender"
-    t.integer  "staff_position_id"
+    t.integer   "event_id"
+    t.integer   "person_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.boolean   "counts",            :default => true
+    t.boolean   "is_staff"
+    t.boolean   "is_waitlist",       :default => false
+    t.timestamp "deleted_at"
+    t.string    "gender"
+    t.integer   "staff_position_id"
   end
 
   add_index "attendances", ["counts"], :name => "index_attendances_on_counts"
@@ -42,13 +42,13 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
   add_index "attendances", ["person_id"], :name => "index_attendances_on_person_id"
 
   create_table "attendee_slots", :force => true do |t|
-    t.integer  "event_id",                  :null => false
-    t.integer  "max",        :default => 0, :null => false
-    t.integer  "min",        :default => 0, :null => false
-    t.integer  "preferred",  :default => 0, :null => false
-    t.string   "gender"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "event_id",                  :null => false
+    t.integer   "max",        :default => 0, :null => false
+    t.integer   "min",        :default => 0, :null => false
+    t.integer   "preferred",  :default => 0, :null => false
+    t.string    "gender"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "attendee_slots", ["event_id"], :name => "index_attendee_slots_on_event_id"
@@ -59,6 +59,8 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
     t.boolean "exclusive",   :default => true
   end
 
+  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
+
   create_table "events", :force => true do |t|
     t.string   "fullname",                                                       :null => false
     t.string   "shortname"
@@ -68,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type"
-    t.string   "blurb",                       :limit => 4000
-    t.string   "description",                 :limit => 4000
+    t.text     "blurb",                       :limit => 4000
+    t.text     "description",                 :limit => 4000
     t.integer  "parent_id"
     t.integer  "registration_policy_id"
     t.boolean  "attendees_visible",                           :default => false
@@ -101,47 +103,42 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
   end
 
   create_table "people", :force => true do |t|
-    t.string   "email"
-    t.string   "firstname"
-    t.string   "lastname"
-    t.string   "gender"
-    t.datetime "birthdate"
-    t.string   "nickname"
-    t.string   "phone"
-    t.string   "best_call_time"
-    t.boolean  "admin"
-    t.string   "username"
-    t.integer  "sign_in_count",      :default => 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "email"
+    t.string    "firstname"
+    t.string    "lastname"
+    t.string    "gender"
+    t.timestamp "birthdate"
+    t.string    "nickname"
+    t.string    "phone"
+    t.string    "best_call_time"
+    t.boolean   "admin"
+    t.string    "username"
+    t.integer   "sign_in_count",      :default => 0
+    t.timestamp "current_sign_in_at"
+    t.timestamp "last_sign_in_at"
+    t.string    "current_sign_in_ip"
+    t.string    "last_sign_in_ip"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "people", ["username"], :name => "index_people_on_username", :unique => true
 
-  create_table "plugin_schema_info", :id => false, :force => true do |t|
-    t.string  "plugin_name"
-    t.integer "version"
-  end
-
   create_table "public_info_fields", :force => true do |t|
-    t.string   "name"
-    t.integer  "event_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "name"
+    t.integer   "event_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "public_info_fields", ["event_id"], :name => "index_public_info_fields_on_event_id"
 
   create_table "public_info_values", :force => true do |t|
-    t.integer  "public_info_field_id"
-    t.integer  "attendance_id"
-    t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "public_info_field_id"
+    t.integer   "attendance_id"
+    t.string    "value"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   add_index "public_info_values", ["attendance_id"], :name => "index_public_info_values_on_attendance_id"
@@ -175,12 +172,12 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
   end
 
   create_table "schedule_blocks", :force => true do |t|
-    t.integer  "schedule_id"
-    t.datetime "start"
-    t.datetime "end"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "interval"
+    t.integer   "schedule_id"
+    t.timestamp "start"
+    t.timestamp "end"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.integer   "interval"
   end
 
   create_table "schedule_blocks_tracks", :id => false, :force => true do |t|
@@ -189,23 +186,23 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
   end
 
   create_table "scheduled_event_positions", :force => true do |t|
-    t.integer  "schedule_block_id"
-    t.integer  "event_id"
-    t.float    "left"
-    t.float    "top"
-    t.float    "width"
-    t.float    "height"
-    t.string   "color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "schedule_block_id"
+    t.integer   "event_id"
+    t.float     "left"
+    t.float     "top"
+    t.float     "width"
+    t.float     "height"
+    t.string    "color"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "schedules", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "event_id"
-    t.boolean  "published"
+    t.string    "name"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.integer   "event_id"
+    t.boolean   "published"
   end
 
   create_table "site_templates", :force => true do |t|
@@ -217,21 +214,21 @@ ActiveRecord::Schema.define(:version => 20120208192105) do
   end
 
   create_table "staff_positions", :force => true do |t|
-    t.integer  "event_id"
-    t.string   "name"
-    t.boolean  "publish_email", :default => true
-    t.integer  "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "event_id"
+    t.string    "name"
+    t.boolean   "publish_email", :default => true
+    t.integer   "position"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "tracks", :force => true do |t|
-    t.string   "name"
-    t.integer  "position"
-    t.integer  "schedule_id", :null => false
-    t.string   "color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "name"
+    t.integer   "position"
+    t.integer   "schedule_id", :null => false
+    t.string    "color"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "virtual_sites", :force => true do |t|
