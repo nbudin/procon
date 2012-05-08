@@ -1,4 +1,6 @@
 class SignupController < ApplicationController
+  skip_authorization_check
+  
   def signup
     @hide_chrome = true
     @person = current_person
