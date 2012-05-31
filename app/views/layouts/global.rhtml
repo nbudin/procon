@@ -101,6 +101,12 @@
   </div>
 <% end -%>
 
+<% if flash[:alert].present? -%>
+  <div class="error_messages">
+	<%=h flash[:alert] %>
+  </div>
+<% end -%>
+
 <% if flash[:error_messages].present? -%>
   <div class="error_messages">
     <p>There were some errors processing your request:</p>
