@@ -14,7 +14,12 @@ class ApplicationController < ActionController::Base
   end
   
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_url, :alert => exception.message
+    if person_signed_in?
+      redirect_to root_url, :alert => exception.message
+    else
+      session[:person_return_to] = request.url if request.get?
+      redirect_to new_person_session_url
+    end
   end
   
   private
