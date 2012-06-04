@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_filter :set_event_from_context
+  before_filter :load_event_tree, :only => :index
   load_and_authorize_resource :through => :context, :through_association => :children, :shallow => true
   
   def email_list
@@ -267,5 +268,14 @@ class EventsController < ApplicationController
     if @context && @context.id == params[:id].to_i
       @event = @context
     end
+  end
+  
+  def load_event_tree
+    @events = if @context
+      @context.children
+    else
+      Event.roots
+    end
+    @events = @events.all(:include => {:virtual_sites => [], :children => :virtual_sites})
   end
 end

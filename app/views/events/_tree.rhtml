@@ -2,7 +2,7 @@
   # if roots does not exist or is nil, we'll create it
   roots.length
 rescue
-  roots = events.select { |e| @context ? e.parent == @context : e.parent.nil? }
+  roots = events.select { |e| @context ? e.parent_id == @context.id : e.parent.nil? }
 end -%>
 <% if events.length > 0 -%>
   <ul>

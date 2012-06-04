@@ -76,6 +76,7 @@ class Event < ActiveRecord::Base
         { :joins => :tracks, :conditions => { :tracks => { :id => schedule.track_ids } },
           :select => "DISTINCT `events`.*", :include => :tracks }
   }
+  named_scope :roots, :conditions => { :parent_id => [nil, 0] }
   
   def set_default_registration_policy
     if registration_policy.nil?
