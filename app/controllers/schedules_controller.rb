@@ -95,6 +95,7 @@ class SchedulesController < ApplicationController
     if params[:remove_event_from_track]
       params[:remove_event_from_track].each_pair do |track_id, events|
         track = Track.find(track_id)
+        events = [events] unless events.respond_to?(:each)
         events.each do |event_id|
           event = Event.find(event_id)
           track.events.delete(event)
