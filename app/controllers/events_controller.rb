@@ -162,7 +162,7 @@ class EventsController < ApplicationController
     if params[:remove_staff]
       params[:remove_staff].each_key do |staff_id|
         if params[:remove_staff][staff_id]
-          @event.staff.delete Person.find(staff_id.to_i)
+          @event.attendances.find_by_person_id(staff_id.to_i).destroy
         end
       end
     end
