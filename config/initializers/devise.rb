@@ -1,4 +1,4 @@
-IllyanClient.base_url = "http://accounts.sugarpond.net"
+IllyanClient.base_url = "https://accounts.sugarpond.net"
 
 # Use this hook to configure devise mailer, warden hooks and so forth. The first
 # four configuration values can also be set straight in your models.
