@@ -76,7 +76,7 @@ class Event < ActiveRecord::Base
     :attendee_slots => [], :locations => [] }
   named_scope :in_schedule, lambda { |schedule|
         { :joins => :tracks, :conditions => { :tracks => { :id => schedule.track_ids } },
-          :select => "DISTINCT `events`.*", :include => :tracks }
+          :group => "events.id", :include => :tracks }
   }
   
   def set_default_registration_policy
