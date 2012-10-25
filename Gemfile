@@ -2,7 +2,7 @@ source :gemcutter
 source "http://gems.github.com"
 
 gem "rails", "2.3.14"
-gem "mysql2", "~> 0.2.0"
+gem "pg"
 gem "sqlite3", :groups => [:development, :test]
 
 # bundler requires these gems in all environments

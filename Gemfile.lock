@@ -39,10 +39,10 @@ GEM
     method_source (0.6.7)
       ruby_parser (>= 2.3.1)
     mime-types (1.16)
-    mysql2 (0.2.18)
     paperclip (2.3.3)
       activerecord
       activesupport
+    pg (0.14.1)
     pry (0.9.7.3)
       coderay (~> 0.9.8)
       method_source (~> 0.6.7)
@@ -90,8 +90,8 @@ DEPENDENCIES
   heroku_external_db (>= 1.0.0)
   hoptoad_notifier
   illyan_client
-  mysql2 (~> 0.2.0)
   paperclip (~> 2.3)
+  pg
   pry
   rails (= 2.3.14)
   right_aws
