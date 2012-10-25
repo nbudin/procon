@@ -68,7 +68,7 @@ class Event < ActiveRecord::Base
   has_many :public_info_fields, :dependent => :destroy
   has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
     
-  acts_as_tree :order => connection.quote_column_name("start")
+  acts_as_tree :order => "start"
   named_scope :time_ordered, :order => "#{connection.quote_column_name 'start'}, #{connection.quote_column_name 'end'}"
   named_scope :for_registration, :include => { :attendances => :person, :registration_policy => :rules, 
     :attendee_slots => [], :locations => [] }
