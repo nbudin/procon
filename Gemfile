@@ -16,7 +16,6 @@ gem 'right_aws'
 gem 'febeling-rubyzip', '~> 0.9.2', :require => 'zip/zip'
 gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
 gem 'ae_users_migrator'
-gem 'heroku_external_db', '>= 1.0.0'
 gem 'hoptoad_notifier'
 gem 'pry', :groups => [:development, :test]
 
