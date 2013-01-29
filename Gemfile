@@ -1,7 +1,7 @@
 source :gemcutter
 source "http://gems.github.com"
 
-gem "rails", "2.3.14"
+gem "rails", "2.3.16"
 gem "pg"
 gem "sqlite3", :groups => [:development, :test]
 
