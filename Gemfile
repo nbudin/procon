@@ -1,7 +1,7 @@
 source :gemcutter
 source "http://gems.github.com"
 
-gem "rails", "2.3.16"
+gem "rails", "2.3.17"
 gem "mysql2", "~> 0.2.0"
 
 # bundler requires these gems in all environments
