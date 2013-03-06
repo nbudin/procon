@@ -166,7 +166,7 @@ class Event < ActiveRecord::Base
   
   def attendance_errors(attendance, other_atts=nil)
     errs = []
-    if counts_for_max_attendances? && parent.try(:limits_child_event_attendances?)
+    if !attendance.is_staff? && counts_for_max_attendances? && parent.try(:limits_child_event_attendances?)
       other_att_count = if other_atts
         other_atts.count do |att|
           evt = att.event
