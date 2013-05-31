@@ -1,5 +1,7 @@
-source :gemcutter
+source "https://rubygems.org"
 source "http://gems.github.com"
+
+ruby "1.8.7"
 
 gem "rails", "2.3.17"
 gem "mysql2", "~> 0.2.0"
@@ -18,6 +20,7 @@ gem 'ae_users_legacy', '0.6.11', :require => 'ae_users'
 gem 'heroku_external_db', '>= 1.0.0'
 gem 'airbrake'
 gem 'pry', :groups => [:development, :test]
+gem 'unicorn'
 
 group :development do
   # bundler requires these gems in development
