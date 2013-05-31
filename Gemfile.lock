@@ -31,6 +31,7 @@ GEM
       ruby_parser (>= 2.3.1)
     mime-types (1.16)
     mysql2 (0.2.18)
+    newrelic_rpm (3.6.3.104)
     paperclip (2.3.3)
       activerecord
       activesupport
@@ -74,6 +75,7 @@ DEPENDENCIES
   febeling-rubyzip (~> 0.9.2)
   heroku_external_db (>= 1.0.0)
   mysql2 (~> 0.2.0)
+  newrelic_rpm
   paperclip (~> 2.3)
   pry
   rails (= 2.3.17)
