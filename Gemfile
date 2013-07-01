@@ -21,7 +21,6 @@ gem 'heroku_external_db', '>= 1.0.0'
 gem 'airbrake'
 gem 'pry', :groups => [:development, :test]
 gem 'unicorn'
-gem 'newrelic_rpm'
 
 group :development do
   # bundler requires these gems in development
