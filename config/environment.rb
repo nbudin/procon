@@ -37,7 +37,7 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector
 
   # Make Active Record use UTC-base instead of local time
-  # config.active_record.default_timezone = :utc
+  config.active_record.default_timezone = :utc
   
   config.action_controller.session = { :session_key => '_procon_session',
     :secret => (ENV['SECRET_TOKEN'] || 'bc255802f9d9bc085a354679499f23c59bd5c4750ad7c12e3ddb2b1b1ce65092ad081667da7c798f01fc00e981535f28efa7cef737ec068bffde7598773a663f')
