@@ -19,7 +19,7 @@ class ScheduleBlock
   end
   
   def min_event_length
-    @min_event_length ||= events.collect(&:length).reject { |l| l <= 0 }.compact.min
+    @min_event_length ||= (events.collect(&:length).reject { |l| l <= 0 }.compact.min || 0)
   end
   
   def interval
