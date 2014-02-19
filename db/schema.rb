@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304151821) do
+ActiveRecord::Schema.define(:version => 20140219220206) do
 
   create_table "attached_images", :force => true do |t|
     t.string   "image_file_name"
@@ -253,6 +253,7 @@ ActiveRecord::Schema.define(:version => 20130304151821) do
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "email"
   end
 
   create_table "tracks", :force => true do |t|
