@@ -1,9 +1,8 @@
 source "https://rubygems.org"
-source "http://gems.github.com"
 
 ruby "1.8.7"
 
-gem "rails", "2.3.17"
+gem 'rails', :git => 'https://github.com/makandra/rails.git', :branch => '2-3-lts'
 gem "mysql2", "~> 0.2.0"
 
 # bundler requires these gems in all environments
