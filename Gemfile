@@ -15,7 +15,7 @@ gem 'aws-s3'
 gem 'right_aws'
 gem 'febeling-rubyzip', '~> 0.9.2', :require => 'zip/zip'
 gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
-gem 'ae_users_legacy', '0.6.11', :require => 'ae_users'
+gem 'ae_users_legacy', '0.6.13', :require => 'ae_users'
 gem 'heroku_external_db', '>= 1.0.0'
 gem 'airbrake'
 gem 'pry', :groups => [:development, :test]

@@ -1,0 +1,1 @@
+AeUsers.gender_field_name = "Character gender (for game signups)"

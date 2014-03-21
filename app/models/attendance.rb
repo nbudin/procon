@@ -9,7 +9,7 @@ class Attendance < ActiveRecord::Base
   validates_uniqueness_of :person_id, :scope => :event_id, :message => "is already attending that event."
   after_destroy :pull_from_waitlist
 
-  validates_inclusion_of :gender, :in => ["male", "female"]
+  validates_inclusion_of :gender, :in => ["male", "female"], :if => :gendered_event?, :message => "must be set in your profile in order to sign up for events with gendered slots."
   validate :check_attendance_errors
 
   before_validation :ensure_gender_set
@@ -66,5 +66,9 @@ class Attendance < ActiveRecord::Base
         self.event.pull_from_waitlist
       end
     end
+  end
+  
+  def gendered_event?
+    event.gendered?
   end
 end

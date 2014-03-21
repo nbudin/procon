@@ -15,8 +15,8 @@
     <td><%= link_to att.event.shortname, event_attendances_path(att.event)  %></td>
     <td>
       <%= att.person.name %>
-      <% if att.gender != att.person.gender -%>
-	(crosscast)
+      <% if att.gender.present? && att.gender != att.person.gender -%>
+        (crosscast)
       <% end -%>
     </td>
     <td>

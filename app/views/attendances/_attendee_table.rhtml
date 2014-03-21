@@ -36,9 +36,9 @@
       </td>
       <td>
         <%=h attendance.gender %>
-	<% if attendance.gender != attendance.person.gender -%>
-	  (crosscast)
-	<% end -%>
+        <% if attendance.gender.present? && attendance.gender != attendance.person.gender -%>
+      	  (crosscast)
+      	<% end -%>
       </td>
     <% else -%>
       <td colspan="4">

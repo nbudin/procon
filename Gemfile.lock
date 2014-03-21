@@ -32,8 +32,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    ae_users_legacy (0.6.11)
-      ruby-openid (>= 2.0.4)
+    ae_users_legacy (0.6.13)
     airbrake (3.0.5)
       activesupport
       builder
@@ -80,7 +79,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  ae_users_legacy (= 0.6.11)
+  ae_users_legacy (= 0.6.13)
   airbrake
   aws-s3
   febeling-rubyzip (~> 0.9.2)
