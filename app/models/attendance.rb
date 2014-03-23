@@ -69,6 +69,6 @@ class Attendance < ActiveRecord::Base
   end
   
   def gendered_event?
-    event.gendered?
+    event.try(:gendered?)
   end
 end
