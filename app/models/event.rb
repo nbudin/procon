@@ -361,4 +361,8 @@ class Event < ActiveRecord::Base
       return param.to_s.downcase == "true"
     end
   end
+  
+  def gendered?
+    false
+  end
 end
