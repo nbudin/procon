@@ -5,12 +5,12 @@ class EventsController < ApplicationController
   
   def email_list
     @method = if params[:waitlist]
-      "waitlist_attendees"
+      "waitlist_attendances"
     else
-      "confirmed_attendees"
+      "confirmed_attendances"
     end
     @event = Event.find(params[:id])
-    @attendees = @event.send(@method)
+    @attendees = @event.send(@method).all(:include => {:person => :email_addresses}).map(&:person)
   end
   
   def signup_sheet
