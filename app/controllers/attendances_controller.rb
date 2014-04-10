@@ -8,8 +8,8 @@ class AttendancesController < ApplicationController
   # GET /attendances.xml
   def index
     @event = Event.find(params[:event_id])
-    @attendances = @event.attendances
-    @deleted_attendances = @event.attendances.all(:only_deleted => true)
+    @attendances = @event.attendances.all(:include => :person)
+    @deleted_attendances = @event.attendances.all(:include => {:event => [], :person => [:account, :email_addresses]}, :only_deleted => true)
 
     respond_to do |format|
       format.html # index.rhtml
