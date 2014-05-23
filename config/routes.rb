@@ -32,6 +32,8 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.resources :virtual_sites
+  
+  map.resource :profile
 
   # site contexts - so we know what our local event parent is
   map.connect 'c/:context', :controller => "main"

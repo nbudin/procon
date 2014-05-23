@@ -1,0 +1,34 @@
+<% form_for current_person, :url => profile_path do |f| %>
+  <h1>My profile</h1>
+  
+  <fieldset style="margin-bottom: 1em;">
+    <h2>Account data</h2>
+    
+    <p>The following data is stored in your Sugar Pond account.  
+      You can <%= link_to "edit it at Sugar Pond Account Central", "#{IllyanClient.base_url}/profile" %>.</p>
+      
+    <table>
+      <tr><th>Name</th><td><%=h current_person.firstname %> <%=h current_person.lastname %></td></tr>
+      <tr><th>Email</th><td><%=h current_person.email %></td></tr>
+      <tr><th>Birth date</th><td><%= current_person.birthdate.try(:to_date).try(:to_s, :long) %></td></tr>
+      <tr><th>Gender <small>(for demographic purposes)</small></th><td><%=h current_person.profile_gender %></td></tr>
+    </table>
+  </fieldset>
+  
+  <fieldset>
+    <% if flash[:notice].present? %>
+      <h3><%= flash[:notice] %></h3>
+    <% end %>
+    
+    <table>
+      <tr><th><%= f.label :nickname %></th><td><%= f.text_field :nickname %></td></tr>
+      <tr>
+        <th><%= f.label :gender, "Character gender (for game signup)" %></th>
+        <td><%= f.select :gender, [["prefer not to select (this will only allow you to sign up for gender-neutral events)", "unspecified"], ["male"], ["female"]] %></td>
+      </tr>
+      <tr><th><%= f.label :phone, "Phone number" %></th><td><%= f.text_field :phone %></td></tr>
+      <tr><th><%= f.label :best_call_time, "Best time to call" %></th><td><%= f.text_field :best_call_time %></td></tr>
+      <tr><th></th><td><%= f.submit %></td></tr>
+    </table>
+  </fieldset>
+<% end %>

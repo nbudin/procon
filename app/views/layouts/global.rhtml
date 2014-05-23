@@ -88,7 +88,7 @@
         <td align="right">
           <div id="auth_form">
           	<% if person_signed_in? -%>
-		        <%= link_to current_person.name, "#{IllyanClient.base_url}/profile" %>
+		        <%= link_to current_person.name, profile_path %>
 		        |
 		        <%= link_to "Log out", destroy_person_session_path %>
 			<% else -%>

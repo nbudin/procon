@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   session :session_key => '_procon_session_id'
   layout "global"
   before_filter :get_virtual_site
+  before_filter :check_profile_completeness, :unless => :devise_or_profile_controller?
   
   check_authorization :unless => :devise_controller?
   
@@ -48,5 +49,21 @@ class ApplicationController < ActionController::Base
   
   def sort_people(people)
     people.sort {|a, b| "#{a.lastname}#{a.firstname}".downcase <=> "#{b.lastname}#{b.firstname}".downcase}
+  end
+  
+  def check_profile_completeness
+    if person_signed_in?
+      if current_person.gender.blank?  
+        # We do allow people not to choose a gender, but that will write "unspecified" in the field, so this essentially
+        # validates that they have seen and submitted the profile form
+        
+        session[:return_to_after_profile_complete] = request.url
+        redirect_to profile_path, :alert => "Welcome!  Please complete your profile below in order to use this site."
+      end
+    end
+  end
+  
+  def devise_or_profile_controller?
+    devise_controller?
   end
 end
