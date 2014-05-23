@@ -26,6 +26,7 @@ gem 'rubycas-client', '~> 2.2.0' # 2.3.x breaks in Rails 2 for some reason
 gem 'devise_cas_authenticatable'
 gem 'cancan'
 gem 'illyan_client'
+gem 'json'
 
 group :development do
   # bundler requires these gems in development
