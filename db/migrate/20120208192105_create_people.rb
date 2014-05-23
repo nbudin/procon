@@ -13,6 +13,7 @@ class CreatePeople < ActiveRecord::Migration
       t.string :firstname
       t.string :lastname
       t.string :gender
+      t.string :profile_gender
       t.timestamp :birthdate
       
       t.string :nickname
@@ -77,8 +78,8 @@ class CreatePeople < ActiveRecord::Migration
         merge_into = Person.find_by_username(person.primary_email_address.address)
         if merge_into.nil?
           merge_into = Person.new(:firstname => person.firstname, :lastname => person.lastname, 
-            :email => person.primary_email_address.address, :gender => person.gender, :birthdate => person.birthdate,
-            :username => person.primary_email_address.address)
+            :email => person.primary_email_address.address, :gender => person.gender, :profile_gender => person.gender,
+            :birthdate => person.birthdate, :username => person.primary_email_address.address)
           merge_into.id = person.id
         else
           say "Person ID #{person.id} (#{person.firstname} #{person.lastname}) has an existing email address.  Merging into ID #{merge_into.id} (#{person.firstname} #{person.lastname})."

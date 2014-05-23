@@ -99,7 +99,8 @@ class Person < ActiveRecord::Base
       when :birthdate
         self.birthdate = value
       when :gender
-        self.gender = value
+        self.profile_gender = value
+        self.gender ||= value
       when :email
         self.email = value
       end
