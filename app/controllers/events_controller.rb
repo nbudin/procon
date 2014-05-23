@@ -5,11 +5,11 @@ class EventsController < ApplicationController
   
   def email_list
     @method = if params[:waitlist]
-      "waitlist_attendees"
+      "waitlist_attendances"
     else
-      "confirmed_attendees"
+      "confirmed_attendances"
     end
-    @attendees = @event.send(@method)
+    @attendees = @event.send(@method).all(:include => {:person => :email_addresses}).map(&:person)
   end
   
   def signup_sheet
@@ -122,7 +122,7 @@ class EventsController < ApplicationController
     if params[:remove_staff]
       params[:remove_staff].each_key do |staff_id|
         if params[:remove_staff][staff_id]
-          @event.staff.delete Person.find(staff_id.to_i)
+          @event.attendances.find_by_person_id(staff_id.to_i).destroy
         end
       end
     end

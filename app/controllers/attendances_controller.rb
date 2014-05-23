@@ -7,7 +7,8 @@ class AttendancesController < ApplicationController
   # GET /attendances
   # GET /attendances.xml
   def index
-    @deleted_attendances = @event.attendances.all(:only_deleted => true)
+    @attendances = @event.attendances.all(:include => :person)
+    @deleted_attendances = @event.attendances.all(:include => {:event => [], :person => [:account, :email_addresses]}, :only_deleted => true)
 
     respond_to do |format|
       format.html # index.rhtml

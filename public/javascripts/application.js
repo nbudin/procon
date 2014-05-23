@@ -5,9 +5,9 @@ jQuery.fn.extend({
     eventDateShim: function(dateFieldId) {
 	return this.bind('change', function(evt) {
 	    d = new Date(new Number(this.value) * 1000);
-	    $("#" + dateFieldId + '_1i').val(d.getFullYear().toString());
-	    $("#" + dateFieldId + '_2i').val((d.getMonth() + 1).toString());
-	    $("#" + dateFieldId + '_3i').val(d.getDate().toString());
+	    $("#" + dateFieldId + '_1i').val(d.getUTCFullYear().toString());
+	    $("#" + dateFieldId + '_2i').val((d.getUTCMonth() + 1).toString());
+	    $("#" + dateFieldId + '_3i').val(d.getUTCDate().toString());
 	});
     }
 });

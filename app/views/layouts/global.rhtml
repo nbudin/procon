@@ -9,10 +9,11 @@
 <% end -%>
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <%= stylesheet_link_tag "thickbox" %>
+  <%= stylesheet_link_tag "jquery-ui" %>
   <%= stylesheet_link_tag 'global.css' %>
-  <%= stylesheet_link_tag "thickbox", "jquery.autocomplete.css" %>
-  <%= hoptoad_javascript_notifier %>
-  <%= javascript_include_tag "jquery", "thickbox", "jquery.ui.all.packed.js", "jquery.bgiframe.min.js", "jquery.autocomplete.pack.js" %>
+  <%= airbrake_javascript_notifier %>
+  <%= javascript_include_tag "jquery", "thickbox", "jquery-ui" %>
   <%= javascript_include_tag "application" %>
   <% if @rss_url %>
     <link rel="alternate" title="RSS Feed" href="<%=@rss_url%>" type="application/rss+xml"/>

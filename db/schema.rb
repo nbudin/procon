@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120426134704) do
+ActiveRecord::Schema.define(:version => 20140219220206) do
 
   create_table "attached_images", :force => true do |t|
     t.string    "image_file_name"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(:version => 20120426134704) do
   add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
 
   create_table "events", :force => true do |t|
-    t.string   "fullname",                                                       :null => false
+    t.string   "fullname",                                       :null => false
     t.string   "shortname"
     t.string   "number"
     t.datetime "start"
@@ -70,11 +70,11 @@ ActiveRecord::Schema.define(:version => 20120426134704) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type"
-    t.text     "blurb",                       :limit => 4000
-    t.text     "description",                 :limit => 4000
+    t.text     "blurb"
+    t.text     "description"
     t.integer  "parent_id"
     t.integer  "registration_policy_id"
-    t.boolean  "attendees_visible",                           :default => false
+    t.boolean  "attendees_visible",           :default => false
     t.text     "proposed_timing"
     t.text     "proposal_comments"
     t.text     "proposed_location"
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(:version => 20120426134704) do
     t.integer  "proposer_id"
     t.integer  "proposed_event_id"
     t.integer  "max_child_event_attendances"
-    t.boolean  "counts_for_max_attendances",                  :default => true,  :null => false
+    t.boolean  "counts_for_max_attendances",  :default => true,  :null => false
   end
 
   add_index "events", ["proposed_event_id"], :name => "index_events_on_proposed_event_id"
@@ -214,12 +214,13 @@ ActiveRecord::Schema.define(:version => 20120426134704) do
   end
 
   create_table "staff_positions", :force => true do |t|
-    t.integer   "event_id"
-    t.string    "name"
-    t.boolean   "publish_email", :default => true
-    t.integer   "position"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.integer  "event_id"
+    t.string   "name"
+    t.boolean  "publish_email", :default => true
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "email"
   end
 
   create_table "tracks", :force => true do |t|

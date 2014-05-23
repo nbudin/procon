@@ -7,7 +7,7 @@ class Schedule < ActiveRecord::Base
   end
 
   def all_events_registration_open=(status)
-    events.each do |event|
+    Event.find_each(:conditions => {:id => events.map(&:id)}) do |event|
       event.registration_open = status
       event.save
     end
