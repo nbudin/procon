@@ -53,8 +53,6 @@ GEM
     eventmachine (1.0.3)
     febeling-rubyzip (0.9.2)
     heroku_external_db (1.0.0)
-    illyan_client (1.0.2)
-      activeresource
     json (1.8.1)
     kgio (2.8.0)
     method_source (0.6.7)
@@ -107,7 +105,6 @@ DEPENDENCIES
   devise_cas_authenticatable
   febeling-rubyzip (~> 0.9.2)
   heroku_external_db (>= 1.0.0)
-  illyan_client
   jrails (= 0.5.1)!
   json
   mysql2 (~> 0.2.0)

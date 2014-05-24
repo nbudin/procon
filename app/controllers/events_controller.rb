@@ -133,7 +133,7 @@ class EventsController < ApplicationController
 
       if staffer
         a = (staffer && @event.attendances.find_by_person_id(staffer.id))
-        a ||= @event.attendances.new :person_email => person_email, :counts => false
+        a ||= @event.attendances.new :person => staffer, :counts => false
         a.is_staff = true
         if not a.save
           flash[:error_messages].push("Could not add the staff member specified: #{a.errors.full_messages.join(", ")}")
