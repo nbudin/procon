@@ -1,4 +1,4 @@
-IllyanClient.base_url = "https://accounts.sugarpond.net"
+ILLYAN_URL = "https://accounts.sugarpond.net"
 
 # Use this hook to configure devise mailer, warden hooks and so forth. The first
 # four configuration values can also be set straight in your models.
@@ -7,7 +7,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in DeviseMailer.
   config.mailer_sender = "nat@sugarpond.net"
   
-  config.cas_base_url = "#{IllyanClient.base_url}/cas"
+  config.cas_base_url = "#{ILLYAN_URL}/cas"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
