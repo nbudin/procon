@@ -16,7 +16,7 @@
   <% end -%>
   
   <%= render :partial => 'attendee_table', 
-    :locals => { :attendances => @event.confirmed_attendances.all(:include => {:event => [], :person => [:account, :email_addresses]}), :waitlist => false } %>
+    :locals => { :attendances => @event.confirmed_attendances.all(:include => [:event, :person]), :waitlist => false } %>
 <% end -%>
 
 <% if @event.waitlist_attendances.count > 0 -%>
@@ -27,7 +27,7 @@
   <% end -%>
 
   <%= render :partial => 'attendee_table', 
-    :locals => { :attendances => @event.waitlist_attendances.all(:include => {:event => [], :person => [:account, :email_addresses]}), :waitlist => true } %>
+    :locals => { :attendances => @event.waitlist_attendances.all(:include => [:event, :person]), :waitlist => true } %>
 <% end -%>
 
 <% if @deleted_attendances.count > 0 -%>
