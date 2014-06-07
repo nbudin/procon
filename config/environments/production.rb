@@ -17,19 +17,11 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-config.action_mailer.delivery_method = :smtp
-config.action_mailer.smtp_settings = {
-  :address => "localhost",
-  :port => 25,
-  :domain => "events.brandeislarp.com",
-#  :authentication => :login,
-#  :user_name => "noreply@events.brandeislarp.com",
-#  :password => "fillfencepost",
-}
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_charset = 'utf-8'
-  
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.perform_deliveries = true
+config.action_mailer.default_charset = 'utf-8'
+
+require 'exception_notification'
 ExceptionNotification::Notifier.exception_recipients = %w(natbudin@gmail.com)
 ExceptionNotification::Notifier.sender_address = "exception_notification@sugarpond.net"
 ExceptionNotification::Notifier.email_prefix = "[Procon] "
