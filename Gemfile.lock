@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/makandra/rails.git
-  revision: a847b10881e1e0c199e68e58e0b82a2734f2f741
+  revision: 133bbcb301a2b51918d3641541f4d0aa2b086af0
   branch: 2-3-lts
   specs:
     actionmailer (2.3.18)
@@ -26,7 +26,7 @@ GIT
       activerecord (= 2.3.18)
       activeresource (= 2.3.18)
       activesupport (= 2.3.18)
-      railslts-version (= 2.3.18.9)
+      railslts-version (= 2.3.18.10)
       rake (>= 0.8.3)
 
 GEM
@@ -34,9 +34,6 @@ GEM
   specs:
     ae_users_migrator (1.0.5)
       activerecord (>= 2.3)
-    airbrake (3.0.5)
-      activesupport
-      builder
     aws-s3 (0.6.2)
       builder
       mime-types
@@ -51,6 +48,7 @@ GEM
       devise (>= 1.0.6)
       rubycas-client (>= 2.2.1)
     eventmachine (1.0.3)
+    exception_notification (2.4.1)
     febeling-rubyzip (0.9.2)
     json (1.8.1)
     kgio (2.8.0)
@@ -67,7 +65,7 @@ GEM
       ruby_parser (>= 2.3.1)
       slop (~> 2.1.0)
     rack (1.1.6)
-    railslts-version (2.3.18.9)
+    railslts-version (2.3.18.10)
     raindrops (0.11.0)
     rake (10.3.2)
     right_aws (2.0.0)
@@ -97,11 +95,11 @@ PLATFORMS
 
 DEPENDENCIES
   ae_users_migrator
-  airbrake
   aws-s3
   cancan
   devise (~> 1.0.0)
   devise_cas_authenticatable
+  exception_notification
   febeling-rubyzip (~> 0.9.2)
   jrails (= 0.5.1)!
   json

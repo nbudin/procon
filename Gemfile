@@ -12,7 +12,7 @@ gem 'right_aws'
 gem 'febeling-rubyzip', '~> 0.9.2', :require => 'zip/zip'
 gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
 gem 'ae_users_migrator'
-gem 'airbrake'
+gem 'exception_notification'
 gem 'pry', :groups => [:development, :test]
 gem 'unicorn'
 

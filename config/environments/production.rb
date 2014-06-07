@@ -29,5 +29,9 @@ config.action_mailer.smtp_settings = {
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
   config.action_mailer.default_charset = 'utf-8'
+  
+ExceptionNotification::Notifier.exception_recipients = %w(natbudin@gmail.com)
+ExceptionNotification::Notifier.sender_address = "exception_notification@sugarpond.net"
+ExceptionNotification::Notifier.email_prefix = "[Procon] "
     
 $application_name = "BSCF LARP Conspiracy Events"
