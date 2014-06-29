@@ -2,7 +2,7 @@ class AttendancesController < ApplicationController
   layout "global"
   
   load_resource :event
-  load_and_authorize_resource :through => :event
+  load_and_authorize_resource :through => :event, :except => :children
   
   # GET /attendances
   # GET /attendances.xml
@@ -21,6 +21,7 @@ class AttendancesController < ApplicationController
   end
 
   def children
+    authorize! :view_children_attendances, @event
     @children = @context.children.reject { |e| e.kind_of? ProposedEvent }
     @attendances = @children.collect { |e| e.attendances.all(:with_deleted => true) }.flatten
     @attendances.reject! { |a| a.person.nil? }
