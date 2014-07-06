@@ -51,7 +51,7 @@ GEM
     daemons (1.1.9)
     devise (1.0.11)
       warden (~> 0.10.3)
-    devise_cas_authenticatable (1.0.0)
+    devise_cas_authenticatable (1.2.1)
       devise (>= 1.0.6)
       rubycas-client (>= 2.2.1)
     eventmachine (1.0.3)

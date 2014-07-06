@@ -8,6 +8,7 @@ Devise.setup do |config|
   config.mailer_sender = "nat@sugarpond.net"
   
   config.cas_base_url = "#{ILLYAN_URL}/cas"
+  config.cas_logout_url_param = "destination"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
