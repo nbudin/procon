@@ -14,21 +14,21 @@ class Ability
       else
         # TODO: generalize this to work with multiple event levels deep
         
-        event_staff_conds = { :attendances => { :person_id => person.id, :is_staff => true } }
+        staff_event_ids = Event.all(:joins => :attendances, :conditions => {:attendances => {:person_id => person.id, :is_staff => true}}, :select => "events.id").map(&:id)
         
-        can :manage, Event, event_staff_conds
+        can :manage, Event, :id => staff_event_ids
         can :view_attendances, Event, :attendees_visible => true, :attendances => { :person_id => person.id }
-        can :manage, Event, :parent => event_staff_conds
+        can :manage, Event, :parent_id => staff_event_ids
         
-        can :manage, Schedule, :event => event_staff_conds
-        can :manage, Schedule, :event => { :parent => event_staff_conds }
+        can :manage, Schedule, :event_id => staff_event_ids
+        can :manage, Schedule, :event => { :parent_id => staff_event_ids }
       
-        can :manage, Attendance, :event => event_staff_conds
-        can :manage, Attendance, :event => { :parent => event_staff_conds }
+        can :manage, Attendance, :event_id => staff_event_ids
+        can :manage, Attendance, :event => { :parent_id => staff_event_ids }
         can(:read, Attendance) { |att| can? :view_attendances, att.try(:event) }
         
         can :create, ProposedEvent
-        can :manage, ProposedEvent, :parent => event_staff_conds
+        can :manage, ProposedEvent, :parent_id => staff_event_ids
         can [:read, :update, :destroy], ProposedEvent, :proposer_id => person.id
       end
     end
