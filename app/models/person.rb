@@ -78,14 +78,14 @@ class Person < ActiveRecord::Base
 
   def busy_at?(time, events=[])
     return Attendance.count(:conditions => ["start <= ? AND end > ? and person_id = ? #{events_cond events}", 
-                                            time, time, person.id],
+                                            time, time, id],
                             :joins => :event) > 0
   end
   
   def busy_between?(start_time, end_time, events=[])
     return (busy_at?(start_time, events) or 
             Attendance.count(:conditions => ["(end > ? AND start <= ?) and person_id = ? #{events_cond events}", 
-                                             start_time, end_time, person.id],
+                                             start_time, end_time, id],
                              :joins => :event) > 0)
   end
   
