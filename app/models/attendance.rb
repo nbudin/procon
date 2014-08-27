@@ -19,6 +19,19 @@ class Attendance < ActiveRecord::Base
     person.try(:email)
   end
   
+  def person_email=(person_email)
+    if person_email
+      person = Person.find_by_email(person_email)
+      if person
+        self.person = person
+      else
+        self.errors.add(:person_email, "#{person_email} does not correspond to an existing user")
+      end
+    else
+      self.person = nil
+    end
+  end
+  
   def status
     if is_staff
       "Staff"

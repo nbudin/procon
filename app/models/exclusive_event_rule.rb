@@ -17,7 +17,7 @@ class ExclusiveEventRule < RegistrationRule
     
     sametime = attendance.event.simultaneous_events
     
-    Attendance.find_all_by_person_id(attendance.person.id).each do |a|
+    Attendance.find_all_by_person_id(attendance.person_id).each do |a|
       if a.is_staff
         next
       end
