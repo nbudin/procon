@@ -8,7 +8,7 @@ class ProfilesController < ApplicationController
   def update
     if current_person.update_attributes(params[:person].slice(:nickname, :gender, :phone, :best_call_time))
       flash[:notice] = "Your changes have been saved."
-      return_url = session[:return_to_after_profile_complete] || profile.path
+      return_url = session[:return_to_after_profile_complete] || profile_path
       session[:return_to_after_profile_complete] = nil
       redirect_to return_url
     else
