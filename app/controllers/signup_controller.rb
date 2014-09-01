@@ -1,5 +1,6 @@
 class SignupController < ApplicationController
   skip_authorization_check
+  before_filter :authenticate_person!
   
   def signup
     @hide_chrome = true
