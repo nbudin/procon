@@ -9,7 +9,7 @@ class EventsController < ApplicationController
     else
       "confirmed_attendances"
     end
-    @attendees = @event.send(@method).all(:include => {:person => :email_addresses}).map(&:person)
+    @attendees = @event.send(@method).all(:include => :person).map(&:person)
   end
   
   def signup_sheet
