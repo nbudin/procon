@@ -96,13 +96,13 @@ class LimitedCapacityEvent < Event
         end
       end
       total = neutral_slot_count
-      spillover = {}
-      gendered_slot_count.each_pair do |gender, count|
-        spillover = attendee_count(gender) - count
-        if spillover < 0
-          spillover = 0
+      attendances.each do |att|
+        next unless att.counts
+        if gendered_slot_count[att.gender].try(:>, 0)
+          gendered_slot_count[att.gender] -= 1
+        else
+          total -= 1
         end
-        total -= spillover
       end
     else
       total = max_count(gender) - attendee_count(gender)
