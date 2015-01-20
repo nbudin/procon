@@ -22,6 +22,8 @@ gem 'devise_cas_authenticatable'
 gem 'cancan'
 gem 'json'
 
+gem 'newrelic_rpm'
+
 group :production do
   gem "thin"
 end
