@@ -14,7 +14,7 @@ class Ability
       else
         # TODO: generalize this to work with multiple event levels deep
         
-        staff_event_ids = Event.all(:joins => :attendances, :conditions => {:attendances => {:person_id => person.id, :is_staff => true}}, :select => "events.id").map(&:id)
+        staff_event_ids = Event.all(:joins => :attendances, :conditions => ["attendances.person_id = ? AND attendances.is_staff = ? AND type != 'ProposedEvent'", person.id, true], :select => "events.id").map(&:id)
         
         can :manage, Event, :id => staff_event_ids
         can :view_attendances, Event, :attendees_visible => true, :attendances => { :person_id => person.id }
