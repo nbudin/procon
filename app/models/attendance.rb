@@ -55,6 +55,7 @@ class Attendance < ActiveRecord::Base
   end
   
   def age
+    return nil unless event.start
     person.try(:age_as_of, event.start)
   end
 
