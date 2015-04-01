@@ -44,5 +44,5 @@ And you should then be all set to start running ProCon.
 
 ## License
 
-ProCon is licensed to [Nat Budin](http://natbudin.com) using the [MIT License](http://opensource.org/licenses/MIT).
+ProCon is &copy; [Nat Budin](http://natbudin.com) and is released under the terms and conditions of the [MIT License](http://opensource.org/licenses/MIT).
 
