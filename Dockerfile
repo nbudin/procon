@@ -1,4 +1,5 @@
 FROM octohost/ruby-1.8
+MAINTAINER Nat Budin <natbudin@gmail.com>
 
 WORKDIR /app
 

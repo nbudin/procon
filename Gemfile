@@ -4,6 +4,7 @@ ruby "1.8.7"
 
 gem 'rails', :git => 'https://github.com/makandra/rails.git', :branch => '2-3-lts'
 gem "mysql2", "~> 0.2.0"
+gem 'pg', '~> 0.17.1'
 
 gem 'jrails', '0.5.1', :github => 'aaronchi/jrails', :branch => 'ea8b56b446f3e55236c25b04eb6c9a10c9a189e6'
 gem 'paperclip', '~> 2.3'

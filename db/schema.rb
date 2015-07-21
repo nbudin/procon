@@ -59,6 +59,8 @@ ActiveRecord::Schema.define(:version => 20140219220206) do
     t.boolean "exclusive",   :default => true
   end
 
+  add_index "event_locations", ["event_id"], :name => "index_event_locations_on_event_id"
+
   create_table "events", :force => true do |t|
     t.string   "fullname",                                       :null => false
     t.string   "shortname"
@@ -105,7 +107,6 @@ ActiveRecord::Schema.define(:version => 20140219220206) do
     t.string   "firstname"
     t.string   "lastname"
     t.string   "gender"
-    t.string   "profile_gender"
     t.datetime "birthdate"
     t.string   "nickname"
     t.string   "phone"
@@ -122,11 +123,6 @@ ActiveRecord::Schema.define(:version => 20140219220206) do
   end
 
   add_index "people", ["username"], :name => "index_people_on_username", :unique => true
-
-  create_table "plugin_schema_info", :id => false, :force => true do |t|
-    t.string  "plugin_name"
-    t.integer "version"
-  end
 
   create_table "public_info_fields", :force => true do |t|
     t.string   "name"

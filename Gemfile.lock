@@ -66,6 +66,7 @@ GEM
     paperclip (2.3.3)
       activerecord
       activesupport
+    pg (0.17.1)
     pry (0.9.7.3)
       coderay (~> 0.9.8)
       method_source (~> 0.6.7)
@@ -113,6 +114,7 @@ DEPENDENCIES
   mysql2 (~> 0.2.0)
   newrelic_rpm
   paperclip (~> 2.3)
+  pg (~> 0.17.1)
   pry
   rails!
   right_aws
