@@ -19,7 +19,7 @@ class Ability
         # TODO: generalize this to work with multiple event levels deep
         
         can :manage, Event, :id => staff_event_ids
-        can :view_attendances, Event, :attendees_visible => true, :attendances => { :person_id => person.id }
+        can :view_attendances, Event, :attendees_visible => true, :attendances => { :person_id => person.id, :deleted_at => nil }
         can :manage, Event, :parent_id => staff_event_ids
         
         can :manage, Schedule, :event_id => staff_event_ids
@@ -40,7 +40,9 @@ class Ability
     @staff_event_ids ||= begin
       Event.all(
         :joins => :attendances, 
-        :conditions => ["attendances.person_id = ? AND attendances.is_staff = ? AND (type != 'ProposedEvent' OR type IS NULL)", person.id, true], 
+        :conditions => [
+          "attendances.person_id = ? AND attendances.is_staff = ? AND attendances.deleted_at IS NULL AND (type != 'ProposedEvent' OR type IS NULL)", person.id, true
+        ], 
         :select => "events.id"
       ).map(&:id)
     end
