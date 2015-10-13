@@ -29,23 +29,15 @@ class CreatePeople < ActiveRecord::Migration
     add_index :people, :username, :unique => true
     
     person_ids = Attendance.all(:group => :person_id, :select => :person_id).map(&:person_id)
-    begin
-      person_ids += ProconProfile.all(:group => :person_id, :select => :person_id).map(&:person_id)
-      person_ids += Permission.all(:group => :person_id, :select => :person_id).map(&:person_id)
-    rescue
-      # Ignore this; procon_profiles and permissions might not exist for clean installs
-    end
+    person_ids += ProconProfile.all(:group => :person_id, :select => :person_id).map(&:person_id) if ProconProfile.connection.tables.include?(ProconProfile.table_name)
+    person_ids += Permission.all(:group => :person_id, :select => :person_id).map(&:person_id) if Permission.connection.tables.include?(Permission.table_name)
     
     # Event schema has changed to the point of unusability here, we have to use SQL
     person_ids += execute("select distinct proposer_id from #{Event.table_name}").map { |r| r[0] }
     person_ids = person_ids.uniq.compact
     
     role_ids = []
-    begin
-      role_ids += Permission.group(:role_id).map(&:role_id)
-    rescue
-      # Ignore for clean installs
-    end
+    role_ids += Permission.group(:role_id).map(&:role_id) if Permission.connection.tables.include?(Permission.table_name)
     role_ids = role_ids.uniq.compact
     
     if person_ids.count > 0 or role_ids.count > 0
@@ -105,32 +97,35 @@ class CreatePeople < ActiveRecord::Migration
         say "Merged #{count} existing records for person ID #{from_id}"
       end
       
-      Permission.all(:conditions => "permission is null and permissioned_id is null").each do |perm|
-        say "Found admin permission #{perm.inspect}"
+      if Permission.connection.tables.include?(Permission.table_name)
+        Permission.all(:conditions => "permission is null and permissioned_id is null").each do |perm|
+          say "Found admin permission #{perm.inspect}"
         
-        admins = []
-        if perm.person_id
-          if merged_person_ids[perm.person_id]
-            admins << Person.find(merged_person_ids[perm.person_id])
-          else
-            admins << Person.find(perm.person_id)
+          admins = []
+          if perm.person_id
+            if merged_person_ids[perm.person_id]
+              admins << Person.find(merged_person_ids[perm.person_id])
+            else
+              admins << Person.find(perm.person_id)
+            end
+          elsif perm.role_id
+            admins += Person.all(:conditions => {:id => dumpfile.roles[perm.role_id].people.map(&:id)})
           end
-        elsif perm.role_id
-          admins += Person.all(:conditions => {:id => dumpfile.roles[perm.role_id].people.map(&:id)})
-        end
         
-        admins.each do |person|
-          say "Granting admin rights to #{person.name}"
-          person.admin = true
-          person.save!
+          admins.each do |person|
+            say "Granting admin rights to #{person.name}"
+            person.admin = true
+            person.save!
+          end
         end
+
+        drop_table :permissions
       end
       
-      drop_table :permissions
       drop_table :open_id_authentication_associations
       drop_table :open_id_authentication_nonces
       drop_table :permission_caches
-      drop_table :procon_profiles
+      drop_table :procon_profiles if ProconProfile.connection.tables.include?(ProconProfile.table_name)
       drop_table :auth_tickets
     end
   end
