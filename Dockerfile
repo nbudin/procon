@@ -11,4 +11,5 @@ ADD . /app
 RUN mv config/database.yml.production config/database.yml
 
 EXPOSE 3000
-CMD ["bundle", "exec", "unicorn_rails", "-p", "3000", "-c", "config/unicorn.rb"]
+#CMD ["bundle", "exec", "unicorn_rails", "-p", "3000", "-c", "config/unicorn.rb"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
