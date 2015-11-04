@@ -1,4 +1,4 @@
-FROM octohost/ruby-1.8
+FROM everydayhero/ruby-ree
 MAINTAINER Nat Budin <natbudin@gmail.com>
 
 WORKDIR /app
@@ -11,5 +11,5 @@ ADD . /app
 RUN mv config/database.yml.production config/database.yml
 
 EXPOSE 3000
-#CMD ["bundle", "exec", "unicorn_rails", "-p", "3000", "-c", "config/unicorn.rb"]
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+CMD ["bundle", "exec", "unicorn_rails", "-p", "3000", "-c", "config/unicorn.rb"]
+#CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

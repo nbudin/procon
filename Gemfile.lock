@@ -122,3 +122,6 @@ DEPENDENCIES
   rubycas-client (~> 2.2.0)
   thin
   unicorn
+
+BUNDLED WITH
+   1.10.5

@@ -15,7 +15,7 @@ gem 'ruby-openid', '>= 2.0.4', :require => 'openid'
 gem 'ae_users_migrator'
 gem 'exception_notification', :github => 'smartinez87/exception_notification', :branch => '2-3-stable'
 gem 'pry', :groups => [:development, :test]
-gem 'puma'
+gem 'unicorn'
 
 gem 'devise', '~> 1.0.0'
 gem 'rubycas-client', '~> 2.2.0' # 2.3.x breaks in Rails 2 for some reason
