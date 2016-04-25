@@ -50,40 +50,33 @@ class Event < ActiveRecord::Base
 
   has_many :staff_positions, :dependent => :destroy, :order => "position"
   get_people_method "general_staff", [ "is_staff = ? and staff_position_id is null", true]
-    
+
   belongs_to :registration_policy
   has_many :virtual_sites
   belongs_to :proposed_event
-    
+
   has_many :schedules
   has_and_belongs_to_many :tracks
-  
-  # possibly replace this with a confirmation check later
-  validate do |e|
-    if e.length and e.length > 2.weeks
-      e.errors.add_to_base "Events cannot be longer than 2 weeks"
-    end
-  end
-  
+
   has_many :public_info_fields, :dependent => :destroy
   has_many :public_info_values, :through => :public_info_fields, :dependent => :destroy
-    
+
   acts_as_tree :order => "start"
   named_scope :time_ordered, :order => "#{connection.quote_column_name 'start'}, #{connection.quote_column_name 'end'}"
-  named_scope :for_registration, :include => { :attendances => :person, :registration_policy => :rules, 
+  named_scope :for_registration, :include => { :attendances => :person, :registration_policy => :rules,
     :attendee_slots => [], :locations => [] }
   named_scope :in_schedule, lambda { |schedule|
         { :joins => :tracks, :conditions => { :tracks => { :id => schedule.track_ids } },
           :group => "events.id", :include => :tracks }
   }
   named_scope :roots, :conditions => { :parent_id => [nil, 0] }
-  
+
   def set_default_registration_policy
     if registration_policy.nil?
       create_registration_policy
       save
     end
-    
+
     is_closed = false
     is_exclusive = false
     registration_policy.rules.each do |rule|
