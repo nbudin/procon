@@ -23,6 +23,12 @@ gem 'devise_cas_authenticatable'
 gem 'cancan'
 gem 'json'
 
+# Required to work with modern Bundler. See https://makandracards.com/makandra/43292
+gem 'archive-tar-minitar'
+gem 'hoe'
+gem 'rcov'
+gem 'nokogiri', '~> 1.5.10'
+
 gem 'newrelic_rpm'
 
 group :production do
