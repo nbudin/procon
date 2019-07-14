@@ -1,10 +1,14 @@
-#ProCon
+# ProCon
 
 _Awesome registration for awesome events_
 
 ProCon is an online event registration system, written for the BSCF LARP Conspiracy’s Festival of the LARPs 2007.  ProCon is written using Ruby on Rails.
 
-##Features
+# END OF LIFE!
+
+ProCon is offline and no longer supported.  For a modern replacement (which can import ProCon databases), please check out my new app, [Intercode](https://github.com/neinteractiveliterature/intercode)!
+
+## Features
 
 * Easy-to-use online registration.
 * Automatic, flexible waitlisting system for events that have limited capacities.
